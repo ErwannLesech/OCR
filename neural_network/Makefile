@@ -1,14 +1,13 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -O1
+CFLAGS = -Wall -Wextra
+DEP = -lm
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 
-%.o : %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+all: main
 
-test: $(OBJ)
- 	$(CC) -o $@ $^
+%.o: %.c
+	$(CC) $(CFLAGS) $(DEP) -o $@ -c $<
 
-clean:
-	rm -rf $(OBJ)
-	rm -rf test
+main: $(OBJ)
+	$(CC) $(CFLAGS) $(DEP) -o $@ $^
