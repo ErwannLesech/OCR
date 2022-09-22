@@ -11,3 +11,7 @@ all: main
 
 main: $(OBJ)
 	$(CC) $(CFLAGS) $(DEP) -o $@ $^
+
+clean: 
+	rm -rf $(OBJ)
+	rm -rf main

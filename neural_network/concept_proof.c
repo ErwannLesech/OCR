@@ -6,10 +6,10 @@
 
 // Input datasets
 
-void forward_propagation(float hidden_weights[]/*, float[] hidden_bias, 
-		float[] output_weights, float[] output_bias*/);
+void forward_propagation(float hidden_weights[], float hidden_bias[]);/*, 
+		float output_weights[], float output_bias[]);*/
 
-const unsigned int inputs[8] = 
+float inputs[8] = 
 {
 	0, 0, 
 	0, 1, 
@@ -19,7 +19,7 @@ const unsigned int inputs[8] =
 
 // Output datasets expected
 
-const unsigned int expected_output[4] =
+float expected_output[4] =
 {
 	0,
 	1, 
@@ -81,16 +81,20 @@ void initialization()
 	printf("Output bias: \n");
 	print_matrix(output_bias, output_neurons, 1);
 
-	forward_propagation(hidden_weights/*, hidden_bias, output_weights, output_bias*/);
+	forward_propagation(hidden_weights, hidden_bias/*, output_weights, output_bias*/);
 }
 
-void forward_propagation(float hidden_weights[]/*, float hidden_bias[], 
+void forward_propagation(float hidden_weights[], float hidden_bias[]/*, 
 		float output_weights[], float output_bias[]*/)
 {
 	float hidden_weights_propagation[8];
-	multiply_matrix(hidden_weights, inputs, 4, 4, 2, hidden_weights_propagation);
+	multiply_matrix(hidden_weights, inputs, 2, 2, 4, hidden_weights_propagation);
        	printf("\n");
+	printf("hidden_weights_propagation:\n");
 	print_matrix(hidden_weights_propagation, 4, 2);
-
-	
+	add_matrix(hidden_weights_propagation, 
+			hidden_bias, 1, 2, hidden_weights_propagation);
+	printf("\n");
+	printf("hidden_weights_propagation after bias:\n");
+	print_matrix(hidden_weights_propagation, 4, 2);
 }
