@@ -2,6 +2,8 @@
 #include <SDL2/SDL.h>
 #include "display_img.h"
 #include <stdbool.h>
+#include <stdio.h>
+#include <SDL2/SDL_image.h>
 
 Uint8 RGBToUint(float gray){
    float grayinInt = (gray)*3;
@@ -10,7 +12,7 @@ Uint8 RGBToUint(float gray){
 
 SDL_Surface* get_surface(float** array, int height, int width)
 {
-    char pixels[height*width];
+    char pixels[sizeof(float)*height*width];
     int count = 0;
     for (size_t i = 0; i < height; i++)
     {
@@ -24,7 +26,7 @@ SDL_Surface* get_surface(float** array, int height, int width)
         width,
         height,
         24,
-        width,
+        3*width,
         0x0000FF,             
         0x00FF00,             
         0xFF0000,              
@@ -38,10 +40,10 @@ void display_img(float** array, int height, int width){
     SDL_Event event;
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window * window = SDL_CreateWindow("SDL2 Displaying Image",
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 840, 720, 0);
+    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);  	
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
-    SDL_Rect dstrect = { 5, 5, width, height };
+    SDL_Rect dstrect = { 0, 0, width, height };
     SDL_RenderCopy(renderer, texture, NULL, &dstrect);
     SDL_RenderPresent(renderer);
     while (!quit)

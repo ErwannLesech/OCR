@@ -1,8 +1,10 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
+#include <stddef.h>
 #include "load_img.h"
 #include "array_utils.h"
 #include "display_img.h"
+#include "img.h"
 
 Uint32 getpixel(SDL_Surface *surface, int x, int y)
 {
@@ -23,10 +25,9 @@ switch (bpp)
     case 3:
         if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
             return p[0] << 16 | p[1] << 8 | p[2];
-        else
+        else{
             return p[0] | p[1] << 8 | p[2] << 16;
-            break;
-
+            }
         case 4:
             return *(Uint32 *)p;
             break;
@@ -36,11 +37,11 @@ switch (bpp)
       }
 }
 
-float** init_img(char* path){
+struct img init_img(char* path){
    SDL_Surface * sdl_surface = IMG_Load(path);
    SDL_LockSurface(sdl_surface);
    
-   Uint8 *q = (Uint8 *) sdl_surface -> pixels;
+   //Uint8 *q = (Uint8 *) sdl_surface -> pixels;
    float** array = init_array(sdl_surface->h, sdl_surface->w);
    for (int x = 0; x < sdl_surface->w; x++)
    {
@@ -52,10 +53,14 @@ float** init_img(char* path){
         array[y][x] = calculate_pixel_with_suppression(rgb.r, rgb.g, rgb.b);
       }
    }
-    display_img(array, sdl_surface->h, sdl_surface->w);
+   //print_array(array, sdl_surface->h, sdl_surface->w);
+    //display_img(array, sdl_surface->h, sdl_surface->w);
     SDL_UnlockSurface(sdl_surface);
-    return array;
-   
+    struct img image;
+    image.array = array;
+    image.height = sdl_surface->h;
+    image.width = sdl_surface->w;
+    return image;   
 }
 
 
