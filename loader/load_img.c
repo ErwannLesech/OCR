@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include "load_img.h"
 #include "array_utils.h"
+#include "display_img.h"
 
 Uint32 getpixel(SDL_Surface *surface, int x, int y)
 {
@@ -35,7 +36,7 @@ switch (bpp)
       }
 }
 
-void init_img(char* path){
+float** init_img(char* path){
    SDL_Surface * sdl_surface = IMG_Load(path);
    SDL_LockSurface(sdl_surface);
    
@@ -51,8 +52,9 @@ void init_img(char* path){
         array[y][x] = calculate_pixel_with_suppression(rgb.r, rgb.g, rgb.b);
       }
    }
-   SDL_UnlockSurface(sdl_surface);
-   print_array(array, sdl_surface->h, sdl_surface->w);
+    display_img(array, sdl_surface->h, sdl_surface->w);
+    SDL_UnlockSurface(sdl_surface);
+    return array;
    
 }
 
@@ -70,4 +72,4 @@ float calculate_pixel_with_suppression(int red, int green, int blue){
 
    return pixel;
 }
-//height = hauteur weight = largeur
+//height = hauteur width = largeur
