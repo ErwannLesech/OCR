@@ -3,9 +3,11 @@
 
 #include "solver.h"
 
+int is_valid(char argv[9][9], int row, int col, char c);
+
 int solver(char argv[9][9])
 {
-	for(unsigned int i = 0; i < 9)
+	for(unsigned int i = 0; i < 9; i++)
 	{
 		for(unsigned int j = 0; j < 9; j++)
 		{
@@ -17,7 +19,7 @@ int solver(char argv[9][9])
 					{
 						argv[i][j] = c;
 
-						if(solve(argv))
+						if(solver(argv))
 						{
 							return 1;
 						}
