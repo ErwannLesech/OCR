@@ -2,29 +2,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-float sigmoid(float x)
+double sigmoid(double x)
 {
 	return 1 / (1 + expf(-x));
 }
 
-float sigmoid_derivative(float x)
+double sigmoid_derivative(double x)
 {
 	return sigmoid(x) *  (1 - sigmoid(x));
 }
 
-void add_matrix(float m1[], float m2[], size_t row, size_t col, float return_matrix[])
+// rm -> return_matrix
+void add_matrix(double m1[], double m2[], size_t row, size_t col, double rm[])
 {
 	for(size_t idx = 0; idx < row; idx++)
 	{
 		for(size_t j = 0; j < col; j++)
 			{
-				return_matrix[idx * col + j] = 
+				rm[idx * col + j] = 
 					m1[idx * col + j] + m2[idx * col + j];
 			}
 	}
 }
 
-void multiply_matrix(float m1[], float m2[], size_t r1, size_t c1, size_t c2, float return_matrix[])
+void multiply_matrix(double m1[], double m2[], size_t r1, size_t c1, 
+		size_t c2, double rm[])
 {
 	for(size_t i = 0; i < r1; i++)
 	{
@@ -32,7 +34,8 @@ void multiply_matrix(float m1[], float m2[], size_t r1, size_t c1, size_t c2, fl
 		{
 			for(size_t k = 0; k < c1; k++)
 			{
-				return_matrix[i * c2 + j] += m1[i * c1 + k] * m2[k * c2 + j]; 
+				rm[i * c2 + j] += 
+					m1[i * c1 + k] * m2[k * c2 + j]; 
 			}
 		}
 	}
@@ -53,9 +56,9 @@ double dot_product(double m1[][2], double m2[][2], size_t len)
 	return product;
 }
 
-float mean(float m1[][2], size_t row, size_t col)
+double mean(double m1[][2], size_t row, size_t col)
 {
-	float sum = 0;
+	double sum = 0;
 
 	for(size_t i = 0; i < row; i++)
 	{
@@ -69,7 +72,7 @@ float mean(float m1[][2], size_t row, size_t col)
 
 }
 
-void print_matrix(float matrix[], size_t row, size_t col)
+void print_matrix(double matrix[], size_t row, size_t col)
 {
 	 for(size_t i = 0; i < row; i++)
         {

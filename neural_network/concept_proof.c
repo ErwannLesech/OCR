@@ -6,10 +6,10 @@
 
 // Input datasets
 
-void forward_propagation(float hidden_weights[], float hidden_bias[], 
-		float output_weights[], float output_bias[]);
+void forward_propagation(double hidden_weights[], double hidden_bias[], 
+		double output_weights[], double output_bias[]);
 
-float inputs[8] = 
+double inputs[8] = 
 {
 	0, 0, 
 	0, 1, 
@@ -19,7 +19,7 @@ float inputs[8] =
 
 // Output datasets expected
 
-float expected_output[4] =
+double expected_output[4] =
 {
 	0,
 	1, 
@@ -33,7 +33,7 @@ const unsigned long epochs = 10000;
 
 // Learning rate (distance for Gradient Descent)
 
-const float learning_rate = 0.9;
+const float learning_rate = 0.15;
 
 // Neural network architecture
 
@@ -43,86 +43,89 @@ const unsigned int output_neurons = 1;
 
 // Initialization of weights and bias
 
+// hw -> hidden_weights | hb -> hidden_bias
+// ow -> output_weights | ob -> output_bias
+
 void initialization()
 {
 	srand( time( NULL ) );
 	
-	float hidden_weights[] =
+	double hw[] =
 	{	
         	((rand() % 10000) / 10000.0), ((rand() % 10000) / 10000.0),
         	((rand() % 10000) / 10000.0), ((rand() % 10000) / 10000.0)
 	};
 	
-	float hidden_bias[] =
+	double hb[] =
 	{
         	((rand() % 10000) / 10000.0), ((rand() % 10000) / 10000.0),
 	};
 
-	float output_weights[] =
+	double ow[] =
 	{
         	((rand() % 10000) / 10000.0), ((rand() % 10000) / 10000.0),
 	};
 
-	float output_bias[] =
+	double ob[] =
 	{
 	 	((rand() % 10000) / 10000.0),
 	};
 
 
 	printf("Hidden weights: \n");
-	print_matrix(hidden_weights, input_neurons, 2);
+	print_matrix(hw, input_neurons, 2);
 
 	printf("Hidden bias: \n");
-	print_matrix(hidden_bias, 1, 2);
+	print_matrix(hb, 1, 2);
 
 	printf("Output weights: \n");
-	print_matrix(output_weights, 1, 2);
+	print_matrix(ow, 1, 2);
 
 	printf("Output bias: \n");
-	print_matrix(output_bias, output_neurons, 1);
+	print_matrix(ob, output_neurons, 1);
 
-	forward_propagation(hidden_weights, hidden_bias, output_weights, output_bias);
+	forward_propagation(hw, hb, ow, ob);
 }
 
-void forward_propagation(float hidden_weights[], float hidden_bias[], 
-		float output_weights[], float output_bias[])
+// hw -> hidden_weights | hb -> hidden_bias
+// ow -> output_weights | ob -> output_bias
+
+void forward_propagation(double hw[], double hb[], double ow[], double ob[])
 {
 	// HIDDEN
 
-	float hidden_weights_propagation[8];
-	multiply_matrix(hidden_weights, inputs, 2, 2, 4, hidden_weights_propagation);
+	double hw_propagation[8];
+	multiply_matrix(hw, inputs, 2, 2, 4, hw_propagation);
        	printf("\n");
 	printf("hidden_weights_propagation:\n");
-	print_matrix(hidden_weights_propagation, 4, 2);
-	add_matrix(hidden_weights_propagation, 
-			hidden_bias, 1, 2, hidden_weights_propagation);
+	print_matrix(hw_propagation, 4, 2);
+	add_matrix(hw_propagation, hb, 1, 2, hw_propagation);
 	printf("\n");
 	printf("hidden_weights_propagation after bias:\n");
-	print_matrix(hidden_weights_propagation, 4, 2);
-	float hidden_layer_output[8];
+	print_matrix(hw_propagation, 4, 2);
+	double hidden_layer_output[8];
 	for(size_t idx = 0; idx < 8; idx++)
 	{
-		hidden_layer_output[idx] = sigmoid(hidden_weights_propagation[idx]);
+		hidden_layer_output[idx] = sigmoid(hw_propagation[idx]);
 	}
 	printf("hidden_layer_output (sigmoid):\n");
 	print_matrix(hidden_layer_output, 4, 2);
 
 	// OUTPUT
 	
-	float output_weights_propagation[4];
-	multiply_matrix(hidden_layer_output, output_weights, 2, 4, 1, output_weights_propagation);
+	double ow_propagation[4];
+	multiply_matrix(hidden_layer_output, ow, 2, 4, 1, ow_propagation);
        	printf("\n");
 	printf("output_weights_propagation:\n");
-	print_matrix(output_weights_propagation, 4, 1);
-	add_matrix(output_weights_propagation, 
-			output_bias, 1, 2, output_weights_propagation);
+	print_matrix(ow_propagation, 4, 1);
+	add_matrix(ow_propagation, ob, 1, 2, ow_propagation);
 	printf("\n");
 	printf("output_weights_propagation after bias:\n");
-	print_matrix(output_weights_propagation, 4, 1);
-	float output_layer_output[4];
+	print_matrix(ow_propagation, 4, 1);
+	double output_layer_output[4];
 	for(size_t idx = 0; idx < 4; idx++)
 	{
-		output_layer_output[idx] = sigmoid(output_weights_propagation[idx]);
+		output_layer_output[idx] = sigmoid(ow_propagation[idx]);
 	}
 	printf("output_layer_output (sigmoid):\n");
 	print_matrix(output_layer_output, 4, 1);
