@@ -114,7 +114,7 @@ void forward_propagation(double hw[], double hb[], double ow[], double ob[])
 	// OUTPUT
 	
 	double ow_propagation[4];
-	multiply_matrix(hidden_layer_output, ow, 2, 4, 1, ow_propagation);
+	multiply_matrix(hidden_layer_output, ow, 2, 2, 4, ow_propagation);
        	printf("\n");
 	printf("output_weights_propagation:\n");
 	print_matrix(ow_propagation, 4, 1);
