@@ -2,7 +2,6 @@
 #include <math.h>
 #include <SDL.h>
 #include <SDL/SDL_rotozoom.h>
-#include <SDL/SDL_gfx>
 
 void print(SDL_Renderer* renderer, SDL_Texture* texture)
 {
@@ -55,7 +54,7 @@ SDL_Surface* load_image(const char* path)
 	return surface;
 }
 
-int main(int arc, char** argv)
+int main(int argc, char** argv)
 {
 	if (argc != 3)
 		errx(EXIT_FAILURE, "Error");
@@ -66,12 +65,12 @@ int main(int arc, char** argv)
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1,
 			SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL)
-		errx(EXIT_FAILURE, "%s", SDL_GetError())
+		errx(EXIT_FAILURE, "%s", SDL_GetError());
 	SDL_Surface* surface = load_image(argv[1]);
 	SDL_SetWindowSize(window, surface->w,surface->h);
 	SDL_Texture *normal = SDL_CreateTextureFromSurface(renderer, surface);
-	double angle_radian = (int)argv[2] * M_PI / 180.0;
-	SDL_Surface* surfaceturn =rotozoomSurface(SDL_Surface* image,-angle_radian, 1,1);
+	double angler = (int)(argv[2]) * M_PI / 180.0;
+	SDL_Surface* surfaceturn =rotozoomSurface(surface,(-angler), 1,1);
 	SDL_Texture *turn = SDL_CreateTextureFromSurface(renderer, surfaceturn);
 	SDL_FreeSurface(surfaceturn);
 	event_loop(renderer,normal,turn);
