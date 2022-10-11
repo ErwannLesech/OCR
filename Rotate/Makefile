@@ -1,23 +1,18 @@
-# Makefile
-
 CC = gcc
-CPPFLAGS =
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
-LDFLAGS =
-LDLIBS = `pkg-config --libs sdl2 SDL2_image`
+FLAGS = -Wall -Wextra
+LDFLAGS=-lSDL -lSDL_gfx
+DEP = -lm
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
 
 all: main
 
-SRC = main.c
-OBJ = ${SRC:.c=.o}
-EXE = ${SRC:.c=}
+%.o: %.c
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEP) -o $@ -c $<
 
-main: main.o
-
-.PHONY: clean
+main: $(OBJ)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEP) -o $@ $^
 
 clean:
-	${RM} ${OBJ}
-	${RM} ${EXE}
-
-# END
+	rm -rf $(OBJ)
+	rm -rf main
