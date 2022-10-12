@@ -1,4 +1,4 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
@@ -126,7 +126,34 @@ void forward_propagation(double hw[], double hb[], double ow[], double ob[])
 	print_matrix(ow_propagation, 4, 1);
 	double output_layer_output[4];
 	for(size_t idx = 0; idx < 4; idx++)
-	{print_matrix(hw); 2, 1, ow_transposed);
+	{
+		output_layer_output[idx] = sigmoid(ow_propagation[idx]);
+	}
+	printf("output_layer_output (sigmoid):\n");
+	print_matrix(output_layer_output, 4, 1);
+	back_propagation(output_layer_output, hidden_layer_output, hw, hb, ow, ob);
+}
+
+// ol -> output_layer | hl -> hidden_layer | ow -> output_weights
+void back_propagation(double ol_output[], double hl_output[], double hw[], double hb[], double ow[], double ob[])
+{
+	double error[4];
+	for(size_t i = 0; i < 4; i++)
+	{
+		error[i] = ol_output[i] - expected_output[i];
+	} 
+	printf("Error matrix:\n");
+	print_matrix(error, 4, 1);
+	
+	for(size_t i = 0; i < 4; i++)
+	{
+		error[i] = error[i] * sigmoid_derivative(ol_output[i]);
+	} 
+	printf("Error matrix after sigm_d:\n");
+	print_matrix(error, 4, 1);
+
+	double ow_transposed[4];
+	transpose_matrix(ow, 2, 1, ow_transposed);
 	double hl_error[16];
 	multiply_matrix(ol_output, ow_transposed, 4, 2, 4, hl_error);
 	printf("hl_error:\n");

@@ -10,7 +10,7 @@ all: main
 	$(CC) $(CFLAGS) -o $@ -c $< $(DEP)
 
 main: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(DEP)
+	$(CC) $(CFLAGS) $(DEP) -o $@ $^ $(DEP)
 
 clean: 
 	rm -rf $(OBJ)
