@@ -1,10 +1,10 @@
 CC = gcc
-CPPFLAGS= `pkg-config --cflags gtk+-3.0` `pkg-config --cflags sdl2` -lSDL_gfx -D__NO_INLINE__
-CFLAGS=  -g -fsanitize=address -Wall -Wextra  -std=c99 -O0
-LDFLAGS= -fsanitize=address 
-LDLIBS= -lasan `pkg-config --libs gtk+-3.0` `pkg-config --libs sdl2` -lSDL2_image -lm -lpthread
+CPPFLAGS=  `pkg-config --cflags sdl2 SDL2_image` -lSDL_gfx 
+CFLAGS=  -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+LDFLAGS= 
+LDLIBS=  `pkg-config --libs sdl2 SDL2_image`
 
-SRC=$(wildcard*.c)
+SRC= main.c
 OBJ=$(SRC:.c=.o)
 DEP=$(SRC:.c=.d)
 
