@@ -5,7 +5,7 @@
 #include "neuronal_network_functions.h"
 
 
-matrix *init_matrix(matrix *m, int rows, int cols)
+matrix *init_matrix(matrix *m, int rows, int cols, double value)
 {
     m->rows = rows;
     m->cols = cols;
@@ -13,7 +13,7 @@ matrix *init_matrix(matrix *m, int rows, int cols)
 
     for (int idx = 0; idx < (rows * cols); idx++)
     {
-        m->data[idx] = 0;
+        m->data[idx] = value;
     }
     
     return m;
@@ -75,22 +75,43 @@ matrix *add_matrix(matrix *m_one, matrix *m_two)
         return m_one;
 }
 
+matrix add_col_matrix(matrix *m)
+{
+    int rows = m->rows;
+    int cols = m->cols;
 
-matrix *substract_matrix(matrix *m_one, matrix *m_two)
+    matrix sum;
+    init_matrix(&sum, rows, 1, 0);
+    for (int i = 0; i < rows; i++)
+    {
+        double total = 0.0;
+        for (int j = 0; j < cols; j++)
+        {
+            total += get_value(m, i, j);
+        }
+        insert_value(&sum, i, 0, total);
+    }
+    return sum;
+}
+
+
+matrix substract_matrix(matrix *m_one, matrix *m_two)
 {
     int rows = m_one->rows;
     int cols = m_one->cols;
     double diff;
+    matrix substract_matrix;
+    init_matrix(&substract_matrix, rows, cols, 0);
 
     for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < cols; j++)
             {
                 diff = get_value(m_one, i, j) - get_value(m_two, i, j);
-                insert_value(m_one, i, j, diff);
+                insert_value(&substract_matrix, i, j, diff);
             }
         }
-        return m_one;
+        return substract_matrix;
 }
 
 
@@ -104,6 +125,8 @@ matrix multiply_matrix(matrix *m_one, matrix *m_two)
     if (m_one_cols != m_two_rows)
     {
         printf("multiply_matrix: Incorrect dimensions.\n");
+        print_matrix(m_one);
+        print_matrix(m_two);
         exit(1);
     }
 
@@ -111,7 +134,7 @@ matrix multiply_matrix(matrix *m_one, matrix *m_two)
     int p_cols = m_two_cols;
 
     matrix product_m;
-    init_matrix(&product_m, p_rows, p_cols);
+    init_matrix(&product_m, p_rows, p_cols, 0);
 
     double sum;
 
@@ -131,13 +154,35 @@ matrix multiply_matrix(matrix *m_one, matrix *m_two)
     return product_m;
 }
 
+matrix undot_matrix(matrix *m, double val)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    matrix undot_m;
+    init_matrix(&undot_m, m_rows, m_cols, 0);
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        double data;
+        for (int j = 0; j < m_cols; j++)
+        {
+            data = get_value(m, i, j) * val;
+            insert_value(&undot_m, i, j, data);
+        }
+        
+    }
+
+    return undot_m;
+}
+
 matrix transpose_matrix(matrix *m)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
 
     matrix transposed_m;
-    init_matrix(&transposed_m, m_rows, m_cols);
+    init_matrix(&transposed_m, m_cols, m_rows, 0);
     
     double value = 0;
 
@@ -145,8 +190,8 @@ matrix transpose_matrix(matrix *m)
     {
         for (int j = 0; j < m_cols; j++)
         {
-            value = get_value(m, j, i);
-            insert_value(&transposed_m, i, j, value);
+            value = get_value(m, i, j);
+            insert_value(&transposed_m, j, i, value);
         }
     }
 

@@ -15,3 +15,4 @@ main: $(OBJ)
 clean: 
 	rm -rf $(OBJ)
 	rm -rf main
+	rm -rf test.txt

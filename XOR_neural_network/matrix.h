@@ -10,7 +10,7 @@ typedef struct
 } matrix;
 
 // initialize a matrix
-matrix *init_matrix(matrix *m, int rows, int cols);
+matrix *init_matrix(matrix *m, int rows, int cols, double value);
 
 // initialize a matrix with random values
 matrix *init_rand_matrix(matrix *m, int rows, int cols);
@@ -27,11 +27,17 @@ double get_value(matrix *m, int rows, int cols);
 // add matrix m_two in matrix m_one
 matrix *add_matrix(matrix *m_one, matrix *m_two);
 
-// substract matrix m_two to matrix m_one
-matrix *substract_matrix(matrix *m_one, matrix *m_two);
+// sum colomns of matrix m
+matrix add_col_matrix(matrix *m);
+
+// substract matrix m_two and matrix m_one
+matrix substract_matrix(matrix *m_one, matrix *m_two);
 
 // multiply the matrix m_one and matrix m_two
 matrix multiply_matrix(matrix *m_one, matrix *m_two);
+
+// multiply every values in the matrix by val
+matrix undot_matrix(matrix *m, double val);
 
 // transpose matrix m_one
 matrix transpose_matrix(matrix *m);
