@@ -152,12 +152,40 @@ multiple_result *back_prop, double lr)
 	return parameters;
 }
 
-int predict(matrix *inputs, multiple_result *parameters)
+double predict_xor(multiple_result *parameters, double input_one, double input_two)
 {
-	multiple_result forward_prop;
-	forward_prop = forward_propagation(parameters, inputs);
-	matrix A2 = forward_prop.d;
-	return A2.data[0] >= 0.5;
+	matrix inputs;
+	init_matrix(&inputs, 1, 2, 0);
+	insert_value(&inputs, 0, 0, input_one);
+	insert_value(&inputs, 0, 1, input_two);
+
+	matrix hw = parameters->a;
+	matrix hb = parameters->b;
+	matrix ow = parameters->c;
+	matrix ob = parameters->d;
+
+	// HIDDEN LAYER
+
+	matrix hidden_propagation;
+	hidden_propagation = multiply_matrix(&inputs, &hw);
+	add_matrix(&hidden_propagation, &hb);
+	sigmoid_matrix(&hidden_propagation);
+
+	// OUTPUT LAYER
+
+	matrix output_propagation;
+	output_propagation = multiply_matrix(&hidden_propagation, &ow);
+	add_matrix(&hidden_propagation, &ob);
+	sigmoid_matrix(&output_propagation);
+
+	// Return values
+	double result = get_value(&output_propagation, 0, 0);
+
+	free_matrix(&inputs);
+	free_matrix(&hidden_propagation);
+	free_matrix(&output_propagation);
+
+	return result;
 }
 
 

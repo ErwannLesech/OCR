@@ -57,10 +57,7 @@ int main()
 
     // save_parameters(&parameters, "test.txt");
 
-    /*matrix test;
-    init_matrix(&test, 1, 2, 0);
-
-    printf(predict(&init_matrix, &parameters));*/
+    // printf("predict: %f\n", predict_xor(&parameters, 0, 1));
 
     // Parameters
     matrix hw = parameters.a;

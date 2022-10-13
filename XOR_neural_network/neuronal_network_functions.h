@@ -26,6 +26,7 @@ multiple_result back_propagation(matrix *inputs, matrix *exp_outputs, multiple_r
 
 multiple_result *upgrade_parameters(multiple_result *parameters, multiple_result *back_prop, double lr);
 
-int predict(matrix *inputs, multiple_result *parameters);
+// simulate forward_prop for a test input
+double predict_xor(multiple_result *parameters, double input_one, double input_two);
 
 void save_parameters(multiple_result *parameters, char path[]);
