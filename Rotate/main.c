@@ -6,6 +6,8 @@
 #include <SDL/SDL_rotozoom.h>
 #include <SDL2/SDL_image.h>
 
+const int WIN_WIDTH = 640;
+const int WIN_HEIGHT = 480;
 /*void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 {
      SDL_RenderCopyEx(renderer, NULL, NULL, texture,180,  NULL, SDL_FLIP_NONE);
@@ -42,20 +44,11 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* normal, SDL_Texture* turn)
 					draw(renderer, normal);
 					t = normal;
 				}
-				break;*/
+				break;
 		}
 	}	
 }
-
-/*SDL_Surface* load_image(const char* path)
-{
-	SDL_Surface *image = IMG_Load(path);
-    	SDL_Surface *surface = SDL_ConvertSurfaceFormat(image,SDL_PIXELFORMAT_RGB888,0);
-    	if(!surface)
-	    	errx(EXIT_FAILURE, "%s", SDL_GetError());
-	SDL_FreeSurface(image);
-	return surface;
-}
+*/
 
 int main(int argc, char** argv)
 {
@@ -63,8 +56,43 @@ int main(int argc, char** argv)
         	errx(EXIT_FAILURE, "Erreur");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
+
+	SDL_Window *win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, 0);
+	SDL_Renderer *renderer = SDL_CreateRenderer(win, -1,
+		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+
+	//Put your own bmp image here
+	SDL_Surface *bmpSurf = SDL_LoadBMP(argv[1]);
+	SDL_Texture *bmpTex = SDL_CreateTextureFromSurface(renderer, bmpSurf);
+	SDL_FreeSurface(bmpSurf);
+
+	//Make a target texture to render too
+	SDL_Surface* surfaceturn =rotozoomSurface(bmpSurf,(-180), 1,1);
+	SDL_Texture *texTarget = SDL_CreateTextureFromSurface(renderer, surfaceturn);
+
 	
-	SDL_Window* window = SDL_CreateWindow("Window", 0, 0,
+	//Now render to the texture
+	SDL_SetRenderTarget(renderer, texTarget);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, bmpTex, NULL, NULL);
+	//Detach the texture
+	SDL_SetRenderTarget(renderer, NULL);
+
+	//Now render the texture target to our screen, but upside down
+	SDL_RenderClear(renderer);
+	SDL_RenderCopyEx(renderer, bmpTex, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
+	SDL_RenderPresent(renderer);
+
+	SDL_Delay(5000);
+	SDL_DestroyTexture(texTarget);
+	SDL_DestroyTexture(bmpTex);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(win);
+	SDL_Quit();
+	return 0;
+	
+/*	SDL_Window* window = SDL_CreateWindow("Window", 0, 0,
 			800, 800,SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	if (window == NULL)
@@ -79,6 +107,11 @@ int main(int argc, char** argv)
 
 	//SDL_SetWindowSize(window, surface->w,surface->h);
 	SDL_Texture* normal = IMG_LoadTexture(renderer,argv[1]);
+
+
+
+
+	
 	int angler = (int)(argv[2]) * M_PI / 180.0;
 	
 	SDL_Surface* surfaceturn =rotozoomSurface(surface,(-180), 1,1);
@@ -87,7 +120,7 @@ int main(int argc, char** argv)
 	
 	SDL_FreeSurface(surface);
 
-	event_loop(renderer,normal,turn);
+	//event_loop(renderer,normal,turn);
 
 	SDL_DestroyTexture(normal);
 	printf("a");
@@ -98,9 +131,9 @@ int main(int argc, char** argv)
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-	return EXIT_SUCCESS;    
-}*/
-
+	return EXIT_SUCCESS; */   
+}
+/*
 void corrected_rotation_matrix(double angle, double x, double y,
     double center_x, double center_y, double *rx, double *ry)
 {
@@ -108,12 +141,12 @@ void corrected_rotation_matrix(double angle, double x, double y,
     *ry = (x - center_x) * sin(angle) + (y - center_y) * cos(angle) + center_y;
 }
 
-/**
+
  * @brief Rotates image counterclockwise by an angle
  *
  * @param image image to rotate
  * @param angle angle of the rotation in degrees
- */
+ 
 Image rotate_image(Image *image, double angle)
 {
     Image rotated_image = clone_image(image);
@@ -151,4 +184,15 @@ Image rotate_image(Image *image, double angle)
     }
 
     return rotated_image;
-}
+}*/
+
+
+my $screen  = SDL::Video::set_video_mode(800, 600, 32, SDL_SWSURFACE);
+my $picture = SDL::Video::load_BMP('test.bmp');
+ 
+my $rotated = SDL::GFX::Rotozoom::surface( $picture, 45, 0.8, SMOOTHING_ON );
+ 
+SDL::Video::blit_surface( $rotated, SDL::Rect->new(0, 0, $rotated->w, $rotated->h), 
+                          $screen,  SDL::Rect->new(0, 0, 0, 0) );
+ 
+SDL::Video::update_rect( $screen, 0, 0, 0, 0 );
