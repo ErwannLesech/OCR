@@ -48,14 +48,14 @@ matrix *inputs)
 	// HIDDEN LAYER
 
 	matrix hidden_propagation;
-	hidden_propagation = multiply_matrix(inputs, &hw);
+	hidden_propagation = dot_matrix(inputs, &hw);
 	add_matrix(&hidden_propagation, &hb);
 	sigmoid_matrix(&hidden_propagation);
 
 	// OUTPUT LAYER
 
 	matrix output_propagation;
-	output_propagation = multiply_matrix(&hidden_propagation, &ow);
+	output_propagation = dot_matrix(&hidden_propagation, &ow);
 	add_matrix(&hidden_propagation, &ob);
 	sigmoid_matrix(&output_propagation);
 
@@ -75,41 +75,61 @@ multiple_result *parameters, multiple_result *forward_prop)
     matrix output_prop = forward_prop->b;
 	matrix ow = parameters->c;
 
-	matrix dZ2;
-	dZ2 = substract_matrix(&output_prop, exp_outputs);
+	// OUTPUT TO HIDDEN
 
-	matrix hidden_prop_t;
-	hidden_prop_t = transpose_matrix(&hidden_prop);
-
-	matrix dW2;
-	dW2 = multiply_matrix(&hidden_prop_t, &dZ2);
-	matrix dB2;
-	dB2 = add_col_matrix(&dZ2);
-
-	matrix dZ1;
-	matrix ow_transposed;
-	ow_transposed = transpose_matrix(&ow);
-	dZ1 = multiply_matrix(&dZ2, &ow_transposed);
-	dZ1 = multiply_matrix(&dZ1, &hidden_prop_t);
-
-	matrix one_mat;
-	init_matrix(&one_mat, 4, 2, 1);
-	one_mat = substract_matrix(&one_mat, &hidden_prop);
-	matrix one_mat_t;
-	one_mat_t = transpose_matrix(&one_mat);
-	dZ1 = multiply_matrix(&one_mat_t, &dZ1);
+	matrix error;
+	error = substract_matrix(&output_prop, exp_outputs);
 	
-	matrix dW1;
-	dW1 = multiply_matrix(inputs, &dZ1);
+	matrix douto_dino;
+	douto_dino = deriv_sigmoid_matrix(&output_prop);
+
+	matrix douto_dino_t;
+	douto_dino_t = transpose_matrix(&douto_dino);
+
+	matrix derr_dino;
+	derr_dino = multiply_matrix(&error, &douto_dino_t);
 	
-	matrix dB1;
-	dB1 = add_col_matrix(&dZ1);
+	matrix ow_t;
+	ow_t = transpose_matrix(&ow);
+
+	matrix error_hidden_layer;
+	error_hidden_layer = dot_matrix(&derr_dino, &ow_t);
+
+	
+	// HIDDEN TO INPUT
+
+	matrix douth_dinh;
+	douth_dinh = deriv_sigmoid_matrix(&hidden_prop);
+	print_matrix(&douth_dinh);
+	
+	matrix douth_dinh_t;
+	douth_dinh_t = transpose_matrix(&douth_dinh);
+	print_matrix(&douth_dinh_t);
+	
+	matrix derr_dinh;
+	derr_dinh = multiply_matrix(&error_hidden_layer, &douth_dinh_t);
+	printf("output passed\n");
+	matrix input_t;
+	input_t = transpose_matrix(inputs);
+	
+	
+	matrix d_hidden_layer;
+	d_hidden_layer = multiply_matrix(&input_t, &derr_dinh);
+
+	matrix out_hidden_t;
+	out_hidden_t = transpose_matrix(&hidden_prop);
+
+	matrix d_output_layer;
+	d_output_layer = multiply_matrix(&out_hidden_t, &derr_dino);
+	
+
+	// RETURN RESULT
 
 	multiple_result back_prop;
-	back_prop.a = dW1;
-	back_prop.b = dB1;
-	back_prop.c = dW2;
-	back_prop.d = dB2;
+	back_prop.a = d_output_layer;
+	back_prop.b = derr_dino;
+	back_prop.c = d_hidden_layer;
+	back_prop.d = derr_dinh;
 
 	return back_prop;
 }
@@ -122,27 +142,28 @@ multiple_result *back_prop, double lr)
 	matrix ow = parameters->c;
 	matrix ob = parameters->d;
 
-	matrix dW1 = back_prop->a;
-	matrix dB1 = back_prop->b;
-	matrix dW2 = back_prop->c;
-	matrix dB2 = back_prop->d;
+	matrix d_output_layer = back_prop->a;
+	matrix derr_dino = back_prop->b;
+	matrix d_hidden_layer = back_prop->c;
+	matrix derr_dinh = back_prop->d;
 
-	matrix undot_w1;
-	undot_w1 = undot_matrix(&dW1, lr);
-	matrix undot_w2;
-	undot_w2 = undot_matrix(&dW2, lr);
-	matrix undot_b1;
-	undot_b1 = undot_matrix(&dB1, lr);
-	matrix undot_b2;
-	undot_b2 = undot_matrix(&dB2, lr);
+	matrix d_ol;
+	d_ol =  multiply_matrix_val(&d_output_layer, lr);
+	ow = substract_matrix(&ow, &d_ol);
 
-	print_matrix(&hw);
-	print_matrix(&undot_b1);
-	
-	hw = substract_matrix(&hw, &undot_w1);
-	hb = substract_matrix(&hb, &undot_b1);
-	ow = substract_matrix(&ow, &undot_w2);
-	ob = substract_matrix(&ob, &undot_b2);
+	matrix d_output_bias;
+	d_output_bias = add_row_matrix(&derr_dino);
+	d_output_bias = multiply_matrix_val(&d_output_bias, lr);
+	ob = substract_matrix(&ob, &d_output_bias);
+
+	matrix d_hl;
+	d_hl =  multiply_matrix_val(&d_hidden_layer, lr);
+	hw = substract_matrix(&hw, &d_hl);
+
+	matrix d_hidden_bias;
+	d_hidden_bias = add_row_matrix(&derr_dinh);
+	d_hidden_bias = multiply_matrix_val(&d_hidden_bias, lr);
+	hb = substract_matrix(&hb, &d_hidden_bias);
 
 	parameters->a = hw;
 	parameters->b = hb;
@@ -187,6 +208,70 @@ double predict_xor(multiple_result *parameters, double input_one, double input_t
 
 	return result;
 }
+
+
+double log_loss(double exp_output, double pred_output)
+{
+	return 0.5 * pow((exp_output - pred_output), 2);
+}
+
+double xor_accuracy(multiple_result *parameters, int nb_tests)
+{
+	int valid_pred;
+	double dError;
+	for(int i = 0; i < nb_tests; i++)
+	{
+		matrix inputs;
+		init_rand_matrix(&inputs, 1, 2);
+
+		double input_one;
+		double input_two;
+
+		if(inputs.data[0] < 0.5)
+		{
+			input_one = 0;
+		}
+		else
+		{
+			input_one = 1;
+		}
+
+		if(inputs.data[1] < 0.5)
+		{
+			input_two = 0;
+		}
+		else
+		{
+			input_two = 1;
+		}
+
+		double pred_output = predict_xor(parameters, input_one, input_two);
+
+		int exp_output;
+
+		if ((input_one < 0.5 && input_two < 0.5) || (input_one > 0.5 && input_two > 0.5))
+		{
+			exp_output = 0;
+		}
+		else
+		{
+			exp_output = 1;
+		}
+
+		dError += log_loss(exp_output, pred_output);
+
+		if(exp_output == (int) pred_output)
+		{
+			valid_pred++;
+		}
+	}
+
+	printf("XOR correct pred = %i sur %i tests.\n", valid_pred, nb_tests);
+	printf("Average error per test: %f\n", dError / nb_tests);
+
+	return (valid_pred / nb_tests);
+}
+	
 
 
 void save_parameters(multiple_result *parameters, char path[])
@@ -271,6 +356,8 @@ void save_parameters(multiple_result *parameters, char path[])
         }
 		fprintf(file, "]\n");
     }
+
+	fprintf(file, "\n");
 }
 
 

@@ -49,13 +49,21 @@ int main()
         
         forward_prop = forward_propagation(&parameters, &inputs);
 
+        printf("for passed\n");
+
         back_prop = back_propagation(&inputs, &exp_outputs, 
         &parameters, &forward_prop);
 
+        printf("back passed\n");
+
         upgrade_parameters(&parameters, &back_prop, learning_rate);
+
+        printf("up passed\n");
     }
 
     // save_parameters(&parameters, "test.txt");
+
+    xor_accuracy(&parameters, 250);
 
     // printf("predict: %f\n", predict_xor(&parameters, 0, 1));
 

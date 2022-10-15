@@ -10,6 +10,7 @@ matrix *init_matrix(matrix *m, int rows, int cols, double value)
     m->rows = rows;
     m->cols = cols;
     m->data = malloc(sizeof(double) * (rows * cols));
+    
 
     for (int idx = 0; idx < (rows * cols); idx++)
     {
@@ -94,6 +95,24 @@ matrix add_col_matrix(matrix *m)
     return sum;
 }
 
+matrix add_row_matrix(matrix *m)
+{
+    int rows = m->rows;
+    int cols = m->cols;
+
+    matrix sum;
+    init_matrix(&sum, 1, cols, 0);
+    for (int i = 0; i < cols; i++)
+    {
+        double total = 0.0;
+        for (int j = 0; j < rows; j++)
+        {
+            total += get_value(m, i, j);
+        }
+        insert_value(&sum, 0, i, total);
+    }
+    return sum;
+}
 
 matrix substract_matrix(matrix *m_one, matrix *m_two)
 {
@@ -115,7 +134,7 @@ matrix substract_matrix(matrix *m_one, matrix *m_two)
 }
 
 
-matrix multiply_matrix(matrix *m_one, matrix *m_two)
+matrix dot_matrix(matrix *m_one, matrix *m_two)
 {
     int m_one_rows = m_one->rows;
     int m_one_cols = m_one->cols;
@@ -154,7 +173,7 @@ matrix multiply_matrix(matrix *m_one, matrix *m_two)
     return product_m;
 }
 
-matrix undot_matrix(matrix *m, double val)
+matrix multiply_matrix_val(matrix *m, double val)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
@@ -168,6 +187,39 @@ matrix undot_matrix(matrix *m, double val)
         for (int j = 0; j < m_cols; j++)
         {
             data = get_value(m, i, j) * val;
+            insert_value(&undot_m, i, j, data);
+        }
+        
+    }
+
+    return undot_m;
+}
+
+matrix multiply_matrix(matrix *m, matrix *m_two)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+    int m_two_rows = m_two->rows;
+    int m_two_cols = m_two->cols;
+
+    if (m_rows != m_two_rows || m_cols != m_two_cols)
+    {
+        printf("multiply_matrix: Incorrect dimensions.\n");
+        print_matrix(m);
+        print_matrix(m_two);
+        exit(1);
+    }
+    
+
+    matrix undot_m;
+    init_matrix(&undot_m, m_rows, m_cols, 0);
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        double data;
+        for (int j = 0; j < m_cols; j++)
+        {
+            data = get_value(m, i, j) * get_value(m_two, i, j);
             insert_value(&undot_m, i, j, data);
         }
         
@@ -198,6 +250,7 @@ matrix transpose_matrix(matrix *m)
     return transposed_m;
 }
 
+
 matrix *sigmoid_matrix(matrix *m)
 {
     int m_rows = m->rows;
@@ -213,6 +266,28 @@ matrix *sigmoid_matrix(matrix *m)
     }
     return m;
 }
+
+
+matrix deriv_sigmoid_matrix(matrix *m)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+
+    matrix d_sigm_m;
+    init_matrix(&d_sigm_m, m_cols, m_rows, 0);
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        for (int j = 0; j < m_cols; j++)
+        {
+            double x = get_value(m, i, j);
+            insert_value(&d_sigm_m, i, j, sigmoid_derivative(x));
+        }
+    }
+    return d_sigm_m;
+}
+
 
 void print_matrix(matrix *m)
 {

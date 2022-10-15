@@ -30,20 +30,29 @@ matrix *add_matrix(matrix *m_one, matrix *m_two);
 // sum colomns of matrix m
 matrix add_col_matrix(matrix *m);
 
+// sum rows of matrix m
+matrix add_row_matrix(matrix *m);
+
 // substract matrix m_two and matrix m_one
 matrix substract_matrix(matrix *m_one, matrix *m_two);
 
 // multiply the matrix m_one and matrix m_two
-matrix multiply_matrix(matrix *m_one, matrix *m_two);
+matrix dot_matrix(matrix *m_one, matrix *m_two);
 
 // multiply every values in the matrix by val
-matrix undot_matrix(matrix *m, double val);
+matrix multiply_matrix_val(matrix *m, double val);
+
+// multiply every values in the matrix by same position value in mat two
+matrix multiply_matrix(matrix *m, matrix *m_two);
 
 // transpose matrix m_one
 matrix transpose_matrix(matrix *m);
 
 // apply the sigmoid function to the matrix m
 matrix *sigmoid_matrix(matrix *m);
+
+// apply the derivative_sigmoid function to the matrix m
+matrix deriv_sigmoid_matrix(matrix *m);
 
 // print a matrix
 void print_matrix(matrix *m);

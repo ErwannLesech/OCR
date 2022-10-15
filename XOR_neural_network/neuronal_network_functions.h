@@ -29,4 +29,8 @@ multiple_result *upgrade_parameters(multiple_result *parameters, multiple_result
 // simulate forward_prop for a test input
 double predict_xor(multiple_result *parameters, double input_one, double input_two);
 
+double log_loss(double exp_output, double pred_output);
+
+double xor_accuracy(multiple_result *parameters, int nb_tests);
+
 void save_parameters(multiple_result *parameters, char path[]);
