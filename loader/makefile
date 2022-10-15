@@ -4,11 +4,11 @@ CFLAGS = #-Wall -Wextra
 LDFLAGS = $(sdl2-config --cflags --libs)
 LDLIBS = -lSDL2_image 
 
-SRC = load_img.c array_utils.c canny_filter.c main.c turn_img.c display_img.c 
+SRC = load_img.c utils.c canny_filter.c main.c turn_img.c display_img.c 
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
 
-mainu: ${OBJ}
+main: ${OBJ}
 
 -include ${DEP}
 
@@ -22,4 +22,4 @@ clean:
 # END
 
 #test: load_img.c load_img.h main.c array_utils.c array_utils.h display_img.c display_img.h 
-#	gcc -o test main.c load_img.c array_utils.c  
+#	gcc -o test main.c load_img.c utils.c canny_filter.c display_img.c hough_translate.c utils_hough_translate.c $(sdl2-config --cflags --libs) -lSDL2_image -lm

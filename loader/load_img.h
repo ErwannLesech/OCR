@@ -1,7 +1,7 @@
 #ifndef LOAD_IMG_H
 #define LOAD_IMG_H
-#include "img.h"
-struct img init_img(char* path);
-float** init_array(int height, int weight);
-float calculate_pixel_with_suppression(int red, int green, int blue);
+#include <SDL2/SDL.h>
+
+SDL_Surface* init_img(char* path);
+void surface_to_grayscale_and_black_white(SDL_Surface* surface);
 #endif

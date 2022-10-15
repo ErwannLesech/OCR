@@ -1,2 +1,4 @@
 #pragma once
-void filter(float** mat, int w, int h);
+#include <SDL2/SDL.h>
+void filter(SDL_Surface* sdl_surface);
+void sobel_filter(SDL_Surface* sdl_surface);

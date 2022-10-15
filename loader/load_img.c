@@ -2,79 +2,62 @@
 #include <SDL2/SDL.h>
 #include <stddef.h>
 #include "load_img.h"
-#include "array_utils.h"
 #include "display_img.h"
-#include "img.h"
+#include <err.h>
 
-Uint32 getpixel(SDL_Surface *surface, int x, int y)
+Uint32 pixels_in_black_and_white(Uint32 pixel_color, SDL_PixelFormat* format){
+     Uint8 r, g, b;
+    SDL_GetRGB(pixel_color, format, &r, &g, &b);
+    if ((r+b+g)/3 >= 127)
+    {
+        return SDL_MapRGB(format, 255, 255, 255);
+    }
+    else{
+        return SDL_MapRGB(format, 0, 0, 0);
+    }
+  
+}
+
+Uint32 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
 {
-    int bpp = surface->format->BytesPerPixel;
-    /* Here p is the address to the pixel we want to retrieve */
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+    Uint8 r, g, b;
+    SDL_GetRGB(pixel_color, format, &r, &g, &b);
+    Uint8 average = 0.3*r + 0.59*g+0.11*b;
+    r = g = b = average;
+    Uint32 color = SDL_MapRGB(format, r, g, b);
+    return color;
+    
+}
 
-switch (bpp)
+void surface_to_grayscale_and_black_white(SDL_Surface* surface)
 {
-    case 1:
-        return *p;
-        break;
-
-    case 2:
-        return *(Uint16 *)p;
-        break;
-
-    case 3:
-        if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else{
-            return p[0] | p[1] << 8 | p[2] << 16;
-            }
-        case 4:
-            return *(Uint32 *)p;
-            break;
-
-        default:
-            return 0;       /* shouldn't happen, but avoids warnings */
-      }
+    Uint32* pixels = surface->pixels;
+    int len = (surface->w)*(surface->h);
+    SDL_PixelFormat* format = surface->format;
+    SDL_LockSurface(surface);
+    for (int i = 0; i < len; i++)
+    {   
+        if (pixels[i] == NULL)
+        {
+            SDL_UnlockSurface(surface);
+            return;
+           // errx(EXIT_FAILURE, "%s", SDL_GetError());
+        }
+        
+       pixels[i]= pixel_to_grayscale(pixels[i], format);
+      // pixels[i] = pixels_in_black_and_white(pixels[i], format);
+    }
+    SDL_UnlockSurface(surface);
 }
 
-struct img init_img(char* path){
-   SDL_Surface * sdl_surface = IMG_Load(path);
-   SDL_LockSurface(sdl_surface);
-   
-   //Uint8 *q = (Uint8 *) sdl_surface -> pixels;
-   float** array = init_array(sdl_surface->h, sdl_surface->w);
-   for (int x = 0; x < sdl_surface->w; x++)
-   {
-      for (size_t y = 0; y < sdl_surface->h; y++)
-      {
-         SDL_Color rgb;
-      Uint32 data = getpixel(sdl_surface, x, y);
-      SDL_GetRGB(data, sdl_surface->format, &rgb.r, &rgb.g, &rgb.b);
-        array[y][x] = calculate_pixel_with_suppression(rgb.r, rgb.g, rgb.b);
-      }
-   }
-   //print_array(array, sdl_surface->h, sdl_surface->w);
-    //display_img(array, sdl_surface->h, sdl_surface->w);
-    SDL_UnlockSurface(sdl_surface);
-    struct img image;
-    image.array = array;
-    image.height = sdl_surface->h;
-    image.width = sdl_surface->w;
-    return image;   
+SDL_Surface* init_img(char* path){
+     SDL_Surface* surface = IMG_Load(path);
+    SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGB888, 0);
+    SDL_FreeSurface(surface);
+    //surface_to_grayscale(new_surface);
+    return new_surface;
 }
 
 
-float calculate_pixel_with_suppression(int red, int green, int blue){
-   float pixel = ( ((float)red)/255.0f + ((float)green)/255.0f + ((float)blue)/255.0f)/3;
-   if (pixel <0.3f)
-   {
-      return 0.0f;
-   }
-   if (pixel > 0.7f)
-   {
-      return 1.0f;
-   }
 
-   return pixel;
-}
 //height = hauteur width = largeur
