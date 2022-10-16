@@ -51,15 +51,7 @@ void print_sudoku(char argv[9][9])
 				printf(" ");
 			}
 			
-			/*if(argv[i][j] == '.')
-			{
-				printf("0");
-			}*/
-
-			//else
-			//{
-				printf("%c", argv[i][j]);
-			//}
+			printf("%c", argv[i][j]);
 		}
 
 		printf("\n");
