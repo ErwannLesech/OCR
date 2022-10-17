@@ -8,7 +8,7 @@
 
 const int WIN_WIDTH = 640;
 const int WIN_HEIGHT = 480;
-/*void draw(SDL_Renderer* renderer, SDL_Texture* texture)
+void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 {
      SDL_RenderCopyEx(renderer, NULL, NULL, texture,180,  NULL, SDL_FLIP_NONE);
      SDL_RenderPresent(renderer);
@@ -48,7 +48,7 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* normal, SDL_Texture* turn)
 		}
 	}	
 }
-*/
+
 
 int main(int argc, char** argv)
 {
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
         	errx(EXIT_FAILURE, "Erreur");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
-
+	/*
 	SDL_Window *win = SDL_CreateWindow("Rendering to a texture!", SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, 0);
 	SDL_Renderer *renderer = SDL_CreateRenderer(win, -1,
@@ -90,9 +90,9 @@ int main(int argc, char** argv)
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
-	return 0;
+	return 0;*/
 	
-/*	SDL_Window* window = SDL_CreateWindow("Window", 0, 0,
+	SDL_Window* window = SDL_CreateWindow("Window", 0, 0,
 			800, 800,SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	if (window == NULL)
@@ -104,34 +104,31 @@ int main(int argc, char** argv)
 	if (renderer == NULL)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 	SDL_Surface* surface= SDL_LoadBMP(argv[1]);
-
-	//SDL_SetWindowSize(window, surface->w,surface->h);
 	SDL_Texture* normal = IMG_LoadTexture(renderer,argv[1]);
 
-
-
-
 	
-	int angler = (int)(argv[2]) * M_PI / 180.0;
+	//int angler = (int)(argv[2]) * M_PI / 180.0;
 	
 	SDL_Surface* surfaceturn =rotozoomSurface(surface,(-180), 1,1);
+	int turn = SDL_SaveBMP(surfaceturn, "test.bmp");
+	SDL_Renderer* renderer2 = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Texture* normal2= IMG_LoadTexture(renderer2, "test.bmp");
+
 	
-	SDL_Texture *turn = SDL_CreateTextureFromSurface(renderer, surfaceturn);
+	
+	//SDL_Texture *turn = SDL_CreateTextureFromSurface(renderer, surfaceturn);
 	
 	SDL_FreeSurface(surface);
-
-	//event_loop(renderer,normal,turn);
+	event_loop(renderer,normal,normal2);
 
 	SDL_DestroyTexture(normal);
-	printf("a");
-
-	SDL_DestroyTexture(turn);
 	printf("a");
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-	return EXIT_SUCCESS; */   
+	return EXIT_SUCCESS; 
+	
 }
 /*
 void corrected_rotation_matrix(double angle, double x, double y,
@@ -186,7 +183,7 @@ Image rotate_image(Image *image, double angle)
     return rotated_image;
 }*/
 
-
+/*
 my $screen  = SDL::Video::set_video_mode(800, 600, 32, SDL_SWSURFACE);
 my $picture = SDL::Video::load_BMP('test.bmp');
  
@@ -195,4 +192,4 @@ my $rotated = SDL::GFX::Rotozoom::surface( $picture, 45, 0.8, SMOOTHING_ON );
 SDL::Video::blit_surface( $rotated, SDL::Rect->new(0, 0, $rotated->w, $rotated->h), 
                           $screen,  SDL::Rect->new(0, 0, 0, 0) );
  
-SDL::Video::update_rect( $screen, 0, 0, 0, 0 );
+SDL::Video::update_rect( $screen, 0, 0, 0, 0 );*/
