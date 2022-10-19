@@ -17,15 +17,12 @@ int main(int argc, char** argv)
 
 	SDL_Surface* surface= IMG_Load(argv[1]);
 
-	long angler = (long)(argv[2]) * M_PI / 180.0;
+	long angler = (long)(argv[2]);
 
-	SDL_FreeSurface(surface);
-	//SDL_LockSurface(surface);
-	SDL_Surface* surfaceturn =rotozoomSurface(surface,(-angler), 1,1);
-	//SDL_UnlockSurface(surface);
-	int turn = SDL_SaveBMP(surfaceturn, "test.bmp");
-	if (turn != 0)
-		errx(EXIT_FAILURE, "Erreur");
+	SDL_Surface* turned = NULL;
+	turned = rotozoomSurface(surface,(-angler), 1,1);
+
+	SDL_SaveBMP(turned, "test.bmp");
 
 	SDL_Quit();
 	return EXIT_SUCCESS; 
