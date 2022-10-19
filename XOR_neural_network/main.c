@@ -7,22 +7,22 @@ const unsigned int input_neurons = 2;
 const unsigned int hidden_neurons = 2;
 const unsigned int output_neurons = 1;
 
-const double learning_rate = 0.1;
-const long epochs = 1000;
+const double learning_rate = 0.001;
+const long epochs = 10000;
 
 int main()
 {
     matrix inputs;
-    init_matrix(&inputs, 4, 2, 0);
+    init_matrix(&inputs, 2, 4, 0);
+    insert_value(&inputs, 0, 2, 1);
+    insert_value(&inputs, 0, 3, 1);
     insert_value(&inputs, 1, 1, 1);
-    insert_value(&inputs, 2, 0, 1);
-    insert_value(&inputs, 3, 0, 1);
-    insert_value(&inputs, 3, 1, 1);
+    insert_value(&inputs, 1, 3, 1);
 
     matrix exp_outputs;
-    init_matrix(&exp_outputs, 4, 1, 0);
-    insert_value(&inputs, 1, 0, 1);
-    insert_value(&inputs, 2, 0, 1);
+    init_matrix(&exp_outputs, 1, 4, 0);
+    insert_value(&exp_outputs, 0, 1, 1);
+    insert_value(&exp_outputs, 0, 2, 1);
 
     multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
@@ -30,7 +30,8 @@ int main()
     multiple_result forward_prop;
     multiple_result back_prop;
 
-    for (long i = 0; i < epochs; i++)
+
+    for (long i = 0; i < epochs + 1; i++)
     {
         if (i % 100 == 0)
         {
@@ -49,29 +50,24 @@ int main()
         
         forward_prop = forward_propagation(&parameters, &inputs);
 
-        printf("for passed\n");
-
         back_prop = back_propagation(&inputs, &exp_outputs, 
         &parameters, &forward_prop);
 
-        printf("back passed\n");
-
         upgrade_parameters(&parameters, &back_prop, learning_rate);
-
-        printf("up passed\n");
     }
 
     // save_parameters(&parameters, "test.txt");
 
     xor_accuracy(&parameters, 250);
 
-    // printf("predict: %f\n", predict_xor(&parameters, 0, 1));
+    printf("predict: %f\n", predict_xor(&parameters, 1, 1));
 
     // Parameters
     matrix hw = parameters.a;
     matrix hb = parameters.b;
     matrix ow = parameters.c;
     matrix ob = parameters.d;
+
 
     // Forward prop
     matrix hidden_prop = forward_prop.a;
