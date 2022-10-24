@@ -103,10 +103,7 @@ void change_mat(SDL_Surface * sdl_surface,struct Lines lines){
 
             struct Line l = lines.lines[i];
             //printf("start:%i,%i, end:%i,%i\n", l.x_start, l.y_start, l.x_end, l.y_end);
-            if (l.x_start == 0 && l.y_start == 0 && l.x_end == 0 && l.y_end == 0 || (abs(l.x_start -l.x_end) > 10 && (abs(l.y_start -l.y_end) > 10))
-            {
-                continue;
-            }
+           
            // draw_right(sdl_surface, l);
             draw_line(sdl_surface, sdl_surface->w, sdl_surface->h, l, 1);
         }

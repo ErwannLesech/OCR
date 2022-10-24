@@ -122,7 +122,7 @@ struct Lines Hough(SDL_Surface *sdl_surface){
     free(saveSin);
     
     //print_array_i(accum_mat, 2*diagonal+1, 2*diagonal+1);
-    int pic =  (int)((double)max*0.3);
+    int pic =  (int)((double)max*0.42);
     printf("max:%i\n",max);
     struct Line *lines = malloc(2*diagonal*2*diagonal*sizeof(struct Line));
     int e = 0;
