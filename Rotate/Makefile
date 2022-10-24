@@ -11,5 +11,5 @@ DEP=$(SRC:.c=.d)
 all: main
 clean:
 	rm -rf main
-	rm -rf test.bmp
+	rm -rf test2.bmp
 

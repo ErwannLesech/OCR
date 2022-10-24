@@ -9,7 +9,7 @@
 int main(int argc, char** argv)
 {
 	if (argc != 3)
-        	errx(EXIT_FAILURE, "Erreur");
+        	errx(EXIT_FAILURE, "Il faut plus d'arguments");
 
 	SDL_Init(SDL_INIT_VIDEO);
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -17,14 +17,20 @@ int main(int argc, char** argv)
 
 	SDL_Surface* surface= IMG_Load(argv[1]);
 
-	long angler = (long)(argv[2]);
+	long int angler = strtol(argv[2], NULL, 10);
+	
+	SDL_Surface* turned;
 
-	SDL_Surface* turned = NULL;
-	turned = rotozoomSurface(surface,(-angler), 1,1);
+	turned = rotozoomSurface(surface,angler, 1,10);
+	
+	SDL_FreeSurface(surface);
 
-	SDL_SaveBMP(turned, "test.bmp");
-
+	SDL_SaveBMP(turned, "test2.bmp");
+	
+	SDL_FreeSurface(turned);
+	
 	SDL_Quit();
+	
 	return EXIT_SUCCESS; 
 	
 }
