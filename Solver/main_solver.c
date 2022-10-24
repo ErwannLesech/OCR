@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
+#include <string.h>
 #include "solver.h"
 
 char a[9][9] = 
@@ -128,10 +129,22 @@ int main(int argc, char **argv)
 	else
 	{
 		read_sudoku(argv[1]);
-		printf("a");
 		solver(a);
-		printf("b");
-		char *filename = "test_grid.result";
+		char filename[strlen((argv[1] + 8))];
+		size_t i = 0;
+		for (i = 0; i < strlen((argv[1])); i++)
+		{
+			filename[i] = argv[1][i];
+		}
+		filename[i] = '.';
+		filename[i+1] = 'r';
+		filename[i+2] = 'e';
+		filename[i+3] = 's';
+		filename[i+4] = 'u';
+		filename[i+5] = 'l';
+		filename[i+6] = 't';
+		filename[i+7] = '\0';
+
 		save_sudoku(filename);
 	}
 
