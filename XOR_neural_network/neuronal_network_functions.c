@@ -21,10 +21,18 @@ multiple_result initialization(int input_neurons,
 	matrix ow;
 	matrix ob;
 
-	init_rand_matrix(&hw, input_neurons, hidden_neurons);
-	init_rand_matrix(&hb, 1, hidden_neurons);
-	init_rand_matrix(&ow, 1, hidden_neurons);
-	init_rand_matrix(&ob, 1, output_neurons);
+	//init_rand_matrix(&hw, input_neurons, hidden_neurons);
+	init_matrix(&hw, input_neurons, hidden_neurons, 0);
+	insert_value(&hw, 0, 0, 0.4359949);
+	insert_value(&hw, 0, 1, 0.2592623);
+	insert_value(&hw, 1, 0, 0.54966248);
+	insert_value(&hw, 1, 1, 0.43532239);
+	init_matrix(&hb, hidden_neurons, 1, 0);
+	init_matrix(&ow, 1, hidden_neurons, 0);
+	insert_value(&ow, 0, 0, 0.4203678);
+	insert_value(&ow, 0, 1, 0.33033482);
+	//init_rand_matrix(&ow, 1, hidden_neurons);
+	init_matrix(&ob, 1, output_neurons, 0);
 
 	multiple_result neurons;
 	neurons.a = hw;
@@ -43,25 +51,27 @@ multiple_result forward_propagation(multiple_result *parameters,
 	matrix ow = parameters->c;
 	matrix ob = parameters->d;
 	// HIDDEN LAYER
-
 	matrix hidden_propagation;
 	hidden_propagation = dot_matrix(&hw, inputs);
-
+*
 	add_matrix(&hidden_propagation, &hb);
 	sigmoid_matrix(&hidden_propagation);
 
+	
 	// OUTPUT LAYER
 	matrix output_propagation;
 	output_propagation = dot_matrix(&ow, &hidden_propagation);
-
 	add_matrix(&hidden_propagation, &ob);
+
 	sigmoid_matrix(&output_propagation);
+	
 
 	// Return values
 
 	multiple_result results;
 	results.a = hidden_propagation;
 	results.b = output_propagation;
+
 
 	return results;
 }
@@ -77,6 +87,8 @@ multiple_result back_propagation(matrix *inputs, matrix *exp_outputs,
 	matrix dZ2;
 	dZ2 = substract_matrix(&output_prop, exp_outputs);
 
+	
+
 	matrix hidden_prop_t;
 	hidden_prop_t = transpose_matrix(&hidden_prop);
 
@@ -86,22 +98,29 @@ multiple_result back_propagation(matrix *inputs, matrix *exp_outputs,
 	matrix dB2;
 	dB2 = add_col_matrix(&dZ2);
 
+	dB2 = multiply_matrix(&dB2, (0.25));
+
 	matrix dZ1;
 
 	matrix ow_transposed;
 	ow_transposed = transpose_matrix(&ow);
 
 	dZ1 = dot_matrix(&ow_transposed, &dZ2);
-	d_sigmoid_matrix(&dZ1);
 
+	d_sigmoid_matrix(&dZ1, &hidden_prop);
+	
 	matrix inputs_t;
 	inputs_t = transpose_matrix(inputs);
 
 	matrix dW1;
 	dW1 = dot_matrix(&dZ1, &inputs_t);
 
+	
+
 	matrix dB1;
 	dB1 = add_col_matrix(&dZ1);
+
+	dB1 = multiply_matrix(&dB1, (0.25));
 
 	multiple_result back_prop;
 	back_prop.a = dW1;
@@ -260,18 +279,18 @@ void save_parameters(multiple_result *parameters, char path[])
 	int rows = hw.rows;
 	int cols = hw.cols;
 
-	fprintf(file, "hw dim: ");
+	/*fprintf(file, "hw dim: ");
 	fprintf(file, "%d rows - ", rows);
-	fprintf(file, "%d\n", cols);
+	fprintf(file, "%d\n", cols);*/
 
 	for (int i = 0; i < rows; i++)
 	{
-		fprintf(file, "[");
+		//fprintf(file, "[");
 		for (int j = 0; j < cols; j++)
 		{
-			fprintf(file, " %f ", get_value(&hw, i, j));
+			fprintf(file, "%f ", get_value(&hw, i, j));
 		}
-		fprintf(file, "]\n");
+		fprintf(file, "\n");
 	}
 
 	fprintf(file, "\n");
@@ -279,18 +298,18 @@ void save_parameters(multiple_result *parameters, char path[])
 	rows = hb.rows;
 	cols = hb.cols;
 
-	fprintf(file, "hb dim: ");
+	/*fprintf(file, "hb dim: ");
 	fprintf(file, "%d rows - ", rows);
-	fprintf(file, "%d\n", cols);
+	fprintf(file, "%d\n", cols);*/
 
 	for (int i = 0; i < rows; i++)
 	{
-		fprintf(file, "[");
+		//fprintf(file, "[");
 		for (int j = 0; j < cols; j++)
 		{
-			fprintf(file, " %f ", get_value(&hb, i, j));
+			fprintf(file, "%f ", get_value(&hb, i, j));
 		}
-		fprintf(file, "]\n");
+		fprintf(file, "\n");
 	}
 
 	fprintf(file, "\n");
@@ -298,18 +317,18 @@ void save_parameters(multiple_result *parameters, char path[])
 	rows = ow.rows;
 	cols = ow.cols;
 
-	fprintf(file, "ow dim: ");
+	/*fprintf(file, "ow dim: ");
 	fprintf(file, "%d rows - ", rows);
-	fprintf(file, "%d\n", cols);
+	fprintf(file, "%d\n", cols);*/
 
 	for (int i = 0; i < rows; i++)
 	{
-		fprintf(file, "[");
+		//fprintf(file, "[");
 		for (int j = 0; j < cols; j++)
 		{
-			fprintf(file, " %f ", get_value(&ow, i, j));
+			fprintf(file, "%f ", get_value(&ow, i, j));
 		}
-		fprintf(file, "]\n");
+		fprintf(file, "\n");
 	}
 
 	fprintf(file, "\n");
@@ -317,17 +336,78 @@ void save_parameters(multiple_result *parameters, char path[])
 	rows = ob.rows;
 	cols = ob.cols;
 
-	fprintf(file, "ob dim: ");
+	/*fprintf(file, "ob dim: ");
 	fprintf(file, "%d rows - ", rows);
-	fprintf(file, "%d\n", cols);
+	fprintf(file, "%d\n", cols);*/
 
 	for (int i = 0; i < rows; i++)
 	{
-		fprintf(file, "[");
+		//fprintf(file, "[");
 		for (int j = 0; j < cols; j++)
 		{
-			fprintf(file, " %f ", get_value(&ob, i, j));
+			fprintf(file, "%f ", get_value(&ob, i, j));
 		}
-		fprintf(file, "]\n");
+		fprintf(file, "\n");
 	}
+}
+
+multiple_result load_parameters(char path[])
+{
+	/*FILE *file = fopen(path, "r");
+
+	matrix hw;
+	matrix hb;
+	matrix ow;
+	matrix ob;	
+
+	*/multiple_result parameters;/*
+
+
+	if (NULL == file) {
+        printf("file can't be opened \n");
+    }
+ 
+	int idx = 0;
+	char c;
+	char param[50];
+
+    while (!feof(file))
+	{
+		c = fgetc(file);
+		printf("%c", c);
+
+		if (c != " " && c != "\n")
+		{
+			int j = 0;
+				switch (idx)
+				{
+				case 0:
+					while (c != " " && c != "\n")
+					{
+						c = fgetc(file);
+						param[j] = c;
+						j++;
+					}
+					break;
+
+				case 1:
+				
+					while (c != " " && c != "\n")
+					{
+						c = fgetc(file);
+						param[j] = c;
+						j++;
+					}
+					break;
+				
+				default:
+					break;
+				}		
+		}
+		idx++;
+	}
+	
+ 
+    fclose(file);*/
+	return parameters;
 }

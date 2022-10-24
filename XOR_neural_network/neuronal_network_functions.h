@@ -34,3 +34,5 @@ double log_loss(double exp_output, double pred_output);
 double xor_accuracy(multiple_result *parameters, int nb_tests);
 
 void save_parameters(multiple_result *parameters, char path[]);
+
+multiple_result load_parameters(char path[]);

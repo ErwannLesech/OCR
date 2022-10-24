@@ -7,17 +7,24 @@ const unsigned int input_neurons = 2;
 const unsigned int hidden_neurons = 2;
 const unsigned int output_neurons = 1;
 
-const double learning_rate = 0.001;
-const long epochs = 10000;
+const double learning_rate = 0.2;
+const long epochs = 1000;
 
 int main()
 {
+    /*Inputs =
+    [[0, 0, 1, 1], 
+    [0, 1, 0, 1]]*/
+
     matrix inputs;
     init_matrix(&inputs, 2, 4, 0);
     insert_value(&inputs, 0, 2, 1);
     insert_value(&inputs, 0, 3, 1);
     insert_value(&inputs, 1, 1, 1);
     insert_value(&inputs, 1, 3, 1);
+
+    /*Exp_outputs =
+    [[0], [1], [1], [0]]*/
 
     matrix exp_outputs;
     init_matrix(&exp_outputs, 1, 4, 0);
@@ -42,10 +49,10 @@ int main()
             matrix ow = parameters.c;
             matrix ob = parameters.d;
 
-            print_matrix(&hw);
+            /*print_matrix(&hw);
             print_matrix(&hb);
             print_matrix(&ow);
-            print_matrix(&ob);
+            print_matrix(&ob);*/
         }
         
         forward_prop = forward_propagation(&parameters, &inputs);
@@ -56,11 +63,13 @@ int main()
         upgrade_parameters(&parameters, &back_prop, learning_rate);
     }
 
-    // save_parameters(&parameters, "test.txt");
+    //save_parameters(&parameters, "test.txt");
 
-    xor_accuracy(&parameters, 250);
+    load_parameters("test.txt");
 
-    printf("predict: %f\n", predict_xor(&parameters, 1, 1));
+    // xor_accuracy(&parameters, 250);
+
+    // printf("predict: %f\n", predict_xor(&parameters, 1, 1));
 
     // Parameters
     matrix hw = parameters.a;
@@ -72,6 +81,8 @@ int main()
     // Forward prop
     matrix hidden_prop = forward_prop.a;
     matrix output_prop = forward_prop.b;
+
+    print_matrix(&output_prop);
 
     // Back prop
     matrix dW1 = back_prop.a;

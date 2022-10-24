@@ -52,8 +52,15 @@ matrix *insert_value(matrix *m, int rows, int cols, double val)
 
 double get_value(matrix *m, int rows, int cols)
 {
-    double value = m->data[rows * m->cols + cols];
-    return value;
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    if(rows < m_rows && cols < m_cols)
+    {
+        double value = m->data[rows * m->cols + cols];
+        return value;
+    }
+    return 0;
 }
 
 
@@ -91,6 +98,26 @@ matrix add_col_matrix(matrix *m)
             total += get_value(m, i, j);
         }
         insert_value(&sum, i, 0, total);
+    }
+    return sum;
+}
+
+matrix add_row_matrix(matrix *m)
+{
+    int rows = m->rows;
+    int cols = m->cols;
+
+    matrix sum;
+    init_matrix(&sum, 1, cols, 0);
+    
+    for (int i = 0; i < cols; i++)
+    {
+        double total = 0.0;
+        for (int j = 0; j < rows; j++)
+        {
+            total += get_value(m, j, i);
+        }
+        insert_value(&sum, 0, i, total);
     }
     return sum;
 }
@@ -215,17 +242,20 @@ matrix *sigmoid_matrix(matrix *m)
     return m;
 }
 
-matrix *d_sigmoid_matrix(matrix *m)
+matrix *d_sigmoid_matrix(matrix *m, matrix *m_two)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
+    int m_two_rows = m_two->rows;
+    int m_two_cols = m_two->cols;
 
     for (int i = 0; i < m_rows; i++)
     {
         for (int j = 0; j < m_cols; j++)
         {
-            double x = get_value(m, i, j);
-            insert_value(m, i, j, sigmoid_derivative(x));
+            double x = get_value(m_two, i, j);
+            double y = get_value(m, i, j);
+            insert_value(m, i, j, (y * sigmoid_derivative(x)));
         }
     }
     return m;

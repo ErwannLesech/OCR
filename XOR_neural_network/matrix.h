@@ -30,6 +30,9 @@ matrix *add_matrix(matrix *m_one, matrix *m_two);
 // sum colomns of matrix m
 matrix add_col_matrix(matrix *m);
 
+// sum rows of matrix m
+matrix add_row_matrix(matrix *m);
+
 // substract matrix m_two and matrix m_one
 matrix substract_matrix(matrix *m_one, matrix *m_two);
 
@@ -46,7 +49,7 @@ matrix transpose_matrix(matrix *m);
 matrix *sigmoid_matrix(matrix *m);
 
 // apply the derivative sigmoid function to the matrix m
-matrix *d_sigmoid_matrix(matrix *m);
+matrix *d_sigmoid_matrix(matrix *m, matrix *m_two);
 
 // print a matrix
 void print_matrix(matrix *m);
