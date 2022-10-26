@@ -1,6 +1,6 @@
 CC = gcc
 CPPFLAGS =  `pkg-config --cflags --libs sdl2 SDL2_image` -lSDL_gfx
-CFLAGS =  -Wall -Wextra -O3 $(shell sdl2-config --ccflags)
+CFLAGS =  -Wall -Wextra -O3 `pkg-config --cflags --libs sdl2 SDL2_image` 
 LDFLAGS = $(sdl2-config --cflags --libs) 
 LDLIBS =  -lSDL2_image
 
@@ -8,6 +8,6 @@ SRC = main.c
 OBJ = $(SRC:.c=.o)
 DEP = $(SRC:.c=.d)
 
-all: separate
+separate: ${OBJ}
 clean:
 	rm -rf separate

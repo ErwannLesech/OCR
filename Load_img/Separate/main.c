@@ -17,8 +17,8 @@ int main(int argc, char** argv)
 
 	SDL_Surface* grid = IMG_Load(argv[1]);
 
-	SDL_Surface **surfaces = separate(grid);
-	save_image(surfaces);
+	/*SDL_Surface **surfaces = separate(grid);
+	save_image(surfaces);*/
 
 	SDL_FreeSurface(grid);
 	
