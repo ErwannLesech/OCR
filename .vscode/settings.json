@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sdl_image.h": "c",
+        "array_utils.h": "c"
+    }
+}
