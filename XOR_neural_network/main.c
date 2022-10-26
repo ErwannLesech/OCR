@@ -7,29 +7,34 @@ const unsigned int input_neurons = 2;
 const unsigned int hidden_neurons = 2;
 const unsigned int output_neurons = 1;
 
-const double learning_rate = 0.2;
-const long epochs = 1000;
+const double learning_rate = 0.9;
+const long epochs = 1000000;
 
 int main()
 {
     /*Inputs =
-    [[0, 0, 1, 1], 
-    [0, 1, 0, 1]]*/
+    [[1, 0, 1, 0], 
+    [0, 1, 1, 0]]*/
 
     matrix inputs;
-    init_matrix(&inputs, 2, 4, 0);
+    /*init_matrix(&inputs, 2, 4, 0);
     insert_value(&inputs, 0, 2, 1);
     insert_value(&inputs, 0, 3, 1);
     insert_value(&inputs, 1, 1, 1);
-    insert_value(&inputs, 1, 3, 1);
+    insert_value(&inputs, 1, 3, 1);*/
+    init_matrix(&inputs, 4, 2, 0);
+    insert_value(&inputs, 0, 1, 1);
+    insert_value(&inputs, 1, 0, 1);
+    insert_value(&inputs, 2, 1, 1);
+    insert_value(&inputs, 2, 0, 1);
 
     /*Exp_outputs =
-    [[0], [1], [1], [0]]*/
+    [[1], [1], [0], [0]]*/
 
     matrix exp_outputs;
-    init_matrix(&exp_outputs, 1, 4, 0);
-    insert_value(&exp_outputs, 0, 1, 1);
-    insert_value(&exp_outputs, 0, 2, 1);
+    init_matrix(&exp_outputs, 4, 1, 0);
+    insert_value(&exp_outputs, 0, 0, 1);
+    insert_value(&exp_outputs, 1, 0, 1);
 
     multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
@@ -39,37 +44,43 @@ int main()
 
 
     for (long i = 0; i < epochs + 1; i++)
-    {
-        if (i % 100 == 0)
-        {
-            printf("iter: %li\n", i);
+    {        
+        forward_prop = forward_propagation(&parameters, &inputs);
 
-            matrix hw = parameters.a;
+        back_prop = back_propagation(&exp_outputs, 
+        &parameters, &forward_prop);
+
+        upgrade_parameters(inputs, &parameters, &forward_prop, &back_prop,
+        learning_rate);
+
+        if (i % 1 == 0)
+        {
+            /*matrix hw = parameters.a;
             matrix hb = parameters.b;
             matrix ow = parameters.c;
-            matrix ob = parameters.d;
+            matrix ob = parameters.d;*/
+
+            /*matrix output_prop = forward_prop.b;
+            print_matrix(&output_prop);*/
 
             /*print_matrix(&hw);
             print_matrix(&hb);
             print_matrix(&ow);
             print_matrix(&ob);*/
         }
-        
-        forward_prop = forward_propagation(&parameters, &inputs);
-
-        back_prop = back_propagation(&inputs, &exp_outputs, 
-        &parameters, &forward_prop);
-
-        upgrade_parameters(&parameters, &back_prop, learning_rate);
     }
 
-    //save_parameters(&parameters, "test.txt");
+    save_parameters(&parameters, "test.txt");
 
-    load_parameters("test.txt");
+    // load_parameters("test.txt");
 
-    // xor_accuracy(&parameters, 250);
+    //xor_accuracy(&parameters, 10);
 
-    // printf("predict: %f\n", predict_xor(&parameters, 1, 1));
+    /*matrix test;
+    init_matrix(&test, 1, 2, 0);
+    insert_value(&test, 0, 0, 1);
+    insert_value(&test, 0, 1, 0);
+    predict_xor(&parameters, test);*/
 
     // Parameters
     matrix hw = parameters.a;

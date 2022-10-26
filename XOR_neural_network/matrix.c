@@ -72,14 +72,14 @@ matrix *add_matrix(matrix *m_one, matrix *m_two)
     double sum = 0;
 
     for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
         {
-            for (int j = 0; j < cols; j++)
-            {
-                sum = get_value(m_one, i, j) + get_value(m_two, i, j);
-                insert_value(m_one, i, j, sum);
-            }
+            sum = get_value(m_one, i, j) + get_value(m_two, i, j);
+            insert_value(m_one, i, j, sum);
         }
-        return m_one;
+    }
+    return m_one;
 }
 
 matrix add_col_matrix(matrix *m)
