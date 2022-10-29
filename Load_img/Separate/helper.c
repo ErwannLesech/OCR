@@ -1,7 +1,8 @@
 #include "helper.h"
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-#include "SDL2/SDL_surface.h"
+//#include "SDL2/SDL_surface.h"
+#include "SDL2/SDL_endian.h"
 
 
 Uint32 GetPixel(SDL_Surface *surface, int x, int y)

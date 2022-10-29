@@ -10,4 +10,6 @@ DEP = $(SRC:.c=.d)
 
 separate: ${OBJ}
 clean:
+	${RM} ${OBJ}
+	${RM} ${DEP}
 	rm -rf separate
