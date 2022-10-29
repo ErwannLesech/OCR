@@ -13,3 +13,4 @@ clean:
 	${RM} ${OBJ}
 	${RM} ${DEP}
 	rm -rf separate
+	rm -rf *.bmp
