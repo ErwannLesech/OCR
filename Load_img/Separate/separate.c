@@ -1,10 +1,9 @@
 #include <SDL2/SDL.h>
 #include "SDL2/SDL_image.h"
-//#include "SDL2/SDL_surface.h"
 #include "separate.h"
-//#include "helper.h"
-#include "SDL2/SDL_endian.h"
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 
 Uint32 GetPixel(SDL_Surface *surface, int x, int y)
@@ -69,7 +68,7 @@ int IsPixelInImage(SDL_Surface *surface, int x, int y)
 
 
 
-SDL_Surface** separate(SDL_Surface* grid)//int x1, int y1, int x2, int y2)
+SDL_Surface** separate(SDL_Surface* grid)
 {
 	if(grid == NULL)
 	{
@@ -118,33 +117,13 @@ void save_image(SDL_Surface** surfaces)
 	char name[81][7];
 	for (int i = 0; i < 81; i++)
 	{
-		name[i][0] = (char)(i/10);
-		name[i][1] = (char)(i%10);
+		name[i][0] = (i/10) + '0';
+		name[i][1] = (i%10) + '0';
 		name[i][2] = '.';
 		name[i][3] = 'b';
 		name[i][4] = 'm';
 		name[i][5] = 'p';
-		name[i][6] = '\0';	
-	}
-
-	for (int i = 0; i < 81; i++)
-	{
-		/*char name[86];
-		int temp = i;
-		int index = 0;
-		while(temp != 0)
-		{
-			name[index] = (char)temp%10;
-			temp /= 10;
-			index++;
-		}
-		
-		name[index] = '.';
-		name[index] = 'b';
-		name[index] = 'm';
-		name[index] = 'p';
-		name[index] = '\0';*/
-
+		name[i][6] = '\0';
 		SDL_SaveBMP(surfaces[i], name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}

@@ -1,5 +1,5 @@
 CC = gcc
-CPPFLAGS =  `pkg-config --cflags --libs sdl2 SDL2_image` -lSDL_gfx
+CPPFLAGS =  `pkg-config --cflags --libs sdl2 SDL2_image`
 CFLAGS =  -Wall -Wextra -O3 `pkg-config --cflags --libs sdl2 SDL2_image` 
 LDFLAGS = $(sdl2-config --cflags --libs) 
 LDLIBS =  -lSDL2_image
