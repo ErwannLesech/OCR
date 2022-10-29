@@ -1,16 +1,48 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "matrix.h"
 #include "neuronal_network_functions.h"
+#include "main.h"
+
 
 const unsigned int input_neurons = 2;
 const unsigned int hidden_neurons = 2;
 const unsigned int output_neurons = 1;
 
-const double learning_rate = 0.9;
-const long epochs = 1000000;
+double learning_rate = 0.9;
+long epochs = 1000000;
 
-int main()
+void train_network(long epochs, double lr);
+void predict();
+
+int main_xor(int argc, char *argv[])
+{
+    if (argc < 3)
+    {
+        printf("main_xor: Argv missing");
+        return EXIT_FAILURE;
+    }
+    if (strcmp(argv[2], "-train") == 0)
+    {
+        printf("main_xor: train xor network - 1M epochs - 0.9 learning rate.\n");
+        train_network(epochs, learning_rate);
+        
+    }
+    else if (strcmp(argv[2], "-predict") == 0)
+    {
+        printf("main_xor: predict.\n");
+        predict();
+    }
+    else
+    {
+        printf("main_xor: incorrect argv. -help for help.\n");
+    }
+
+    return EXIT_SUCCESS;
+}
+
+void train_network(long epochs, double lr)
 {
     /*Inputs =
     [[1, 0, 1, 0], 
@@ -115,6 +147,10 @@ int main()
     free_matrix(&dB1);
     free_matrix(&dW2);
     free_matrix(&dB2);
+}
 
-    return EXIT_SUCCESS;
+
+void predict()
+{
+    printf("predict\n");
 }

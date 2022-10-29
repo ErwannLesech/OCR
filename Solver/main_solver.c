@@ -119,22 +119,51 @@ void save_sudoku(char *filename)
 }
 
 
-int main(int argc, char **argv)
+int main_solver(int argc, char **argv)
 {
-	if(argc != 2)
+	if(argc < 3)
 	{
 		errx(EXIT_FAILURE, "%s", "A valid sudoku is needed");
 	}
-
-	else
+	else if (strcmp(argv[2], "-solveAndPrint") == 0)
 	{
-		read_sudoku(argv[1]);
+		printf("main_solver: solve %s and print result.\n", argv[2]);
+
+		read_sudoku(argv[3]);
+		printf("main_solver: Grid before solver\n");
+		print_sudoku();
 		solver(a);
-		char filename[strlen((argv[1] + 8))];
+		char filename[strlen((argv[3] + 8))];
 		size_t i = 0;
-		for (i = 0; i < strlen((argv[1])); i++)
+		for (i = 0; i < strlen((argv[3])); i++)
 		{
-			filename[i] = argv[1][i];
+			filename[i] = argv[3][i];
+		}
+		filename[i] = '.';
+		filename[i+1] = 'r';
+		filename[i+2] = 'e';
+		filename[i+3] = 's';
+		filename[i+4] = 'u';
+		filename[i+5] = 'l';
+		filename[i+6] = 't';
+		filename[i+7] = '\0';
+
+		save_sudoku(filename);
+		printf("main_solver: Grid solved\n");
+		print_sudoku();
+	}
+	
+	else if (strcmp(argv[2], "-solve") == 0)
+	{
+		printf("main_solver: solve %s.\n", argv[2]);
+
+		read_sudoku(argv[3]);
+		solver(a);
+		char filename[strlen((argv[3] + 8))];
+		size_t i = 0;
+		for (i = 0; i < strlen((argv[3])); i++)
+		{
+			filename[i] = argv[3][i];
 		}
 		filename[i] = '.';
 		filename[i+1] = 'r';
@@ -147,6 +176,32 @@ int main(int argc, char **argv)
 
 		save_sudoku(filename);
 	}
+	else if (strcmp(argv[2], "-print") == 0)
+	{
+		printf("main_solver: print %s solved.\n", argv[2]);
+
+		char filename[strlen((argv[3] + 8))];
+		size_t i = 0;
+		for (i = 0; i < strlen((argv[3])); i++)
+		{
+			filename[i] = argv[3][i];
+		}
+		filename[i] = '.';
+		filename[i+1] = 'r';
+		filename[i+2] = 'e';
+		filename[i+3] = 's';
+		filename[i+4] = 'u';
+		filename[i+5] = 'l';
+		filename[i+6] = 't';
+		filename[i+7] = '\0';
+		read_sudoku(filename);
+		print_sudoku();
+	}
+	else
+	{
+		printf("main_solver: incorrect argv. -help for help.\n");
+	}
+	
 
 	return EXIT_SUCCESS;
 }
