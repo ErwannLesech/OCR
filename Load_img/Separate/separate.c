@@ -111,6 +111,59 @@ SDL_Surface** separate(SDL_Surface* grid)
 	return surfaces;
 }
 
+/*SDL_Surface* Resize(SDL_Surface* gridCase){
+    	if(gridCase == NULL){
+        	return NULL;
+    	}
+    	int wLen = 28;
+    	int ratio = gridCase->w % wLen;
+	SDL_Surface* result = SDL_CreateRGBSurface(0,wLen,wLen,32,0,0,0,0);
+
+
+    float ratio = gridCase->w / wLen;
+    SDL_Surface* result = SDL_CreateRGBSurface(0,wLen,wLen,32,0,0,0,0);
+    for(int y = 0; y < wLen; y++){
+        for(int x = 0; x < wLen; x++){
+            int startX = x * ratio;
+            int startY = y * ratio;
+            int cpt = 0;
+            for (int y1 = 0; y1 < ratio; y1++){
+                for (int x1 = 0; x1 < ratio; x1++){
+                    if(IsPixelInImage(gridCase, startX, startY))
+                        cpt += GetPixel(gridCase, startX+x1,
+                                    startY+y1) == 0x00000000;
+                }
+            }
+            int limit = (int)(ratio * ratio) / 2;
+            SetPixel(result, x, y, cpt > limit ? 0x00000000 : 0xFFFFFFFF);
+        }
+    }
+    for (int i = 0; i < wLen; i++){
+        for (int j = 0; j < wLen; j++){
+            if (GetPixel(result, i, j) == 0x00000000){
+                int cpt = 0;
+                if(i != 0){
+                    cpt += GetPixel(result, i-1, j) == 0x00000000;
+                }
+                if(!cpt && j != 0){
+                    cpt += GetPixel(result, i, j-1) == 0x00000000;
+                }
+                if(!cpt && i != wLen-1){
+                    cpt += GetPixel(result, i+1, j) == 0x00000000;
+                }
+                if(!cpt && j != wLen-1){
+                    cpt += GetPixel(result, i, j+1) == 0x00000000;
+                }
+                if(!cpt){
+                    SetPixel(result, i, j, 0xFFFFFFFF);
+                }
+            }
+
+        }
+    }
+    return result;
+}*/
+
 
 void save_image(SDL_Surface** surfaces)
 {
@@ -124,6 +177,7 @@ void save_image(SDL_Surface** surfaces)
 		name[i][4] = 'm';
 		name[i][5] = 'p';
 		name[i][6] = '\0';
+		//surfaces[i]  = Resize(surfaces[i]);
 		SDL_SaveBMP(surfaces[i], name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}
