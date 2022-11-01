@@ -16,7 +16,7 @@ long epochs = 1000000;
 void train_network(long epochs, double lr);
 void predict();
 
-int main_xor(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     if (argc < 3)
     {
@@ -25,14 +25,22 @@ int main_xor(int argc, char *argv[])
     }
     if (strcmp(argv[2], "-train") == 0)
     {
-        printf("main_xor: train xor network - 1M epochs - 0.9 learning rate.\n");
-        train_network(epochs, learning_rate);
-        
+        if (argc > 3)
+        {
+            printf("main_xor: train xor network - 1M epochs - 0.9 learning rate.\n");
+            train_network(epochs, learning_rate);
+        }
+        else    
+        {
+            printf("main_xor: train xor network - 10000 epochs - 0.1 learning rate.\n");
+            train_network(10000, 0.1);    
+            
+        }
     }
-    else if (strcmp(argv[2], "-predict") == 0)
+    else if (strcmp(argv[2], "-weights") == 0)
     {
-        printf("main_xor: predict.\n");
-        predict();
+        printf("main_xor: load_weights.\n\n");
+        load_weights("weights.txt");
     }
     else
     {
@@ -49,11 +57,6 @@ void train_network(long epochs, double lr)
     [0, 1, 1, 0]]*/
 
     matrix inputs;
-    /*init_matrix(&inputs, 2, 4, 0);
-    insert_value(&inputs, 0, 2, 1);
-    insert_value(&inputs, 0, 3, 1);
-    insert_value(&inputs, 1, 1, 1);
-    insert_value(&inputs, 1, 3, 1);*/
     init_matrix(&inputs, 4, 2, 0);
     insert_value(&inputs, 0, 1, 1);
     insert_value(&inputs, 1, 0, 1);
@@ -102,25 +105,15 @@ void train_network(long epochs, double lr)
         }
     }
 
-    save_parameters(&parameters, "test.txt");
-
-    // load_parameters("test.txt");
-
-    //xor_accuracy(&parameters, 10);
-
-    /*matrix test;
-    init_matrix(&test, 1, 2, 0);
-    insert_value(&test, 0, 0, 1);
-    insert_value(&test, 0, 1, 0);
-    predict_xor(&parameters, test);*/
-
     // Parameters
     matrix hw = parameters.a;
     matrix hb = parameters.b;
     matrix ow = parameters.c;
     matrix ob = parameters.d;
 
+    save_parameters(&parameters, "weights.txt");
 
+    // load_parameters("test.txt");
     // Forward prop
     matrix hidden_prop = forward_prop.a;
     matrix output_prop = forward_prop.b;
@@ -150,7 +143,11 @@ void train_network(long epochs, double lr)
 }
 
 
-void predict()
+void load_weights(char *filename)
 {
-    printf("predict\n");
+    multiple_result parameters;
+
+    parameters = load_parameters(filename);
+
+    printf("\n");
 }

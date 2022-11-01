@@ -2,14 +2,14 @@ CC := gcc
 BUILD := build
 TARGET := main
 
-CPPFLAGS = -MMD
+CPPFLAGS = -MMD `pkg-config --cflags --libs sdl` -lSDL_gfx -lSDL_image
 CFLAGS = 
 LDFLAGS :=
-LDLIBS := -lm
+LDLIBS := -lm `pkg-config --libs sdl`
 
 RELEASE := 1
 ifneq ($(RELEASE), 0)
-	CFLAGS += -Wall -Wextra
+	CFLAGS += -Wall -Wextra -O3 `pkg-config --cflags --libs sdl`
 else
 	CFLAGS += -g -O0 -fsanitize=address,undefined
 	LDFLAGS += -fsanitize=address,undefined

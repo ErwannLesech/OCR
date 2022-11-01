@@ -29,10 +29,6 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters, 
 // simulate forward_prop for a test input
 double predict_xor(multiple_result *parameters, matrix inputs);
 
-double log_loss(double exp_output, double pred_output);
-
-double xor_accuracy(multiple_result *parameters, int nb_tests);
-
 void save_parameters(multiple_result *parameters, char path[]);
 
 multiple_result load_parameters(char path[]);
