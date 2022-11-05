@@ -6,18 +6,18 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_rotozoom.h>
 
-int main(int argc, char** argv)
+int main_rotate(int argc, char** argv)
 {
-	if (argc != 3)
-        	errx(EXIT_FAILURE, "Il faut plus d'arguments");
+	if (argc != 4)
+        	errx(EXIT_FAILURE, "Not enougth arguments");
 
 	SDL_Init(SDL_INIT_VIDEO);
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-	SDL_Surface* surface= IMG_Load(argv[1]);
+	SDL_Surface* surface= IMG_Load(argv[2]);
 
-	long int angler = strtol(argv[2], NULL, 10);
+	long int angler = strtol(argv[3], NULL, 10);
 	
 	SDL_Surface* turned;
 

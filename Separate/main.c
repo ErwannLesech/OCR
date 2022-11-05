@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv)
 {
-	if (argc != 2)
+	if (argc != 3)
 	{
 		errx(EXIT_FAILURE, "An image is needed");
 	}
@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-	SDL_Surface* grid = IMG_Load(argv[1]);
+	SDL_Surface* grid = IMG_Load(argv[2]);
 
 	SDL_Surface **surfaces = separate(grid);
 	save_image(surfaces);
