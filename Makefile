@@ -2,10 +2,10 @@ CC := gcc
 BUILD := build
 TARGET := main
 
-CPPFLAGS = -MMD `pkg-config --cflags --libs sdl sdl2 SDL2_image` -lSDL_gfx -lSDL_image 
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags --libs sdl2 SDL2_image` 
+CPPFLAGS = -MMD `pkg-config --cflags --libs sdl` -lSDL_gfx -lSDL_image 
+CFLAGS =
 LDFLAGS := $(sdl2-config --cflags --libs) 
-LDLIBS := -lm `pkg-config --libs sdl` -lSDL2_image
+LDLIBS := -lm `pkg-config --libs sdl`
 
 RELEASE := 1
 ifneq ($(RELEASE), 0)
