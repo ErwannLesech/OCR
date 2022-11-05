@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include "Rotate/main.h"
 #include "XOR_neural_network/main.h"
 #include "Solver/main.h"
 
@@ -20,6 +20,11 @@ int main(int argc, char *argv[])
     {
         main_solver(argc, argv);
     }
+    else if (strcmp(argv[1], "-rotate") == 0)
+    {
+        main_rotate(argc, argv);
+    }
+
     else if (strcmp(argv[1], "-help") == 0)
     {
         printf("\n-xor: xor gate neural network\n");

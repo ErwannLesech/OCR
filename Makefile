@@ -3,7 +3,7 @@ BUILD := build
 TARGET := main
 
 CPPFLAGS = -MMD `pkg-config --cflags --libs sdl` -lSDL_gfx -lSDL_image
-CFLAGS = 
+CFLAGS =  -Wall -Wextra -O3 `pkg-config --cflags --libs sdl`
 LDFLAGS :=
 LDLIBS := -lm `pkg-config --libs sdl`
 
@@ -26,7 +26,8 @@ $(shell mkdir -p $(SRCDIRS:%=$(BUILD)/%))
 all: $(TARGET)
 
 $(TARGET): $(OFILES)
-	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)  $(CPPFLAGS)
+
 
 
 $(BUILD)/%.o: %.c
