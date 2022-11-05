@@ -4,12 +4,13 @@
 #include "Rotate/main.h"
 #include "XOR_neural_network/main.h"
 #include "Solver/main.h"
+#include "Load_img/main.h"
 
 int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        printf("main: Argv missing");
+        printf("main: Argv missing\n");
         return EXIT_FAILURE;
     }
     if (strcmp(argv[1], "-xor") == 0)
@@ -24,7 +25,10 @@ int main(int argc, char *argv[])
     {
         main_rotate(argc, argv);
     }
-
+    else if(strcmp(argv[1], "-load_img") == 0)
+    {
+        main_load(argc, argv);
+    }
     else if (strcmp(argv[1], "-help") == 0)
     {
         printf("\n-xor: xor gate neural network\n");
