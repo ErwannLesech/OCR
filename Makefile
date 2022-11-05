@@ -38,6 +38,7 @@ clean:
 	rm -rf $(BUILD) $(TARGET)
 	rm -rf test.txt
 	rm -rf ./Solver/test_grid_01.result
+	rm -rf *.bmp
 
 .PHONY: all clean
 
