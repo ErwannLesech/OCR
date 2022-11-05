@@ -24,11 +24,12 @@ int main(int argc, char *argv[])
     {
         printf("\n-xor: xor gate neural network\n");
         printf("    -train: train the network\n");
-        printf("    -predict: predict after training an input\n\n");
+        printf("    -weights: load and print weights of the trained network\n\n");
+        printf("    -predict @arg1 @arg2: predict after training with input 1,2\n\n");
         printf("-solver: sudoku solver\n");
-        printf("    -solve @arg: solve a sudoku.\n");
-        printf("    -print: print a sudoku solved.\n");
-        printf("    -printAndSolve: Solve a sudoku and print it.\n");
+        printf("    -solve @arg: solve a sudoku\n");
+        printf("    -print: print a sudoku solved\n");
+        printf("    -printAndSolve: Solve a sudoku and print it\n");
     }
     else
     {

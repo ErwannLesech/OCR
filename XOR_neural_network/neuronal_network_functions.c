@@ -143,7 +143,7 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	return parameters;
 }
 
-double predict_xor(multiple_result *parameters, matrix inputs)
+double predict_xor(multiple_result *parameters, matrix inputs, int inputA, int inputB)
 {
 	matrix hw = parameters->a;
 	matrix hb = parameters->b;
@@ -162,11 +162,29 @@ double predict_xor(multiple_result *parameters, matrix inputs)
 	add_matrix(&output_propagation, &ob);
 
 	sigmoid_matrix(&output_propagation);
-
-	print_matrix(&output_propagation);
-
-	// Return values
-	double result = get_value(&output_propagation, 0, 0);
+	
+	double result;
+	// print values
+	if(inputA == 0 && inputB == 0)
+	{
+		result = get_value(&output_propagation, 2, 0);
+		printf("Input [0, 0] = %i\n", (int)round(result));
+	}
+	else if (inputA == 1 && inputB == 1)
+	{
+		result = get_value(&output_propagation, 3, 0);
+		printf("Input [1, 1] = %i\n", (int)round(result));
+	}
+	else if (inputA == 1 && inputB == 0)
+	{
+		result = get_value(&output_propagation, 0, 0);
+		printf("Input [1, 0] = %i\n", (int)round(result));
+	}
+	else if (inputA == 0 && inputB == 1)
+	{
+		result = get_value(&output_propagation, 1, 0);
+		printf("Input [0, 1] = %i\n", (int)round(result));
+	}
 
 	free_matrix(&inputs);
 	free_matrix(&hidden_propagation);
@@ -358,14 +376,6 @@ multiple_result load_parameters(char path[])
         }
 	}
     fclose(input_file);
-
-    print_matrix(&hw);
-	printf("\n");
-    print_matrix(&hb);
-	printf("\n");
-    print_matrix(&ow);
-    printf("\n");
-	print_matrix(&ob);
 
 	parameters.a = hw;
 	parameters.b = hb;

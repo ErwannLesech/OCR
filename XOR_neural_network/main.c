@@ -14,7 +14,8 @@ double learning_rate = 0.9;
 long epochs = 1000000;
 
 void train_network(long epochs, double lr);
-void predict();
+void load_weights(char *filename);
+void predict(char *a, char *b);
 
 int main(int argc, char *argv[])
 {
@@ -34,13 +35,17 @@ int main(int argc, char *argv[])
         {
             printf("main_xor: train xor network - 10000 epochs - 0.1 learning rate.\n");
             train_network(10000, 0.1);    
-            
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
     {
         printf("main_xor: load_weights.\n\n");
         load_weights("weights.txt");
+    }
+    else if (strcmp(argv[2], "-predict") == 0)
+    {
+        printf("main_xor: predict.\n\n");
+        predict(argv[3], argv[4]);
     }
     else
     {
@@ -88,20 +93,22 @@ void train_network(long epochs, double lr)
         upgrade_parameters(inputs, &parameters, &forward_prop, &back_prop,
         learning_rate);
 
-        if (i % 1 == 0)
+        if (i % (epochs / 10) == 0)
         {
-            /*matrix hw = parameters.a;
+            /*
+            matrix hw = parameters.a;
             matrix hb = parameters.b;
             matrix ow = parameters.c;
-            matrix ob = parameters.d;*/
-
-            /*matrix output_prop = forward_prop.b;
-            print_matrix(&output_prop);*/
-
-            /*print_matrix(&hw);
+            matrix ob = parameters.d;
+            
+            print_matrix(&hw);
             print_matrix(&hb);
             print_matrix(&ow);
             print_matrix(&ob);*/
+
+            matrix output_prop = forward_prop.b;
+            printf("iteration : %li\n", i);
+            print_matrix(&output_prop);
         }
     }
 
@@ -113,12 +120,8 @@ void train_network(long epochs, double lr)
 
     save_parameters(&parameters, "weights.txt");
 
-    // load_parameters("test.txt");
-    // Forward prop
     matrix hidden_prop = forward_prop.a;
     matrix output_prop = forward_prop.b;
-
-    print_matrix(&output_prop);
 
     // Back prop
     matrix dW1 = back_prop.a;
@@ -148,6 +151,33 @@ void load_weights(char *filename)
     multiple_result parameters;
 
     parameters = load_parameters(filename);
+    matrix hw = parameters.a;
+	matrix hb = parameters.b;
+	matrix ow = parameters.c;
+	matrix ob = parameters.d;
 
+    print_matrix(&hw);
+	printf("\n");
+    print_matrix(&hb);
+	printf("\n");
+    print_matrix(&ow);
     printf("\n");
+	print_matrix(&ob);
+    printf("\n");
+}
+
+void predict(char *a, char *b)
+{
+    multiple_result parameters;
+
+    parameters = load_parameters("weights.txt");
+
+    matrix inputs_test;
+    init_matrix(&inputs_test, 4, 2, 0);
+    insert_value(&inputs_test, 0, 1, 1);
+    insert_value(&inputs_test, 1, 0, 1);
+    insert_value(&inputs_test, 2, 1, 1);
+    insert_value(&inputs_test, 2, 0, 1);
+
+    predict_xor(&parameters, inputs_test, (int)*a - 48, (int)*b - 48);
 }
