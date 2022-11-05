@@ -39,6 +39,7 @@ clean:
 	rm -rf test.txt
 	rm -rf ./Solver/test_grid_01.result
 	rm -rf *.bmp
+	rm -rf weights.txt
 
 .PHONY: all clean
 
