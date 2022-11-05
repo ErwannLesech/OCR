@@ -1,5 +1,7 @@
-#include <SDL2/SDL.h>
-#include "SDL2/SDL_image.h"
+#pragma once
+
+#include <SDL/SDL.h>
+#include "SDL/SDL_image.h"
 
 
 SDL_Surface** separate(SDL_Surface* grid);

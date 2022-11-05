@@ -21,7 +21,7 @@ int main_rotate(int argc, char** argv)
 	
 	SDL_Surface* turned;
 
-	turned = rotozoomSurface(surface,angler, 1,10);
+	turned = rotozoomSurface(surface, -angler, 1,10);
 	
 	SDL_FreeSurface(surface);
 
