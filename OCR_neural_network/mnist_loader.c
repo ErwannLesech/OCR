@@ -16,12 +16,12 @@ int main(void)
     printf("label: %d\n", test_label[0]);*/
 
     // save image of first data in test dataset as .pgm file
-    for (size_t i = 0; i < 1000; i++)
+    for (size_t i = 0; i < 100; i++)
     {
         save_mnist_pgm(train_image, i, train_label[i], 0);
     }
 
-    for (size_t j = 0; j < 1000; j++)
+    for (size_t j = 0; j < 20; j++)
     {
         save_mnist_pgm(test_image, j, test_label[j], 1);
     }
