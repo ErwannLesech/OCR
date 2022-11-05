@@ -17,7 +17,7 @@ void train_network(long epochs, double lr);
 void load_weights(char *filename);
 void predict(char *a, char *b);
 
-int main(int argc, char *argv[])
+int main_xor(int argc, char *argv[])
 {
     if (argc < 3)
     {
