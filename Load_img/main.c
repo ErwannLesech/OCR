@@ -10,21 +10,21 @@
     // Load image
     SDL_Surface* img = init_img(argv[2]);
     // Convert to grayscale
-    if (argv[3] == "gray") {
+   if (strcmp(argv[3],"gray")==0) {
       surface_to_grayscale_and_black_white(img);
       display_img(img);
     }
-    else if (argv[3] == "filter")
+    else if (strcmp(argv[3],"filter")==0)
     {
       surface_to_grayscale_and_black_white(img);
       sobel_filter(img);
       display_img(img);
     }
-    else if (argv[3] == "hough")
+    else if (strcmp(argv[3],"hough") == 0)
     {
       surface_to_grayscale_and_black_white(img);
       sobel_filter(img);
-      display_img(img);
       change_mat(img,Hough(img));
+       display_img(img);
     }  
  }
