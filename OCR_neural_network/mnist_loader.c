@@ -1,34 +1,37 @@
 #include "mnist.h"
 
 int main_mnist(int argc, char *argv[])
-{
-    // call to store mnist in array
+{   
     load_mnist();
-
-    // print pixels of first data in test dataset
-    /*int i;
-    for (i=0; i<784; i++) {
-        printf("%1.1f ", test_image[0][i]);
-        if ((i+1) % 28 == 0) putchar('\n');
-    }
-
-    // print first label in test dataset
-    printf("label: %d\n", test_label[0]);*/
-
-    // save image of first data in test dataset as .pgm file
-    for (size_t i = 0; i < 100; i++)
+    if (argc < 3)
     {
-        save_mnist_pgm(train_image, i, train_label[i], 0);
-    }
+        for (size_t i = 0; i < 100; i++)
+        {
+            save_mnist_pgm(train_image, i, train_label[i], 0);
+        }
 
-    for (size_t j = 0; j < 20; j++)
+        for (size_t j = 0; j < 20; j++)
+        {
+            save_mnist_pgm(test_image, j, test_label[j], 1);
+        }
+    }
+    else
     {
-        save_mnist_pgm(test_image, j, test_label[j], 1);
+        if (strcmp(argv[2], "-train") == 0)
+        {
+            for (size_t i = 0; i < 100; i++)
+            {
+                save_mnist_pgm(train_image, i, train_label[i], 0);
+            }
+        }
+        else    
+        {
+            for (size_t j = 0; j < 20; j++)
+            {
+                save_mnist_pgm(test_image, j, test_label[j], 1);
+            }
+        }
     }
-
-    // show all pixels and labels in test dataset
-    /*print_mnist_pixel(test_image, NUM_TEST);
-    print_mnist_label(test_label, NUM_TEST);*/
 
     return 0;
 }

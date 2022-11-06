@@ -57,6 +57,8 @@ int main(int argc, char *argv[])
         printf("    -print: print a sudoku solved\n");
         printf("    -printAndSolve: Solve a sudoku and print it\n");
         printf("-dataset: extract dataset for neural network\n");
+        printf("    -train: extract train dataset for neural network\n");
+        printf("    -test: extract test dataset for neural network\n");
     }
     else
     {

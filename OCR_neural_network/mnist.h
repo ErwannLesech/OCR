@@ -63,7 +63,7 @@ void FlipLong(unsigned char * ptr)
 void read_mnist_char(char *file_path, int num_data, int len_info, 
     int arr_n, unsigned char data_char[][arr_n], int info_arr[])
 {
-    int i, j, k, fd;
+    int i, fd;
     unsigned char *ptr;
 
     if ((fd = open(file_path, O_RDONLY)) == -1) {
@@ -127,33 +127,6 @@ void load_mnist()
     label_char2int(NUM_TEST, test_label_char, test_label);
 }
 
-
-void print_mnist_pixel(double data_image[][SIZE], int num_data)
-{
-    int i, j;
-    for (i=0; i<num_data; i++) {
-        printf("image %d/%d\n", i+1, num_data);
-        for (j=0; j<SIZE; j++) {
-            printf("%1.1f ", data_image[i][j]);
-            if ((j+1) % 28 == 0) putchar('\n');
-        }
-        putchar('\n');
-    }
-}
-
-
-void print_mnist_label(int data_label[], int num_data)
-{
-    int i;
-    if (num_data == NUM_TRAIN)
-        for (i=0; i<num_data; i++)
-            printf("train_label[%d]: %d\n", i, train_label[i]);
-    else
-        for (i=0; i<num_data; i++)
-            printf("test_label[%d]: %d\n", i, test_label[i]);
-}
-
-
 // name: path for saving image (ex: "./images/sample.pgm")
 void save_image(int n, char name[])
 {
@@ -169,10 +142,14 @@ void save_image(int n, char name[])
     fprintf(fp, "%d %d\n", width[n], height[n]);
     fprintf(fp, "%d\n", MAX_BRIGHTNESS);
     for (y=0; y<height[n]; y++)
+    {
         for (x=0; x<width[n]; x++)
-            fputc(image[n][x][y], fp);
-        fclose(fp);
-        printf("Image was saved successfully\n");
+        {
+            fputc(image[n][x][y], fp); 
+        }
+    }
+    fclose(fp);
+    printf("Image was saved successfully\n");
 }
 
 
