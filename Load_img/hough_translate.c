@@ -62,7 +62,7 @@ struct Line line = { .x_start = x1, .y_start = y1, .x_end = x2, .y_end = y2,
 }
     
 
-
+/*
 struct Accum_in_mat** Matrix(int h, int w){
     struct Accum_in_mat **t = (struct Accum_in_mat **)malloc(h * 
         sizeof(struct Accum_in_mat *));
@@ -70,7 +70,7 @@ for (size_t i = 0; i < h; ++i)
     t[i] = (struct Accum_in_mat *)malloc(w * sizeof(struct Accum_in_mat));
 
 return t;
-}
+}*/
 
 
 struct Lines Hough(SDL_Surface *sdl_surface){
@@ -100,7 +100,6 @@ struct Lines Hough(SDL_Surface *sdl_surface){
         {
         for (int x = 0; x < sdl_surface->w; x++)
         {
-            int i = 0;
            Uint8 r,g,b;
            SDL_GetRGB(pixels[y*(sdl_surface->w) + x], 
                 sdl_surface->format, &r, &g,&b);
@@ -113,7 +112,7 @@ struct Lines Hough(SDL_Surface *sdl_surface){
                         (y-centerY)*saveSin[theta];
                     int rrho = (int)rho + diagonal;
                     //printf("%i\n", rho);
-                    if (r < 0 || r >= 2*diagonal)
+                    if (r >= 2*diagonal)
                     {
                         continue;
                     }
@@ -134,7 +133,7 @@ struct Lines Hough(SDL_Surface *sdl_surface){
     
     //print_array_i(accum_mat, 2*diagonal+1, 2*diagonal+1);
     int pic =  (int)((double)max*0.42);
-    printf("max:%i\n",max);
+    //printf("max:%i\n",max);
     struct Line *lines = malloc(2*diagonal*2*diagonal*sizeof(struct Line));
     int e = 0;
     if (num_points == 0)
@@ -175,13 +174,14 @@ struct Lines Hough(SDL_Surface *sdl_surface){
         }
     }
 sort_Lines(lines, e);
-    for (size_t j = 0; j < e; j++)
+   /* for (int j = 0; j < e; j++)
     {
         struct Line line = lines[j];
       
-      printf("x:%i,%i and y:%i,%i, val = %i \n", line.x_start, line.x_end, 
+     printf("x:%i,%i and y:%i,%i, val = %i \n", line.x_start, line.x_end, 
             line.y_start, line.y_end,line.val);
     }
+    */
     
     struct Lines linnes = {.lines = lines, .size = e};
      SDL_UnlockSurface(sdl_surface);

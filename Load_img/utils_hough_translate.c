@@ -99,8 +99,7 @@ void draw_line(SDL_Surface *image, int w, int h,struct Line line,
 
 void change_mat(SDL_Surface * sdl_surface,struct Lines lines){
     SDL_LockSurface(sdl_surface);
-    Uint32 *pixels = sdl_surface->pixels;
-    for (size_t i = 0; i <lines.size; i++)
+    for (int i = 0; i <lines.size; i++)
         {
 
             struct Line l = lines.lines[i];

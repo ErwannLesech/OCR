@@ -40,7 +40,7 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored)
 }
 
 void display_img(SDL_Surface* sdl_surface){
-    printf("aaaa");
+    //printf("aaaa");
    if (SDL_Init(SDL_INIT_VIDEO) != 0)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     // - Create a window.

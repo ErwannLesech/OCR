@@ -7,6 +7,11 @@
 #include "utils_hough_translate.h"
 
  void main_load(int argc, char* argv[]) {
+    if (argc != 4)
+    {
+      return;
+    }
+    
     // Load image
     SDL_Surface* img = init_img(argv[2]);
     // Convert to grayscale

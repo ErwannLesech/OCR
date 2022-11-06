@@ -14,9 +14,9 @@ float gaussian_kernel[5][5] = {{1.0, 4.0,  6.0,  4.0 , 1.0 },
 void filter(SDL_Surface* sdl_surface){
  SDL_LockSurface(sdl_surface);
   Uint32* pixels = sdl_surface->pixels;
-    for (size_t x = 2; x < sdl_surface->w-2; x++)
+    for (int x = 2; x < sdl_surface->w-2; x++)
     {
-        for (size_t y = 2; y < sdl_surface->h-2; y++)
+        for (int y = 2; y < sdl_surface->h-2; y++)
         {
             float red = 0;
             float green = 0;
@@ -89,7 +89,7 @@ int RGB_To_Int(Uint32 pixel, SDL_PixelFormat* format){
         {
             
             Uint8 edge_color = (Uint8)(edge_colors[y][x]);
-            //*((int)scale);
+            ((int)scale);
             if (edge_colors[y][x] != 0)
             {
                  pixels[y*(sdl_surface->w) +x] = SDL_MapRGB(format, 255, 255, 255);
@@ -113,7 +113,6 @@ double Convolution(SDL_Surface * image, double kernel[3][3], int row, int col)
 {
     Uint32 *pixels = image->pixels;
     double sum = 0;
-    unsigned int r;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
