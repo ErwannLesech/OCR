@@ -3,7 +3,7 @@ BUILD := build
 TARGET := main
 
 CPPFLAGS = 
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -w
 LDFLAGS := $(sdl2-config --cflags --libs) 
 LDLIBS := -lm -lSDL2_image -lSDL2
 
