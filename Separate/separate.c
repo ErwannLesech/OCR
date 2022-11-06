@@ -3,78 +3,83 @@
 #include <stdio.h>
 #include <string.h>
 
+//Take the pixel
 
 Uint32 take_pixel(SDL_Surface *surface, int x, int y)
 {
-    Uint8 bytes = surface->format->BytesPerPixel;
-    Uint8 *pix = (Uint8 *)surface->pixels + y * surface->pitch + x * bytes;
+    Uint8 byte = surface->format->BytesPerPixel;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * byte;
 
-    switch(bytes){
+    switch(byte)
+    {
         case 1:
-            return *pix;
+            return *p;
         case 2:
-            return *(Uint16 *)pix;
+            return *(Uint16 *)p;
         case 3:
             if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-                return pix[0] << 16 | pix[1] << 8 | pix[2];
+                return p[0] << 16 | p[1] << 8 | p[2];
             else
-                return pix[0] | pix[1] << 8 | pix[2] << 16;
+                return p[0] | p[1] << 8 | p[2] << 16;
         case 4:
-            return *(Uint32 *)pix;
+            return *(Uint32 *)p;
         default:
             return 0;
     }
 }
 
+//Change the color of the pixel
 
 void change_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
 
-    Uint8 bytes = surface->format->BytesPerPixel;
-    Uint8 *pix = (Uint8 *)surface->pixels + y * surface->pitch + x * bytes;
+    Uint8 byte = surface->format->BytesPerPixel;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * byte;
 
-    switch(bytes){
+    switch(byte)
+    {
         case 1:
-            *pix = pixel;
+            *p = pixel;
             break;
         case 2:
-            *(Uint16 *)pix = pixel;
+            *(Uint16 *)p = pixel;
             break;
         case 3:
             if(SDL_BYTEORDER == SDL_BIG_ENDIAN){
-                pix[0] = (pixel >> 16) & 0xFF;
-                pix[1] = (pixel >> 8) & 0xFF;
-                pix[2] = pixel & 0xFF;
+                p[0] = (pixel >> 16) & 0xFF;
+                p[1] = (pixel >> 8) & 0xFF;
+                p[2] = pixel & 0xFF;
             }
             else{
-                pix[0] = pixel & 0xFF;
-                pix[1] = (pixel >> 8) & 0xFF;
-                pix[2] = (pixel >> 16) & 0xFF;
+                p[0] = pixel & 0xFF;
+                p[1] = (pixel >> 8) & 0xFF;
+                p[2] = (pixel >> 16) & 0xFF;
             }
             break;
         case 4:
-            *(Uint32 *)pix = pixel;
+            *(Uint32 *)p = pixel;
             break;
     }
 }
 
+//Verify if the (x,y) is in the surface
 
 int is_in_image(SDL_Surface *surface, int x, int y)
 {
     return 0 <= x && x < surface->w && 0 <= y && y < surface->h;
 }
 
+//Separate the surface in 9x9 surfaces
 
-
-SDL_Surface** separate(SDL_Surface* grid)
+SDL_Surface** separate(SDL_Surface* surface)
 {
-	if(grid == NULL)
+	if(surface == NULL)
 	{
 		return NULL;
     	}
     	
-    	SDL_Surface** surfaces = malloc(9 * 9 * sizeof(grid));
-    	int size = (grid->w / 9) + 1;
+    	SDL_Surface** surfaces = malloc(9 * 9 * sizeof(surface));
+    	int size = (surface->w / 9) + 1;
 
     	for (int i = 0; i < 9; i++)
 	{
@@ -89,20 +94,22 @@ SDL_Surface** separate(SDL_Surface* grid)
 			{
          	       		for (int x = 0; x < size; x++)
 				{
-					int xGrid = j * size + x;
-        	            		int yGrid = i * size + y;
+					int xsurface = j * size + x;
+        	            		int ysurface = i * size + y;
        	             
-					if (is_in_image(grid, xGrid, yGrid))
+					if (is_in_image(surface, xsurface, 
+								ysurface))
         	            		{
        	                 
-						change_pixel(surfaces[index], x, y, 
-							take_pixel(grid, xGrid, yGrid));
+						change_pixel(surfaces[index],
+						x, y, take_pixel(surface,
+						    xsurface,ysurface));
 					} 
 					
 					else 
 					{
       	                  			change_pixel(surfaces[index], 
-										x, y, 0xFFFFFFFF);
+							x, y, 0xFFFFFFFF);
       	              			}
       	          		}
      	       		}
@@ -111,6 +118,8 @@ SDL_Surface** separate(SDL_Surface* grid)
  	
 	return surfaces;
 }
+
+//Save the 9x9 surfaces in .bmp
             
 void save_image_cut(SDL_Surface** surfaces)
 {
@@ -124,7 +133,6 @@ void save_image_cut(SDL_Surface** surfaces)
 		name[i][4] = 'm';
 		name[i][5] = 'p';
 		name[i][6] = '\0';
-		//surfaces[i]  = Resize(surfaces[i]);
 		SDL_SaveBMP(surfaces[i], name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}

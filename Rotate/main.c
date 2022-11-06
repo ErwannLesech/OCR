@@ -16,8 +16,8 @@ SDL_Surface* rotate_img(SDL_Surface* surface, double degree)
 	 	SDL_PIXELFORMAT_RGB888, 0);
 	
 	//Create a copy of the surface
-	SDL_Surface* surface_copy = SDL_CreateRGBSurface(0,surface->w,surface->h,
-		32,0,0,0,0);
+	SDL_Surface* surface_copy = SDL_CreateRGBSurface(0,surface->w,
+			surface->h ,32,0,0,0,0);
 
 	//Lock the surfaces
 	SDL_LockSurface(surface_copy);
@@ -37,7 +37,8 @@ SDL_Surface* rotate_img(SDL_Surface* surface, double degree)
 	for (int x = 0; x < surface->w; x++)
 	{
 		for (int y = 0; y < surface->h; y++)
-		{
+		{	
+			//Rotate the pixels one by one
 			double rx = (x - center_x) * cos(angle_rad) -
 			       	(y - center_y) * sin(angle_rad) + center_x;
 

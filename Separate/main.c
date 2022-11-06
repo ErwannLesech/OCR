@@ -8,21 +8,25 @@
 
 int main_separate(int argc, char** argv)
 {
+	//Verify the number of arguments
 	if (argc != 3)
 	{
 		errx(EXIT_FAILURE, "An image is needed");
 	}
-
+	
+	//Init the SDL
 	SDL_Init(SDL_INIT_VIDEO);
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		errx(EXIT_FAILURE, "%s", SDL_GetError());
-
-	SDL_Surface* grid = IMG_Load(argv[2]);
-
-	SDL_Surface **surfaces = separate(grid);
+	
+	// Creat a surface from the path
+	SDL_Surface* surface = IMG_Load(argv[2]);
+	
+	//Separate + save the surface
+	SDL_Surface **surfaces = separate(surface);
 	save_image_cut(surfaces);
 
-	SDL_FreeSurface(grid);
+	SDL_FreeSurface(surface);
 	
 	SDL_Quit();
 
