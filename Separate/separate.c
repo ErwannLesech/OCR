@@ -1,5 +1,3 @@
-#include <SDL/SDL.h>
-#include "SDL/SDL_image.h"
 #include "separate.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -111,7 +109,7 @@ SDL_Surface** separate(SDL_Surface* grid)
 	return surfaces;
 }
             
-void save_image(SDL_Surface** surfaces)
+void save_image_cut(SDL_Surface** surfaces)
 {
 	char name[81][7];
 	for (int i = 0; i < 81; i++)
