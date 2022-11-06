@@ -246,8 +246,6 @@ matrix *d_sigmoid_matrix(matrix *m, matrix *m_two)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
-    int m_two_rows = m_two->rows;
-    int m_two_cols = m_two->cols;
 
     for (int i = 0; i < m_rows; i++)
     {

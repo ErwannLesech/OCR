@@ -143,7 +143,8 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	return parameters;
 }
 
-double predict_xor(multiple_result *parameters, matrix inputs, int inputA, int inputB)
+double predict_xor(multiple_result *parameters, matrix inputs, 
+	int inputA, int inputB)
 {
 	matrix hw = parameters->a;
 	matrix hb = parameters->b;
@@ -163,7 +164,7 @@ double predict_xor(multiple_result *parameters, matrix inputs, int inputA, int i
 
 	sigmoid_matrix(&output_propagation);
 	
-	double result;
+	double result = 0;
 	// print values
 	if(inputA == 0 && inputB == 0)
 	{

@@ -93,7 +93,7 @@ void train_network(long epochs, double lr)
         &parameters, &forward_prop);
 
         upgrade_parameters(inputs, &parameters, &forward_prop, &back_prop,
-        learning_rate);
+        lr);
 
         if (i % (epochs / 10) == 0)
         {
