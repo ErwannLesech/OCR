@@ -1,6 +1,6 @@
 #include "mnist.h"
 
-int main_mnist(void)
+int main_mnist(int argc, char *argv[])
 {
     // call to store mnist in array
     load_mnist();

@@ -49,7 +49,8 @@ void display_img(SDL_Surface* sdl_surface){
     if (window == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     // - Create a renderer.
-      SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
+      SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 
+            SDL_RENDERER_TARGETTEXTURE);
     if (renderer == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     // - Create a surface from the colored image.

@@ -60,7 +60,8 @@ void FlipLong(unsigned char * ptr)
 }
 
 
-void read_mnist_char(char *file_path, int num_data, int len_info, int arr_n, unsigned char data_char[][arr_n], int info_arr[])
+void read_mnist_char(char *file_path, int num_data, int len_info, 
+    int arr_n, unsigned char data_char[][arr_n], int info_arr[])
 {
     int i, j, k, fd;
     unsigned char *ptr;
@@ -88,7 +89,8 @@ void read_mnist_char(char *file_path, int num_data, int len_info, int arr_n, uns
 }
 
 
-void image_char2double(int num_data, unsigned char data_image_char[][SIZE], double data_image[][SIZE])
+void image_char2double(int num_data, unsigned char data_image_char[][SIZE],
+     double data_image[][SIZE])
 {
     int i, j;
     for (i=0; i<num_data; i++)
@@ -97,7 +99,8 @@ void image_char2double(int num_data, unsigned char data_image_char[][SIZE], doub
 }
 
 
-void label_char2int(int num_data, unsigned char data_label_char[][1], int data_label[])
+void label_char2int(int num_data, unsigned char data_label_char[][1], 
+    int data_label[])
 {
     int i;
     for (i=0; i<num_data; i++)
@@ -107,16 +110,20 @@ void label_char2int(int num_data, unsigned char data_label_char[][1], int data_l
 
 void load_mnist()
 {
-    read_mnist_char(TRAIN_IMAGE, NUM_TRAIN, LEN_INFO_IMAGE, SIZE, train_image_char, info_image);
+    read_mnist_char(TRAIN_IMAGE, NUM_TRAIN, LEN_INFO_IMAGE, SIZE, 
+        train_image_char, info_image);
     image_char2double(NUM_TRAIN, train_image_char, train_image);
 
-    read_mnist_char(TEST_IMAGE, NUM_TEST, LEN_INFO_IMAGE, SIZE, test_image_char, info_image);
+    read_mnist_char(TEST_IMAGE, NUM_TEST, LEN_INFO_IMAGE, SIZE, 
+        test_image_char, info_image);
     image_char2double(NUM_TEST, test_image_char, test_image);
     
-    read_mnist_char(TRAIN_LABEL, NUM_TRAIN, LEN_INFO_LABEL, 1, train_label_char, info_label);
+    read_mnist_char(TRAIN_LABEL, NUM_TRAIN, LEN_INFO_LABEL, 1, 
+        train_label_char, info_label);
     label_char2int(NUM_TRAIN, train_label_char, train_label);
     
-    read_mnist_char(TEST_LABEL, NUM_TEST, LEN_INFO_LABEL, 1, test_label_char, info_label);
+    read_mnist_char(TEST_LABEL, NUM_TEST, LEN_INFO_LABEL, 1, 
+        test_label_char, info_label);
     label_char2int(NUM_TEST, test_label_char, test_label);
 }
 
@@ -171,7 +178,8 @@ void save_image(int n, char name[])
 
 // save mnist image (call for each image)
 // store train_image[][] into image[][][]
-void save_mnist_pgm(double data_image[][SIZE], int index, double label, int state)
+void save_mnist_pgm(double data_image[][SIZE], int index, double label, 
+    int state)
 {
     int n = 0; // id for image (set to 0)
     int x, y;

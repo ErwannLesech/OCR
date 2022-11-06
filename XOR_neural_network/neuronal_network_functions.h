@@ -20,11 +20,14 @@ int hidden_neurons, int output_neurons);
 // hw -> hidden_weights, hb -> hidden_bias, 
 // ow -> output_weights, ob -> output_bias
 
-multiple_result forward_propagation(multiple_result *parameters, matrix *inputs);
+multiple_result forward_propagation(multiple_result *parameters, 
+    matrix *inputs);
 
-multiple_result back_propagation(matrix *exp_outputs, multiple_result *parameters, multiple_result *forward_prop);
+multiple_result back_propagation(matrix *exp_outputs, 
+    multiple_result *parameters, multiple_result *forward_prop);
 
-multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters, multiple_result *forward_prop, multiple_result *back_prop, double lr);
+multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
+    multiple_result *forward_prop, multiple_result *back_prop, double lr);
 
 // simulate forward_prop for a test input
 double predict_xor(multiple_result *parameters, matrix inputs, int a, int b);

@@ -66,12 +66,14 @@ void draw_line(SDL_Surface *image, int w, int h,struct Line line,
                     if (0 <= (x0 + 1) && (x0 + 1) < w && 0 <= (y0 + 1)
                         && (y0 + 1) < h)
                     {
-                       pixels[(x0 + 1) + w*(y0 + 1)] = SDL_MapRGB(image->format, 127,32,127);
+                       pixels[(x0 + 1) + w*(y0 + 1)] = 
+                        SDL_MapRGB(image->format, 127,32,127);
                     }
                     if (0 <= (x0 - 1) && (x0 - 1) < w && 0 <= (y0 - 1)
                         && (y0 - 1) < h)
                     {
-                       pixels[(x0 - 1) + w*(y0 - 1)] = SDL_MapRGB(image->format, 127,32,127);
+                       pixels[(x0 - 1) + w*(y0 - 1)] = 
+                        SDL_MapRGB(image->format, 127,32,127);
                     }
                 }
     

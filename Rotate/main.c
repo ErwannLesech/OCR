@@ -8,9 +8,11 @@
 
 SDL_Surface* rotate_img(SDL_Surface* sdl, double degree){
 	SDL_LockSurface(sdl);
-	 SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(sdl, SDL_PIXELFORMAT_RGB888, 0);
+	 SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(sdl, 
+	 	SDL_PIXELFORMAT_RGB888, 0);
     SDL_FreeSurface(sdl);
-	SDL_Surface* sdl_copy = SDL_CreateRGBSurface(0,sdl->w,sdl->h,32,0,0,0,0);
+	SDL_Surface* sdl_copy = SDL_CreateRGBSurface(0,sdl->w,sdl->h,
+		32,0,0,0,0);
 	SDL_LockSurface(sdl_copy);
 	SDL_LockSurface(new_surface);
 	Uint32* pixels_copy = sdl_copy->pixels;
@@ -22,17 +24,23 @@ SDL_Surface* rotate_img(SDL_Surface* sdl, double degree){
 	{
 		for (int y = 0; y < sdl->h; y++)
 		{
-			double rx = (x - center_x) * cos(angle_rad) - (y - center_y) * sin(angle_rad) + center_x;
-			double ry =  (x - center_x) * sin(angle_rad) + (y - center_y) * cos(angle_rad) + center_y;
-			if (0 <= rx && rx < new_surface->w && 0 <= ry && ry < new_surface->h)
+			double rx = (x - center_x) * cos(angle_rad) - (y - center_y) * 
+				sin(angle_rad) + center_x;
+			double ry =  (x - center_x) * sin(angle_rad) + (y - center_y) * 
+				cos(angle_rad) + center_y;
+			if (0 <= rx && rx < new_surface->w && 0 <= ry && 
+				ry < new_surface->h)
 			{
 				  Uint8 r,g,b;
-           		SDL_GetRGB(pixels[((int)ry)*(new_surface->w) + (int)rx], new_surface->format, &r, &g,&b);
-				pixels_copy[((int)y)*(new_surface->w) + (int)x] = SDL_MapRGB(new_surface->format, r,g,b);
+           		SDL_GetRGB(pixels[((int)ry)*(new_surface->w) + (int)rx], 
+					new_surface->format, &r, &g,&b);
+				pixels_copy[((int)y)*(new_surface->w) + (int)x] = 
+					SDL_MapRGB(new_surface->format, r,g,b);
 				//pixels[sdl->pixels[y*w +x]];
 			}
 			else{
-				pixels_copy[((int)y)*(new_surface->w) + (int)x] = SDL_MapRGB(new_surface->format, 0,0,0);
+				pixels_copy[((int)y)*(new_surface->w) + (int)x] = 
+					SDL_MapRGB(new_surface->format, 0,0,0);
 			}
 			
 		}

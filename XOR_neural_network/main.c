@@ -28,12 +28,14 @@ int main_xor(int argc, char *argv[])
     {
         if (argc > 3)
         {
-            printf("main_xor: train xor network - 1M epochs - 0.9 learning rate.\n");
+            printf("main_xor: train xor network - 1M epochs - ");
+            printf("0.9 learning rate.\n");
             train_network(epochs, learning_rate);
         }
         else    
         {
-            printf("main_xor: train xor network - 10000 epochs - 0.1 learning rate.\n");
+            printf("main_xor: train xor network - 10000 epochs - ");
+            printf("0.1 learning rate.\n");
             train_network(10000, 0.1);    
         }
     }

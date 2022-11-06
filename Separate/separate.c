@@ -82,7 +82,8 @@ SDL_Surface** separate(SDL_Surface* grid)
 		{
 
             		int index = i * 9 + j;
-            		surfaces[index] = SDL_CreateRGBSurface(0,size,size,32,0,0,0,0);
+            		surfaces[index] = SDL_CreateRGBSurface(0,size,size,
+						32,0,0,0,0);
             	
 			for (int y = 0; y < size ; y++)
 			{
@@ -94,12 +95,14 @@ SDL_Surface** separate(SDL_Surface* grid)
 					if (is_in_image(grid, xGrid, yGrid))
         	            		{
        	                 
-						change_pixel(surfaces[index], x, y, take_pixel(grid, xGrid, yGrid));
+						change_pixel(surfaces[index], x, y, 
+							take_pixel(grid, xGrid, yGrid));
 					} 
 					
 					else 
 					{
-      	                  			change_pixel(surfaces[index], x, y, 0xFFFFFFFF);
+      	                  			change_pixel(surfaces[index], 
+										x, y, 0xFFFFFFFF);
       	              			}
       	          		}
      	       		}

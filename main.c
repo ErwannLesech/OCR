@@ -6,6 +6,7 @@
 #include "Solver/main.h"
 #include "Load_img/main.h"
 #include "Separate/main.h"
+#include "OCR_neural_network/mnist_loader.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,16 +41,22 @@ int main(int argc, char *argv[])
         main_separate(argc, argv);
     }
 
+    else if(strcmp(argv[1], "-dataset") == 0)
+    {
+        main_mnist(argc, argv);
+    }
+
     else if (strcmp(argv[1], "-help") == 0)
     {
         printf("\n-xor: xor gate neural network\n");
         printf("    -train: train the network\n");
-        printf("    -weights: load and print weights of the trained network\n\n");
-        printf("    -predict @arg1 @arg2: predict after training with input 1,2\n\n");
+        printf("    -weights: load and print weights of the network\n\n");
+        printf("    -predict @arg1 @arg2: predict after training\n\n");
         printf("-solver: sudoku solver\n");
         printf("    -solve @arg: solve a sudoku\n");
         printf("    -print: print a sudoku solved\n");
         printf("    -printAndSolve: Solve a sudoku and print it\n");
+        printf("-dataset: extract dataset for neural network\n");
     }
     else
     {

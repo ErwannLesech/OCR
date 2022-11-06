@@ -11,9 +11,6 @@ float gaussian_kernel[5][5] = {{1.0, 4.0,  6.0,  4.0 , 1.0 },
                    {4.0 , 16.0 , 24.0 , 16.0 , 4.0 },
                    {1.0 , 4.0  ,  6.0 ,  4.0 , 1.0 }};
 
-
-
-
 void filter(SDL_Surface* sdl_surface){
  SDL_LockSurface(sdl_surface);
   Uint32* pixels = sdl_surface->pixels;
@@ -28,10 +25,10 @@ void filter(SDL_Surface* sdl_surface){
             {   
                 for (size_t j = 0; j < 5; j++)
                 {  
-                     int xn = x + i - 2;
+                    int xn = x + i - 2;
                     int yn = y + j - 2;  
                     Uint32 RGB = (Uint32)pixels[yn*(sdl_surface->w) + xn];
-                     Uint8 r, g, b;
+                    Uint8 r, g, b;
                     SDL_GetRGB(RGB, sdl_surface->format, &r, &g, &b);
                     red += ((float)r)*((gaussian_kernel[i][j])/256.0);
                     green += ((float)g)*((gaussian_kernel[i][j])/256.0);      
@@ -40,7 +37,8 @@ void filter(SDL_Surface* sdl_surface){
                 }
             }
            
-            Uint32 color = SDL_MapRGB(sdl_surface->format,(Uint8) red,(Uint8) green,(Uint8) blue);
+            Uint32 color = SDL_MapRGB(sdl_surface->format, 
+                (Uint8)red,(Uint8) green,(Uint8) blue);
             pixels[y*(sdl_surface->w) + x] = color;
         }
     }
@@ -162,7 +160,8 @@ void sobel_filter(SDL_Surface *image)
 
            if (g_px > 128)
            {
-                pixels[i*(image->w) + j] = SDL_MapRGB(image->format, 255,255,255);
+                pixels[i*(image->w) + j] = SDL_MapRGB(image->format, 
+                    255,255,255);
            }
            else{
                 pixels[i*(image->w) + j] = SDL_MapRGB(image->format, 0,0,0);
