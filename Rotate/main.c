@@ -14,8 +14,6 @@ SDL_Surface* rotate_img(SDL_Surface* surface, double degree)
 	//Create a new surface in SDL_PIXELFORMAT_RGB888
 	SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
 	 	SDL_PIXELFORMAT_RGB888, 0);
-
-    	SDL_FreeSurface(surface);
 	
 	//Create a copy of the surface
 	SDL_Surface* surface_copy = SDL_CreateRGBSurface(0,surface->w,surface->h,
