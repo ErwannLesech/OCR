@@ -6,7 +6,7 @@
 #include "SDL2/SDL_image.h"
 
 
-int main_separate(int argc, char** argv)
+int main/*_separate*/(int argc, char** argv)
 {
 	//Verify the number of arguments
 	if (argc != 3)

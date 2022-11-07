@@ -123,9 +123,12 @@ SDL_Surface** separate(SDL_Surface* surface)
             
 void save_image_cut(SDL_Surface** surfaces)
 {
+
 	char name[81][7];
 	for (int i = 0; i < 81; i++)
 	{
+		SDL_Surface *new = SDL_CreateRGBSurface(0, 28, 28, 32, 0, 0, 0, 0);
+		SDL_BlitScaled(surfaces[i], NULL, new, NULL);
 		name[i][0] = (i/10) + '0';
 		name[i][1] = (i%10) + '0';
 		name[i][2] = '.';
@@ -133,7 +136,7 @@ void save_image_cut(SDL_Surface** surfaces)
 		name[i][4] = 'm';
 		name[i][5] = 'p';
 		name[i][6] = '\0';
-		SDL_SaveBMP(surfaces[i], name[i]);
+		SDL_SaveBMP(new, name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}
 }
