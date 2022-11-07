@@ -1,9 +1,11 @@
 #include <gtk/gtk.h>
+#include <string.h>;
 
 GtkBuilder *builder;
 GtkWidget *window = NULL;
-
-
+gchar* file;
+GtkStack *stack;
+GtkStack *stack2;
 
 
 int main_interface (int argc, char **argv)
@@ -14,7 +16,8 @@ int main_interface (int argc, char **argv)
 
 	gtk_init(&argc,argv);
 
-	builder = gtk_builder_new();
+	builder = gtk_builder_new_from_file("interface.glade");
+	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
 	filename = g_build_filename("main.glade", NULL);
 
 	if (!gtk_builder_add_from_file(builder, filename, &error)) // load file

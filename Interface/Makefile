@@ -17,3 +17,23 @@ main: $(OBJ)
 clean: 
 	rm -rf $(OBJ)
 	rm -rf main
+
+# Makefile
+
+CC = gcc
+CFLAGS = -Wall -Wextra `pkg-config --cflags gdk-x11-3.0 gdk-3.0 gtk+-3.0`
+LDLIBS = `pkg-config --libs gdk-x11-3.0 gdk-3.0 gtk+-3.0`
+
+EXE = OCR_Interface
+
+all: $(EXE)
+
+$(foreach f, $(EXE), $(eval $(f):))
+
+.PHONY: clean
+
+clean:
+	rm -rf  $(OBJ)
+	rm -rf main
+
+# END
