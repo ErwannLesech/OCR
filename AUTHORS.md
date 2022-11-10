@@ -1,4 +1,0 @@
-LESECH Erwann
-GIBBE Valentin
-JOLIVALT Guillaume
-WOLTER Alexandra

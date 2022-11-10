@@ -1,39 +1,23 @@
-CC = gcc
-CFLAGS = -Wall -Wextra
-GTK_CFLAGS = $(shell pkg-config --cflags gtk+-3.0)
-GTK_LDFLAGS = $(shell pkg-config --libs gtk+-3.0)
-DEP = -lm
-SRC = $(wildcard *.c)
-OBJ = $(SRC:.c=.o)
+CC=gcc
 
-all: main
+CPPFLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags sdl2`
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(GTK_CFLAGS) $(DEP) $(GTK_LDFLAGS) -o $@ -c $<
+CFLAGS = -Wall -Wextra -std=c99 -O3 -lm
 
-main: $(OBJ)
-	$(CC) $(CFLAGS) $(GTK_CFLAGS) $(DEP) $(GTK_LDFLAGS) -o $@ $^
+LDLIBS= -lasan `pkg-config --libs gtk+-3.0` `pkg-config --libs sdl2` -lSDL2_image -lm -lpthread
+
+LDFLAGS= -fsanitize=address 
+
+
+SRC= interface.c
+OBJ=$(SRC:.c=.o)
+DEP=$(SRC:.c=.d)
+
+all: interface
+
 
 clean: 
 	rm -rf $(OBJ)
-	rm -rf main
+	rm -rf interface
+	rm -rf interface.d
 
-# Makefile
-
-CC = gcc
-CFLAGS = -Wall -Wextra `pkg-config --cflags gdk-x11-3.0 gdk-3.0 gtk+-3.0`
-LDLIBS = `pkg-config --libs gdk-x11-3.0 gdk-3.0 gtk+-3.0`
-
-EXE = OCR_Interface
-
-all: $(EXE)
-
-$(foreach f, $(EXE), $(eval $(f):))
-
-.PHONY: clean
-
-clean:
-	rm -rf  $(OBJ)
-	rm -rf main
-
-# END
