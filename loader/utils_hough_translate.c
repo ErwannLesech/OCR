@@ -66,12 +66,14 @@ void draw_line(SDL_Surface *image, int w, int h,struct Line line,
                     if (0 <= (x0 + 1) && (x0 + 1) < w && 0 <= (y0 + 1)
                         && (y0 + 1) < h)
                     {
-                       pixels[(x0 + 1) + w*(y0 + 1)] = SDL_MapRGB(image->format, 127,32,127);
+                       pixels[(x0 + 1) + w*(y0 + 1)] = 
+                        SDL_MapRGB(image->format, 127,32,127);
                     }
                     if (0 <= (x0 - 1) && (x0 - 1) < w && 0 <= (y0 - 1)
                         && (y0 - 1) < h)
                     {
-                       pixels[(x0 - 1) + w*(y0 - 1)] = SDL_MapRGB(image->format, 127,32,127);
+                       pixels[(x0 - 1) + w*(y0 - 1)] = 
+                        SDL_MapRGB(image->format, 127,32,127);
                     }
                 }
     
@@ -97,8 +99,7 @@ void draw_line(SDL_Surface *image, int w, int h,struct Line line,
 
 void change_mat(SDL_Surface * sdl_surface,struct Lines lines){
     SDL_LockSurface(sdl_surface);
-    Uint32 *pixels = sdl_surface->pixels;
-    for (size_t i = 0; i <lines.size; i++)
+    for (int i = 0; i <lines.size; i++)
         {
 
             struct Line l = lines.lines[i];
@@ -111,4 +112,29 @@ void change_mat(SDL_Surface * sdl_surface,struct Lines lines){
     //draw_right(sdl_surface, lines.lines[1]);
     //draw_line(sdl_surface, lines.lines[100]);
     SDL_UnlockSurface(sdl_surface);
+}
+
+void draw_square(SDL_Surface * sdl, struct Square square){
+    SDL_LockSurface(sdl);
+    Uint32* pixels = sdl->pixels;
+    int w = sdl->w;
+    for (int i = square.pA.x; i < square.pB.x; i++)
+    {
+        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
+    }
+    for (int i = square.pC.y; i < square.pD.y; i++)
+    {
+        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 127,32,127);
+    }
+    SDL_UnlockSurface(sdl);
+}
+
+void draw_squares(SDL_Surface * sdl_surface, struct Squares squares){
+    for (size_t i = 0; i < squares.size; i++)
+    {
+        draw_square(sdl_surface, squares.squares[i]);
+    }
+    
 }

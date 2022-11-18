@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include "find_square.h"
 struct Line
 {
     int x_start;
@@ -7,6 +8,7 @@ struct Line
     int x_end;
     int y_end;
     int val;
+    double theta;
 };
 struct Lines
 {
@@ -14,3 +16,5 @@ struct Lines
     int size;
 };
 void change_mat(SDL_Surface * sdl_surface,struct Lines lines);
+
+void draw_squares(SDL_Surface * sdl_surface, struct Squares squares);
