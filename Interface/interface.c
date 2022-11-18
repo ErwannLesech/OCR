@@ -13,25 +13,42 @@ static int cptEaster;
 
 int valid_format(int len)
 {
-    	if (file[len-4] == '.' && file[len-3] == 'p'
-            && ((file[len-2] == 'n' && file[len-1] == 'g')))
+    	if (file[len-4] == '.' && file[len-3] == 'j'
+            && ((file[len-2] == 'p' && file[len-1] == 'g')))
 		return 1;
 
-    	if (file[len-4] == '.' && file[len-3] == 'j'
-	    && file[len-2] == 'p' && file[len-1] == 'g')
+    	if (file[len-5] == '.' && file[len-4] == 'j'
+	    && file[len-3] == 'p' && file[len-2] == 'e'
+	    && file[len-1] == 'g')
 		return 1;
 	return 0;
 }
 
 void updateImage(GtkFileChooser *fc){
     file = gtk_file_chooser_get_preview_filename(fc);
-    if(file){
+
+    if(file)
+    {
         if(valid_format(strlen(file))){
             gtk_label_set_text(GTK_LABEL(label), "The format is valid");
         } else {
-            gtk_label_set_text(GTK_LABEL(label), "Please choose a .png or .jpg");
+            gtk_label_set_text(GTK_LABEL(label), "Please choose a .pneg or .jpg");
         }
+	/*if(file.width >=1000)
+	{
+		file.width = 900;
+	}
+	if(file.height >=800)
+	{
+		file.height = 750:
+	}*/
+	
         gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*) file);
+	/*cairo_surface_t *cr_surface = cairo_image_surface_create_from_png(file);
+		cairo_t *cr = cairo_create(cr_surface);
+		cairo_scale(cr, 0.5, 0.5);
+		cairo_set_source_surface(cr, cr_surface, 0, 0);
+		cairo_surface_write_to_png(cr_surface, "rescaled.pneg");*/
     }
 }
 
@@ -57,7 +74,7 @@ void callOCRProject(){
                 gtk_label_set_text(GTK_LABEL(label), "Just forget about it.");
                 break;
             case 5:
-                gtk_label_set_text(GTK_LABEL(label), "             ...");
+		gtk_label_set_text(GTK_LABEL(label), "             ...");
                 break;
             }
             cptEaster += cptEaster <= 5;
@@ -87,12 +104,15 @@ int main/*_interface*/ (int argc, char **argv)
     	cptEaster = 0;
 
     	builder = gtk_builder_new_from_file("interface.glade");
-    	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
+	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
+	//gtk_widget_set_size_request(window,1000,800);
     	fixed = GTK_WIDGET(gtk_builder_get_object(builder, "fixed"));
     	fileChooser = GTK_WIDGET(gtk_builder_get_object(builder, "fileChooser"));
     	button = GTK_WIDGET(gtk_builder_get_object(builder, "button"));
 	label = GTK_WIDGET(gtk_builder_get_object(builder, "label"));
     	preview = GTK_WIDGET(gtk_builder_get_object(builder, "preview"));
+	//gtk_widget_set_size_request(preview,800,700);
+
 
     	g_signal_connect(window, "destroy",
         	G_CALLBACK(gtk_main_quit), NULL);
@@ -106,4 +126,3 @@ int main/*_interface*/ (int argc, char **argv)
 
     return EXIT_SUCCESS;
 }
-
