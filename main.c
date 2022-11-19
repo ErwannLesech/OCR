@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Rotate/main.h"
-#include "XOR_neural_network/main.h"
+#include "OCR_neural_network/main.h"
 #include "Solver/main.h"
 #include "Load_img/main.h"
 #include "Separate/main.h"
@@ -15,9 +15,9 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (strcmp(argv[1], "-xor") == 0)
+    if (strcmp(argv[1], "-nn") == 0)
     {
-        main_xor(argc, argv);
+        main_neural_network(argc, argv);
     }
 
     else if (strcmp(argv[1], "-solver") == 0)

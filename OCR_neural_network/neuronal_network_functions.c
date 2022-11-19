@@ -1,6 +1,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL.h>
 #include "neuronal_network_functions.h"
 
 double sigmoid(double x)
@@ -11,6 +13,45 @@ double sigmoid(double x)
 double sigmoid_derivative(double x)
 {
 	return x * (1 - x);
+}
+
+void create_input_matrix(matrix *input, char *path)
+{
+    SDL_Surface* surface = IMG_Load(path);
+    SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
+        SDL_PIXELFORMAT_RGB888, 0);
+    Uint32* pixels = surface->pixels;
+    SDL_PixelFormat* format = surface->format;
+    SDL_LockSurface(surface);
+    for (int i = 0; i < 28; i++)
+    {
+        for (size_t j = 0; j < 28; j++)
+        {
+            if (pixels[i + j] == NULL)
+            {
+                printf("null\n");
+                SDL_UnlockSurface(surface);
+                return;
+            // errx(EXIT_FAILURE, "%s", SDL_GetError());
+            }
+
+            Uint8 r, g, b;
+            SDL_GetRGB(pixels[i + j], format, &r, &g, &b);
+            double value = 0;
+            printf("test:%d\n", (r+b+g)/3);
+            if ((r+b+g)/3 >= 127)
+            {
+                value = 1;
+            }
+            else
+            {
+                value = 0;
+            }
+            insert_value(input, i, j, value);
+        }
+    }
+    SDL_FreeSurface(surface);
+    SDL_UnlockSurface(surface);
 }
 
 multiple_result initialization(int input_neurons,

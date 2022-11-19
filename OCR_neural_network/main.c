@@ -5,19 +5,18 @@
 #include "neuronal_network_functions.h"
 #include "main.h"
 
+const unsigned int input_neurons = 784;
+const unsigned int hidden_neurons = 128;
+const unsigned int output_neurons = 9;
 
-const unsigned int input_neurons = 2;
-const unsigned int hidden_neurons = 2;
-const unsigned int output_neurons = 1;
+double learning_rate = 0.1;
+long epochs = 10000;
 
-double learning_rate = 0.9;
-long epochs = 1000000;
-
-void train_network(long epochs, double lr);
+void train_network(long epochs, double lr, char *path);
 void load_weights(char *filename);
 void predict(char *a, char *b);
 
-int main_xor(int argc, char *argv[])
+int main_neural_network(int argc, char *argv[])
 {
     if (argc < 3)
     {
@@ -30,13 +29,14 @@ int main_xor(int argc, char *argv[])
         {
             printf("main_xor: train xor network - 1M epochs - ");
             printf("0.9 learning rate.\n");
-            train_network(epochs, learning_rate);
+            
+            train_network(epochs, learning_rate, argv[3]);
         }
         else    
         {
             printf("main_xor: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1);    
+            train_network(10000, 0.1, argv[3]);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -57,26 +57,16 @@ int main_xor(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void train_network(long epochs, double lr)
+void train_network(long epochs, double lr, char *path)
 {
-    /*Inputs =
-    [[1, 0, 1, 0], 
-    [0, 1, 1, 0]]*/
+    matrix input;
+    init_matrix(&input, 28, 28, 0);
+    print_matrix(&input);
 
-    matrix inputs;
-    init_matrix(&inputs, 4, 2, 0);
-    insert_value(&inputs, 0, 1, 1);
-    insert_value(&inputs, 1, 0, 1);
-    insert_value(&inputs, 2, 1, 1);
-    insert_value(&inputs, 2, 0, 1);
+    create_input_matrix(&input, path);
+    print_matrix(&input);
 
-    /*Exp_outputs =
-    [[1], [1], [0], [0]]*/
-
-    matrix exp_outputs;
-    init_matrix(&exp_outputs, 4, 1, 0);
-    insert_value(&exp_outputs, 0, 0, 1);
-    insert_value(&exp_outputs, 1, 0, 1);
+    /*matrix exp_outputs;
 
     multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
@@ -87,12 +77,12 @@ void train_network(long epochs, double lr)
 
     for (long i = 0; i < epochs + 1; i++)
     {        
-        forward_prop = forward_propagation(&parameters, &inputs);
+        forward_prop = forward_propagation(&parameters, &input);
 
         back_prop = back_propagation(&exp_outputs, 
         &parameters, &forward_prop);
 
-        upgrade_parameters(inputs, &parameters, &forward_prop, &back_prop,
+        upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
         lr);
 
         if (i % (epochs / 10) == 0)
@@ -108,7 +98,7 @@ void train_network(long epochs, double lr)
             print_matrix(&ow);
             print_matrix(&ob);*/
 
-            matrix output_prop = forward_prop.b;
+            /*matrix output_prop = forward_prop.b;
             printf("iteration : %li\n", i);
             print_matrix(&output_prop);
         }
@@ -144,7 +134,7 @@ void train_network(long epochs, double lr)
     free_matrix(&dW1);
     free_matrix(&dB1);
     free_matrix(&dW2);
-    free_matrix(&dB2);
+    free_matrix(&dB2);*/
 }
 
 
