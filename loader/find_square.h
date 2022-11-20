@@ -28,4 +28,5 @@ struct Squares{
     int size;
 };
 
-struct Squares find_square(struct Lines lines);
+struct Squares find_square(struct Lines lines, int min_size, int max_size);
+//struct Points find_intersections(struct Lines lines);

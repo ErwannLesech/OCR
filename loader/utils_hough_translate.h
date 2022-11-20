@@ -18,3 +18,4 @@ struct Lines
 void change_mat(SDL_Surface * sdl_surface,struct Lines lines);
 
 void draw_squares(SDL_Surface * sdl_surface, struct Squares squares);
+void draw_points(SDL_Surface * sdl, struct Points points);

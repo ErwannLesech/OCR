@@ -123,7 +123,17 @@ void draw_square(SDL_Surface * sdl, struct Square square){
         pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
         pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
     }
-    for (int i = square.pC.y; i < square.pD.y; i++)
+    for (int i = square.pB.y; i > square.pC.y; i--)
+    {
+        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 127,32,127);
+    }
+    for (int i = square.pB.x; i < square.pA.x; i++)
+    {
+        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
+    }
+    for (int i = square.pC.y; i > square.pB.y; i--)
     {
         pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 127,32,127);
         pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 127,32,127);
@@ -135,6 +145,21 @@ void draw_squares(SDL_Surface * sdl_surface, struct Squares squares){
     for (size_t i = 0; i < squares.size; i++)
     {
         draw_square(sdl_surface, squares.squares[i]);
+    }
+    
+}
+
+void draw_points(SDL_Surface * sdl, struct Points points){
+    SDL_LockSurface(sdl);
+    Uint32* pixels = sdl->pixels;
+    int w = sdl->w; 
+    for (size_t i = 0; i < points.size; i++)
+    {
+        pixels[(points.points[i].y-1)*w + points.points[i].x -1] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[points.points[i].y*w + points.points[i].x] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[(points.points[i].y)*w + points.points[i].x +1] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[(points.points[i].y+1)*w + points.points[i].x +1] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[(points.points[i].y+1)*w + points.points[i].x ] = SDL_MapRGB(sdl->format, 255,0,0);
     }
     
 }
