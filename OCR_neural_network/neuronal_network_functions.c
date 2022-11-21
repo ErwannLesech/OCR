@@ -193,7 +193,7 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 
 	matrix dZ1;
 	matrix ow_t = transpose_matrix(&ow);
-	matrix dZ1 = dot_matrix(&ow_t, &dZ2);
+	dZ1 = dot_matrix(&ow_t, &dZ2);
 	d_relu_matrix(&dZ1, &Z1);
 
 	matrix dW1;
