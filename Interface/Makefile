@@ -19,5 +19,5 @@ all: interface
 clean: 
 	rm -rf $(OBJ)
 	rm -rf interface
-	rm -rf interface.d
+	rm -rf interface.glade~
 
