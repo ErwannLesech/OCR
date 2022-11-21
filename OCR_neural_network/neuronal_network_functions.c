@@ -6,16 +6,16 @@
 #include <time.h>
 #include "neuronal_network_functions.h"
 
-char **list_of_paths = {
-	"./OCR_neural_network/dataset/1.jpg",
-	"./OCR_neural_network/dataset/2.jpg",
-	"./OCR_neural_network/dataset/3.jpg",
-	"./OCR_neural_network/dataset/4.jpg",
-	"./OCR_neural_network/dataset/5.jpg",
-	"./OCR_neural_network/dataset/6.jpg",
-	"./OCR_neural_network/dataset/7.jpg",
-	"./OCR_neural_network/dataset/8.jpg",
-	"./OCR_neural_network/dataset/9.jpg"
+char list_of_paths[9][35] = {
+"./OCR_neural_network/dataset/1.jpg",
+"./OCR_neural_network/dataset/2.jpg",
+"./OCR_neural_network/dataset/3.jpg",
+"./OCR_neural_network/dataset/4.jpg",
+"./OCR_neural_network/dataset/5.jpg",
+"./OCR_neural_network/dataset/6.jpg",
+"./OCR_neural_network/dataset/7.jpg",
+"./OCR_neural_network/dataset/8.jpg",
+"./OCR_neural_network/dataset/9.jpg"
 };
 
 double sigmoid(double x)
@@ -53,14 +53,14 @@ double softmax(double x, size_t index, matrix *m)
 
 void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 {
-	printf("test");
+
 	srand(time(NULL));
-	printf("test");
 	for (size_t n = 0; n < nbInputs; n++)
 	{
-		char *path = list_of_paths[rand() % 9];
-		printf("%s\n", path);
-		insert_value(exp_output, 0, n, (double)path[30] - 48);
+		printf("%lu\n", n);
+		int random = rand() % 9;
+		char *path = list_of_paths[random];
+		insert_value(exp_output, 0, n, (double)path[29] - 48);
 
 		SDL_Surface* surface = IMG_Load(path);
 		SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
@@ -68,36 +68,36 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 		Uint32* pixels = surface->pixels;
 		SDL_PixelFormat* format = surface->format;
 		SDL_LockSurface(surface);
-		for (int i = 0; i < 28; i++)
+		for (int i = 0; i < 784; i++)
 		{
-			for (size_t j = 0; j < 28; j++)
+			printf("i\n", i);
+			if (pixels[i] == NULL)
 			{
-				if (pixels[i * 28 + j] == NULL)
-				{
-					printf("null\n");
-					SDL_UnlockSurface(surface);
-					return;
-				// errx(EXIT_FAILURE, "%s", SDL_GetError());
-				}
-
-				Uint8 r, g, b;
-				SDL_GetRGB(pixels[i * 28 + j], format, &r, &g, &b);
-				double value = 0;
-				printf("test:%d\n", (r+b+g)/3);
-				if ((r+b+g)/3 >= 127)
-				{
-					value = 1;
-				}
-				else
-				{
-					value = 0;
-				}
-				insert_value(input, i, j, value);
+				printf("null\n");
+				SDL_UnlockSurface(surface);
+				return;
+			// errx(EXIT_FAILURE, "%s", SDL_GetError());
 			}
+
+			Uint8 r, g, b;
+			SDL_GetRGB(pixels[i], format, &r, &g, &b);
+			double value = 0;
+			printf("test:%d\n", (r+b+g)/3);
+			if ((r+b+g)/3 >= 127)
+			{
+				value = 1;
+			}
+			else
+			{
+				value = 0;
+			}
+			insert_value(input, i, n, value);
 		}
 		SDL_FreeSurface(surface);
 		SDL_UnlockSurface(surface);
 	}
+
+	printf("end\n");
 }
 
 multiple_result initialization(int input_neurons,
@@ -108,10 +108,10 @@ multiple_result initialization(int input_neurons,
 	matrix ow;
 	matrix ob;
 
-	init_rand_matrix(&hw, input_neurons, hidden_neurons);
-	init_matrix(&hb, 1, hidden_neurons, 0);
-	init_rand_matrix(&ow, hidden_neurons, output_neurons);
-	init_matrix(&ob, 1, output_neurons, 0);
+	init_rand_matrix(&hw, hidden_neurons, input_neurons);
+	init_matrix(&hb, hidden_neurons, 1, 0);
+	init_rand_matrix(&ow, output_neurons, hidden_neurons);
+	init_matrix(&ob, output_neurons, 1, 0);
 
 	multiple_result neurons;
 	neurons.a = hw;
@@ -131,53 +131,87 @@ multiple_result forward_propagation(multiple_result *parameters,
 	matrix ob = parameters->d;
 	// HIDDEN LAYER
 
-	matrix hidden_propagation;
-	hidden_propagation = dot_matrix(&hw, inputs);
+	matrix Z1;
+	Z1 = dot_matrix(&hw, inputs);
 
-	add_matrix(&hidden_propagation, &hb);
-	relu_matrix(&hidden_propagation);
+	add_matrix(&Z1, &hb);
+	matrix A1 = Z1;
+	relu_matrix(&A1);
 	
 	// OUTPUT LAYER
-	matrix output_propagation;
-	output_propagation = dot_matrix(&ow, &hidden_propagation);
-	add_matrix(&hidden_propagation, &ob);
+	matrix A2;
+	A2 = dot_matrix(&ow, &A1);
+	add_matrix(&A1, &ob);
 
-	softmax_matrix(&output_propagation);
+	softmax_matrix(&A2);
 
 	// Return values
 
 	multiple_result results;
-	results.a = hidden_propagation;
-	results.b = output_propagation;
+	results.a = Z1;
+	results.b = A1;
+	results.c = A2;
 
 
 	return results;
 }
 
-multiple_result back_propagation(matrix *exp_outputs,
+matrix one_hot(matrix exp_output)
+{
+	matrix one_hot_Y;
+	init_matrix(&one_hot_Y, 9, exp_output.cols, 0);
+	for (size_t i = 0; i < exp_output.cols; i++)
+	{
+		size_t value = (int)(get_value(&exp_output, 0, i));
+		insert_value(&one_hot_Y, value - 1, i, 1);
+	}
+	return one_hot_Y;
+}
+
+
+multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 	multiple_result *parameters, multiple_result *forward_prop)
 {
-
-	matrix hidden_prop = forward_prop->a;
-	matrix output_prop = forward_prop->b;
+	matrix Z1 = forward_prop->a;
+	matrix A1 = forward_prop->b;
+	matrix A2 = forward_prop->c;
 	matrix ow = parameters->c;
+	double m = exp_outputs->cols;
 
-	matrix error_output_layer;
-	error_output_layer = substract_matrix(exp_outputs, &output_prop);
+	matrix dZ2;
+	dZ2 = substract_matrix(&A2, exp_outputs);
 	
-	d_sigmoid_matrix(&error_output_layer, &output_prop);
+	matrix A2_t;
+	A2_t = transpose_matrix(&A1);
+	matrix dW2;
+	dW2 = dot_matrix(&dZ2, &A2_t);
+	dW2 = multiply_matrix(&dW2, (1/m));
 
-	matrix ow_t;
-	ow_t = transpose_matrix(&ow);
+	matrix dB2;
+	dB2 = add_col_matrix(&dZ2);
+	dB2 = multiply_matrix(&dB2, (1/m));
 
-	matrix error_hidden_layer;
-	error_hidden_layer = dot_matrix(&error_output_layer, &ow_t);
+	matrix dZ1;
+	matrix ow_t = transpose_matrix(&ow);
+	matrix dZ1 = dot_matrix(&ow_t, &dZ2);
+	d_relu_matrix(&dZ1, &Z1);
+
+	matrix dW1;
+	matrix A0_t;
+	A0_t = transpose_matrix(&inputs);
+	dW1 = dot_matrix(&dZ1, &A0_t);
+	dW1 = multiply_matrix(&dW1, (1/m));
 	
-	d_sigmoid_matrix(&error_hidden_layer, &hidden_prop);
+
+	matrix dB1;
+	dB1 = add_col_matrix(&dZ1);
+	dB1 = multiply_matrix(&dB1, (1/m));
 
 	multiple_result back_prop;
-	back_prop.a = error_output_layer;
-	back_prop.b = error_hidden_layer;
+	back_prop.a = dZ2;
+	back_prop.b = dB2;
+	back_prop.c = dZ1;
+	back_prop.d = dB1;
 
 	return back_prop;
 }
@@ -190,37 +224,26 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	matrix ow = parameters->c;
 	matrix ob = parameters->d;
 
-	matrix hidden_prop = forward_prop->a;
-	// matrix output_prop = forward_prop->b;
-
-	matrix d_predicted_output = back_prop->a;
-	matrix d_hidden_layer = back_prop->b;
-
-	matrix hidden_prop_t;
-	hidden_prop_t = transpose_matrix(&hidden_prop);
-
-	matrix w2_delta;
-	w2_delta = dot_matrix(&hidden_prop_t, &d_predicted_output);
-	w2_delta = multiply_matrix(&w2_delta, lr);
-	add_matrix(&ow, &w2_delta);
-	matrix b2_delta;
-	b2_delta = add_row_matrix(&d_predicted_output);
-	b2_delta = multiply_matrix(&b2_delta, lr);
-	add_matrix(&ob, &b2_delta);
-
-	matrix inputs_t;
-	inputs_t = transpose_matrix(&inputs);
-
-	matrix w1_delta;
-	w1_delta = dot_matrix(&inputs_t, &d_hidden_layer);
-	w1_delta = multiply_matrix(&w1_delta, lr);
-	add_matrix(&hw, &w1_delta);
-
-	matrix b1_delta;
-	b1_delta = add_row_matrix(&d_hidden_layer);
-	b1_delta = multiply_matrix(&b1_delta, lr);
-	add_matrix(&hb, &b1_delta);
+	matrix dZ2 = back_prop->a;
+	matrix dB2 = back_prop->b;
+	matrix dZ1 = back_prop->c;
+	matrix dB1 = back_prop->d;
 	
+	matrix dOW;
+	dOW = multiply_matrix(&dZ2, lr);
+	ow = substract_matrix(&ow, &dOW);
+	
+	matrix dOB;
+	dOB = multiply_matrix(&dB2, lr);
+	ob = substract_matrix(&ob, &dOB);
+
+	matrix dHW;
+	dHW = multiply_matrix(&dZ1, lr);
+	hw = substract_matrix(&hw, &dHW);
+
+	matrix dHB;
+	dHB = multiply_matrix(&dZ1, lr);
+	hb = substract_matrix(&hb, &dHB);
 
 	parameters->a = hw;
 	parameters->b = hb;
@@ -230,56 +253,6 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	return parameters;
 }
 
-double predict_xor(multiple_result *parameters, matrix inputs, 
-	int inputA, int inputB)
-{
-	matrix hw = parameters->a;
-	matrix hb = parameters->b;
-	matrix ow = parameters->c;
-	matrix ob = parameters->d;
-
-	matrix hidden_propagation;
-	hidden_propagation = dot_matrix(&inputs, &hw);
-
-	add_matrix(&hidden_propagation, &hb);
-	sigmoid_matrix(&hidden_propagation);
-	
-	// OUTPUT LAYER
-	matrix output_propagation;
-	output_propagation = dot_matrix(&hidden_propagation, &ow);
-	add_matrix(&output_propagation, &ob);
-
-	sigmoid_matrix(&output_propagation);
-	
-	double result = 0;
-	// print values
-	if(inputA == 0 && inputB == 0)
-	{
-		result = get_value(&output_propagation, 2, 0);
-		printf("Input [0, 0] = %i\n", (int)round(result));
-	}
-	else if (inputA == 1 && inputB == 1)
-	{
-		result = get_value(&output_propagation, 3, 0);
-		printf("Input [1, 1] = %i\n", (int)round(result));
-	}
-	else if (inputA == 1 && inputB == 0)
-	{
-		result = get_value(&output_propagation, 0, 0);
-		printf("Input [1, 0] = %i\n", (int)round(result));
-	}
-	else if (inputA == 0 && inputB == 1)
-	{
-		result = get_value(&output_propagation, 1, 0);
-		printf("Input [0, 1] = %i\n", (int)round(result));
-	}
-
-	free_matrix(&inputs);
-	free_matrix(&hidden_propagation);
-	free_matrix(&output_propagation);
-
-	return result;
-}
 
 
 void save_parameters(multiple_result *parameters, char path[])
