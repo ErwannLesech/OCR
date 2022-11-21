@@ -9,15 +9,16 @@ LDLIBS= -lasan `pkg-config --libs gtk+-3.0` `pkg-config --libs sdl2` -lSDL2_imag
 LDFLAGS= -fsanitize=address 
 
 
-SRC= interface.c
+SRC= interface.c saved.c
 OBJ=$(SRC:.c=.o)
 DEP=$(SRC:.c=.d)
 
-all: interface
+all: interface saved
 
 
 clean: 
 	rm -rf $(OBJ)
 	rm -rf interface
+	rm -rf saved
 	rm -rf interface.glade~
 
