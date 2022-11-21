@@ -37,7 +37,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_xor: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1, 1);    
+            train_network(10000, 0.1, 3);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -57,11 +57,6 @@ int main_neural_network(int argc, char *argv[])
         
         init_input_matrix(&input, &exp_output, 1);
         display_mat(input);
-    }
-    else if (strcmp(argv[2], "-predict") == 0)
-    {
-        printf("main_xor: predict.\n\n");
-        predict(argv[3], argv[4]);
     }
     else
     {
@@ -180,20 +175,4 @@ void load_weights(char *filename)
     printf("\n");
 	print_matrix(&ob);
     printf("\n");
-}
-
-void predict(char *a, char *b)
-{
-    multiple_result parameters;
-
-    parameters = load_parameters("weights.txt");
-
-    matrix inputs_test;
-    init_matrix(&inputs_test, 4, 2, 0);
-    insert_value(&inputs_test, 0, 1, 1);
-    insert_value(&inputs_test, 1, 0, 1);
-    insert_value(&inputs_test, 2, 1, 1);
-    insert_value(&inputs_test, 2, 0, 1);
-
-    predict_xor(&parameters, inputs_test, (int)*a - 48, (int)*b - 48);
 }
