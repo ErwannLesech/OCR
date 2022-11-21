@@ -9,22 +9,17 @@ typedef struct
     matrix d;
 } multiple_result;
 
-/*typedef struct
-{
-    multiple_result
-} layer;
-
-typedef struct
-{
-    size_t layer_number;
-    layer layers[layer_number];
-} neural_network;*/
-
 double sigmoid(double x);
 
 double sigmoid_derivative(double x);
 
-void create_input_matrix(matrix *input, char *path);
+double relu(double x);
+
+double relu_derivative(double x);
+
+double softmax(double x, size_t index, matrix *m);
+
+void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs);
 
 multiple_result initialization(int input_neurons, 
 int hidden_neurons, int output_neurons);

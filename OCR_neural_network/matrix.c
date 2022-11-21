@@ -259,6 +259,59 @@ matrix *d_sigmoid_matrix(matrix *m, matrix *m_two)
     return m;
 }
 
+// apply the relu function to the matrix m
+matrix *relu_matrix(matrix *m)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        for (int j = 0; j < m_cols; j++)
+        {
+            double x = get_value(m, i, j);
+            insert_value(m, i, j, relu(x));
+        }
+    }
+    return m;
+}
+
+// apply the derivative relu function to the matrix m
+matrix *d_relu_matrix(matrix *m, matrix *m_two)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        for (int j = 0; j < m_cols; j++)
+        {
+            double x = get_value(m_two, i, j);
+            double y = get_value(m, i, j);
+            insert_value(m, i, j, (y * relu_derivative(x)));
+        }
+    }
+    return m;
+}
+
+// apply the softmax function to the matrix m
+matrix *softmax_matrix(matrix *m)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        for (int j = 0; j < m_cols; j++)
+        {
+            double x = get_value(m, i, j);
+            insert_value(m, i, j, softmax(x, i, m));
+        }
+    }
+    return m;
+}
+
+
 void print_matrix(matrix *m)
 {
     int m_rows = m->rows;

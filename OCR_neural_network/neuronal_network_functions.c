@@ -3,7 +3,20 @@
 #include <stdlib.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
+#include <time.h>
 #include "neuronal_network_functions.h"
+
+char **list_of_paths = {
+	"./OCR_neural_network/dataset/1.jpg",
+	"./OCR_neural_network/dataset/2.jpg",
+	"./OCR_neural_network/dataset/3.jpg",
+	"./OCR_neural_network/dataset/4.jpg",
+	"./OCR_neural_network/dataset/5.jpg",
+	"./OCR_neural_network/dataset/6.jpg",
+	"./OCR_neural_network/dataset/7.jpg",
+	"./OCR_neural_network/dataset/8.jpg",
+	"./OCR_neural_network/dataset/9.jpg"
+};
 
 double sigmoid(double x)
 {
@@ -15,43 +28,76 @@ double sigmoid_derivative(double x)
 	return x * (1 - x);
 }
 
-void create_input_matrix(matrix *input, char *path)
+double relu(double x)
 {
-    SDL_Surface* surface = IMG_Load(path);
-    SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
-        SDL_PIXELFORMAT_RGB888, 0);
-    Uint32* pixels = surface->pixels;
-    SDL_PixelFormat* format = surface->format;
-    SDL_LockSurface(surface);
-    for (int i = 0; i < 28; i++)
-    {
-        for (size_t j = 0; j < 28; j++)
-        {
-            if (pixels[i + j] == NULL)
-            {
-                printf("null\n");
-                SDL_UnlockSurface(surface);
-                return;
-            // errx(EXIT_FAILURE, "%s", SDL_GetError());
-            }
+	if(x > 0)
+		return x;
+	return 0;
+}
 
-            Uint8 r, g, b;
-            SDL_GetRGB(pixels[i + j], format, &r, &g, &b);
-            double value = 0;
-            printf("test:%d\n", (r+b+g)/3);
-            if ((r+b+g)/3 >= 127)
-            {
-                value = 1;
-            }
-            else
-            {
-                value = 0;
-            }
-            insert_value(input, i, j, value);
-        }
-    }
-    SDL_FreeSurface(surface);
-    SDL_UnlockSurface(surface);
+double relu_derivative(double x)
+{
+	return x > 0;
+}
+
+double softmax(double x, size_t index, matrix *m)
+{
+	double exp_sum = 0;
+	
+	for(size_t i = 0; i < 9; i++)
+		exp_sum += exp(get_value(&m, i, 0));
+	
+	return exp(get_value(&m, index, 0)) / exp_sum;
+}
+
+
+void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
+{
+	printf("test");
+	srand(time(NULL));
+	printf("test");
+	for (size_t n = 0; n < nbInputs; n++)
+	{
+		char *path = list_of_paths[rand() % 9];
+		printf("%s\n", path);
+		insert_value(exp_output, 0, n, (double)path[30] - 48);
+
+		SDL_Surface* surface = IMG_Load(path);
+		SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
+			SDL_PIXELFORMAT_RGB888, 0);
+		Uint32* pixels = surface->pixels;
+		SDL_PixelFormat* format = surface->format;
+		SDL_LockSurface(surface);
+		for (int i = 0; i < 28; i++)
+		{
+			for (size_t j = 0; j < 28; j++)
+			{
+				if (pixels[i * 28 + j] == NULL)
+				{
+					printf("null\n");
+					SDL_UnlockSurface(surface);
+					return;
+				// errx(EXIT_FAILURE, "%s", SDL_GetError());
+				}
+
+				Uint8 r, g, b;
+				SDL_GetRGB(pixels[i * 28 + j], format, &r, &g, &b);
+				double value = 0;
+				printf("test:%d\n", (r+b+g)/3);
+				if ((r+b+g)/3 >= 127)
+				{
+					value = 1;
+				}
+				else
+				{
+					value = 0;
+				}
+				insert_value(input, i, j, value);
+			}
+		}
+		SDL_FreeSurface(surface);
+		SDL_UnlockSurface(surface);
+	}
 }
 
 multiple_result initialization(int input_neurons,
@@ -86,17 +132,17 @@ multiple_result forward_propagation(multiple_result *parameters,
 	// HIDDEN LAYER
 
 	matrix hidden_propagation;
-	hidden_propagation = dot_matrix(inputs, &hw);
+	hidden_propagation = dot_matrix(&hw, inputs);
 
 	add_matrix(&hidden_propagation, &hb);
-	sigmoid_matrix(&hidden_propagation);
+	relu_matrix(&hidden_propagation);
 	
 	// OUTPUT LAYER
 	matrix output_propagation;
-	output_propagation = dot_matrix(&hidden_propagation, &ow);
+	output_propagation = dot_matrix(&ow, &hidden_propagation);
 	add_matrix(&hidden_propagation, &ob);
 
-	sigmoid_matrix(&output_propagation);
+	softmax_matrix(&output_propagation);
 
 	// Return values
 

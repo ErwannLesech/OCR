@@ -12,7 +12,7 @@ const unsigned int output_neurons = 9;
 double learning_rate = 0.1;
 long epochs = 10000;
 
-void train_network(long epochs, double lr, char *path);
+void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
 void predict(char *a, char *b);
 
@@ -30,13 +30,13 @@ int main_neural_network(int argc, char *argv[])
             printf("main_xor: train xor network - 1M epochs - ");
             printf("0.9 learning rate.\n");
             
-            train_network(epochs, learning_rate, argv[3]);
+            train_network(epochs, learning_rate, 5);
         }
         else    
         {
             printf("main_xor: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1, argv[3]);    
+            train_network(10000, 0.1, 5);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -57,14 +57,19 @@ int main_neural_network(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void train_network(long epochs, double lr, char *path)
+void train_network(long epochs, double lr, size_t nbInputs)
 {
     matrix input;
-    init_matrix(&input, 28, 28, 0);
+    init_matrix(&input, 784, nbInputs, 0);
     print_matrix(&input);
 
-    create_input_matrix(&input, path);
+    matrix exp_output;
+    init_matrix(&exp_output, 1, nbInputs, 0);
+    print_matrix(&exp_output);
+
+    init_input_matrix(&input, &exp_output, nbInputs);
     print_matrix(&input);
+    print_matrix(&exp_output);
 
     /*matrix exp_outputs;
 
