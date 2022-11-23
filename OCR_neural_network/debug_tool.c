@@ -5,13 +5,13 @@
 
 SDL_Surface * translate_mat(matrix mat)
 {
-    SDL_Surface* surface = SDL_CreateRGBSurface(0,mat.rows+1000, mat.cols+1000, 32,0,0,0,0);
+    SDL_Surface* surface = SDL_CreateRGBSurface(0,28, 28, 32,0,0,0,0);
     SDL_LockSurface(surface);
     Uint32* pixels = surface->pixels;
-
-  /* for (size_t i = 0; i < mat.rows; i++)
+    
+   for (size_t i = 0; i < mat.rows; i++)
     {
-        for (size_t j = 0; j < mat.cols-1; j++)
+        for (size_t j = 0; j < mat.cols; j++)
         {
             if(get_value(&mat, i,j) == 1){
             pixels[i*mat.cols + j] = SDL_MapRGB(surface->format,255,255,255);
@@ -22,7 +22,7 @@ SDL_Surface * translate_mat(matrix mat)
             }
         }
         
-    }*/
+    }
     
     SDL_UnlockSurface(surface);
     return surface;

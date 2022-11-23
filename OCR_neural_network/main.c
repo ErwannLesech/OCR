@@ -28,16 +28,16 @@ int main_neural_network(int argc, char *argv[])
     {
         if (argc > 3)
         {
-            printf("main_xor: train xor network - 1M epochs - ");
+            printf("main_nn: train xor network - 1M epochs - ");
             printf("0.9 learning rate.\n");
             
             train_network(epochs, learning_rate, 5);
         }
         else    
         {
-            printf("main_xor: train xor network - 10000 epochs - ");
+            printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1, 3);    
+            train_network(10000, 0.1, 9);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -47,15 +47,18 @@ int main_neural_network(int argc, char *argv[])
     }
     else if (strcmp(argv[2], "-test") == 0)
     {
-        matrix input;
-        init_matrix(&input, 784, 1, 0);
+         matrix input;
+        init_matrix(&input, 784, 9, 0);
         print_matrix(&input);
 
         matrix exp_output;
-        init_matrix(&exp_output, 1, 1, 0);
+        init_matrix(&exp_output, 1, 9, 0);
+        //print_matrix(&exp_output);
+
+        init_input_matrix(&input, &exp_output, 9);
+        print_matrix(&input);
         print_matrix(&exp_output);
         
-        init_input_matrix(&input, &exp_output, 1);
         display_mat(input);
     }
     else
@@ -70,12 +73,12 @@ void train_network(long epochs, double lr, size_t nbInputs)
 {
     matrix input;
     init_matrix(&input, 784, nbInputs, 0);
-    print_matrix(&input);
+    //print_matrix(&input);
 
     matrix exp_output;
     init_matrix(&exp_output, 1, nbInputs, 0);
-    print_matrix(&exp_output);
-
+    //print_matrix(&exp_output);
+    
     init_input_matrix(&input, &exp_output, nbInputs);
     print_matrix(&input);
     print_matrix(&exp_output);
@@ -88,17 +91,18 @@ void train_network(long epochs, double lr, size_t nbInputs)
     print_matrix(&parameters.a);
     print_matrix(&parameters.b);
     print_matrix(&parameters.c);
-    print_matrix(&parameters.d);
+    print_matrix(&parameters.d);*/
 
     multiple_result forward_prop;
-    multiple_result back_prop;*/
+    multiple_result back_prop;
 
-    /*
-    for (long i = 0; i < epochs + 1; i++)
+    
+    /*for (long i = 0; i < epochs + 1; i++)
     {        
+        printf("%i\n", i);
         forward_prop = forward_propagation(&parameters, &input);
 
-        back_prop = back_propagation(&exp_outputs, 
+        back_prop = back_propagation(&exp_output, &input,
         &parameters, &forward_prop);
 
         upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
@@ -106,7 +110,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
         if (i % (epochs / 10) == 0)
         {
-            /*
+            
             matrix hw = parameters.a;
             matrix hb = parameters.b;
             matrix ow = parameters.c;
@@ -115,10 +119,9 @@ void train_network(long epochs, double lr, size_t nbInputs)
             print_matrix(&hw);
             print_matrix(&hb);
             print_matrix(&ow);
-            print_matrix(&ob);*/
+            print_matrix(&ob);
 
-            /*matrix output_prop = forward_prop.b;
-            printf("iteration : %li\n", i);
+            matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
         }
     }
@@ -129,20 +132,22 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix ow = parameters.c;
     matrix ob = parameters.d;
 
-    save_parameters(&parameters, "weights.txt");
+    //save_parameters(&parameters, "weights.txt");
 
-    matrix hidden_prop = forward_prop.a;
-    matrix output_prop = forward_prop.b;
+    matrix hidden_prop = forward_prop.b;
+    matrix output_prop = forward_prop.c;
+
+    print_matrix(&output_prop);
 
     // Back prop
     matrix dW1 = back_prop.a;
 	matrix dB1 = back_prop.b;
 	matrix dW2 = back_prop.c;
-	matrix dB2 = back_prop.d;
+	matrix dB2 = back_prop.d;*/
 
     // Free all matrices
 
-    free_matrix(&hw);
+    /*free_matrix(&hw);
     free_matrix(&hb);
     free_matrix(&ow);
     free_matrix(&ob);

@@ -132,11 +132,11 @@ void save_image_cut(SDL_Surface** surfaces)
 		name[i][0] = (i/10) + '0';
 		name[i][1] = (i%10) + '0';
 		name[i][2] = '.';
-		name[i][3] = 'b';
-		name[i][4] = 'm';
-		name[i][5] = 'p';
+		name[i][3] = 'p';
+		name[i][4] = 'n';
+		name[i][5] = 'g';
 		name[i][6] = '\0';
-		SDL_SaveBMP(new, name[i]);
+		IMG_SavePNG(new, name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}
 }

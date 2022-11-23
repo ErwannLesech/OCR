@@ -19,7 +19,6 @@ matrix *init_matrix(matrix *m, int rows, int cols, double value)
     return m;
 }
 
-
 matrix *init_rand_matrix(matrix *m, int rows, int cols)
 {
     srand(time(NULL));
@@ -30,11 +29,15 @@ matrix *init_rand_matrix(matrix *m, int rows, int cols)
 
     for (int idx = 0; idx < (rows * cols); idx++)
     {
-        m->data[idx] = ((rand() % 10000) / 10000.0);
+        double random = 0;
+        
+        random = (rand() % 2001 - 1000) / 2.e3;
+        m->data[idx] = (random);
     }
     
     return m;
 }
+
 
 
 void free_matrix(matrix *m)
@@ -153,8 +156,8 @@ matrix dot_matrix(matrix *m_one, matrix *m_two)
     if (m_one_cols != m_two_rows)
     {
         printf("multiply_matrix: Incorrect dimensions.\n");
-        print_matrix(m_one);
-        print_matrix(m_two);
+        /*print_matrix(m_one);
+        print_matrix(m_two);*/
         exit(1);
     }
 
