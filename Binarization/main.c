@@ -94,7 +94,10 @@ int main(int argc, char **argv)
 	
 	SDL_Surface *image = init_img(argv[1]);
 	
-	median_filter(image);
+	for(int i = 0; i < 1; i++)
+	{
+		median_filter(image);
+	}
 	//display_img(image);
 
 	SDL_SaveBMP(image, "image_median.bmp");

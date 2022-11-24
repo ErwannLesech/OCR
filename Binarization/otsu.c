@@ -170,6 +170,7 @@ Uint32 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
     Uint8 r, g, b;
     SDL_GetRGB(pixel_color, format, &r, &g, &b);
     Uint8 average = 0.3*r + 0.59*g + 0.11*b;
+    //Uint8 average = 0.34*r + 0.33*g + 0.33*b;
     r = g = b = average;
     Uint32 color = SDL_MapRGB(format, r, g, b);
     return color;
@@ -218,7 +219,10 @@ void median_filter(SDL_Surface *image)
 	//int array[height * width];
 	//int arr[height * width];
 	//print_array(array, height, width);
+	
 	int temp[9];
+	
+	//int temp[25];
 	Uint32 *pixels = image->pixels;
 	SDL_PixelFormat* format = image->format;
 
@@ -251,6 +255,17 @@ void median_filter(SDL_Surface *image)
 
 	for(int row = 1; row < height-1; row++)
 	{
+		int temp2[6];
+            	temp2[0] = array[row-1][0];
+            	temp2[1] = array[row-1][1];
+            	temp2[2] = array[row][0];
+            	temp2[3] = array[row][1];
+            	temp2[4] = array[row+1][0];
+            	temp2[5] = array[row+1][1];
+
+		insertion_sort(temp2, 6);
+            	arr[row][0] = temp2[3];
+
 		for(int col = 1; col < width-1; col++)
 		{
 			temp[0] = array[row-1][col-1];
@@ -263,8 +278,35 @@ void median_filter(SDL_Surface *image)
             		temp[7] = array[row+1][col];
             		temp[8] = array[row+1][col+1];
 
+			/*temp[0] = array[row-2][col-2];
+            		temp[1] = array[row-2][col-1];
+            		temp[2] = array[row-2][col];
+            		temp[3] = array[row-2][col+1];
+            		temp[4] = array[row-2][col+2];
+            		temp[5] = array[row-1][col-2];
+            		temp[6] = array[row-1][col-1];
+            		temp[7] = array[row-1][col];
+            		temp[8] = array[row-1][col+1];
+			temp[9] = array[row-1][col+2];
+            		temp[10] = array[row][col-2];
+            		temp[11] = array[row][col-1];
+            		temp[12] = array[row][col];
+            		temp[13] = array[row][col+1];
+            		temp[14] = array[row][col+2];
+            		temp[15] = array[row+1][col-2];
+            		temp[16] = array[row+1][col-1];
+            		temp[17] = array[row+1][col];
+			temp[18] = array[row+1][col+1];
+            		temp[19] = array[row+1][col+2];
+            		temp[20] = array[row+2][col-2];
+            		temp[21] = array[row+2][col-1];
+            		temp[22] = array[row+2][col];
+            		temp[23] = array[row+2][col+1];
+            		temp[24] = array[row+2][col+2];*/
+
             		insertion_sort(temp, 9);
-            		arr[row][col] = temp[4];
+            		arr[row][col] = temp[7];
+			//arr[row][col] = temp[12];
 		}
 	}
 	
