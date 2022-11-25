@@ -96,11 +96,12 @@ int main(int argc, char **argv)
 	
 	for(int i = 0; i < 1; i++)
 	{
-		median_filter(image);
+		//median_filter(image);
 	}
 	//display_img(image);
+	image_binarize(image);
 
-	SDL_SaveBMP(image, "image_median.bmp");
+	IMG_SavePNG(image, "image_median.png");
 	free(image);
 	return EXIT_SUCCESS;
 }

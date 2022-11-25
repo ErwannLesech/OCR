@@ -3,104 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-
-/*static Uint8* image_get_pixel_ref(SDL_Surface *image, int h, int w)
-{
-    int bpp = image->format->BytesPerPixel;
-    Uint8 *pixels = image->pixels;
-    return pixels + h * image->pitch + w * bpp;
-}
-
-
-Uint32 image_get_pixel(SDL_Surface *image, int h, int w)
-{
-    Uint8 *p = image_get_pixel_ref(image, h, w);
-
-    switch (image->format->BytesPerPixel)
-    {
-    case 1:
-        return *p;
-        break;
-
-    case 2:
-        return *(Uint16 *) p;
-        break;
-
-    case 3:
-        if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else
-            return p[0] | p[1] << 8 | p[2] << 16;
-        break;
-
-    case 4:
-        return *(Uint32 *) p;
-        break;
-
-    default:
-        return 0;
-    }
-}
-
-void image_set_pixel(SDL_Surface *image, int h, int w, Uint32 pixel)
-{
-    Uint8 *p = image_get_pixel_ref(image, h, w);
-
-    switch (image->format->BytesPerPixel)
-    {
-    case 1:
-        *p = pixel;
-        break;
-
-    case 2:
-        *(Uint16 *) p = pixel;
-        break;
-
-    case 3:
-        if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-        {
-            p[0] = (pixel >> 16) & 0xff;
-            p[1] = (pixel >> 8) & 0xff;
-            p[2] = pixel & 0xff;
-        }
-        else
-        {
-            p[0] = pixel & 0xff;
-            p[1] = (pixel >> 8) & 0xff;
-            p[2] = (pixel >> 16) & 0xff;
-        }
-        break;
-
-    case 4:
-        *(Uint32 *) p = pixel;
-        break;
-
-    default:
-        break;
-    }
-}
-
-int *get_histogram(SDL_Surface *image)
-{
-	int *histogram = calloc(256, sizeof(int));
-	int *p = histogram;
-
-	for (int height = 0; height < image->h; height++)
-	{
-		for (int width = 0; width < image->w; width++)
-		{
-			Uint8 r,g,b;
-            		Uint32 pixel = image_get_pixel(image, height, width);
-            		SDL_GetRGB(pixel, image->format, &r, &g, &b);
-            
-	    		histogram[r]++;
-        }
-    }
-
-    return histogram;
-}
-
-
+/*
 int get_threshold(SDL_Surface *image)
 {
 	int threshold;
@@ -163,17 +66,90 @@ void image_binarize(SDL_Surface *image)
             image_set_pixel(image, h, w, new_pixel);
         }
     }
-}*/
+}
+*/
 
-Uint32 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
+
+void print_histo(int *histo, int x)
+{
+	for(int i = 0; i < x; i++)
+	{
+		printf("%15i", histo[i]);
+
+		if((i+1)%10 == 0)
+		{
+			printf("\n");
+		}
+	}
+}
+
+
+int *build_histo(SDL_Surface *image)
+{
+	int *histo = calloc(256, sizeof(int));
+	Uint32 *pixels = image->pixels;
+	SDL_PixelFormat *format = image->format;
+
+	for (int height = 0; height < image->h; height++)
+	{
+		for (int width = 0; width < image->w; width++)
+		{
+			Uint8 r,g,b;
+			SDL_GetRGB(pixels[height * (image->w) + width], format, &r, &g, &b);   
+			histo[r]++;
+        	}
+    	}
+	
+	print_histo(histo, 256);
+    	return histo;
+}
+
+
+void image_binarize(SDL_Surface *image)
+{
+	int *histo = build_histo(image);
+	//int threshold = get_threshold(image);
+
+	Uint32 *pixels = image->pixels;
+	SDL_PixelFormat *format = image->format;
+
+	/*for (int height = 0; height < image->h; height++)
+    	{
+        	for (int width = 0; width < image->w; width++)
+        	{
+            		Uint8 r, g, b;
+			int index = height * (image->w) + width;
+            		SDL_GetRGB(pixels[i], format, &r, &g, &b);
+
+            		if (r > threshold)
+			{
+                		pixels[i] = SDL_MapRGB(format, 255, 255, 255);
+			}
+
+            		else
+			{
+                		pixels[i] = SDL_MapRGB(format, 0, 0, 0);
+			}
+        	}
+    	}*/
+
+	free(histo);
+}
+
+/*
+ * NOT WORKING ENOUGHT SADDLY
+*/
+/*Uint8 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
 {
     Uint8 r, g, b;
     SDL_GetRGB(pixel_color, format, &r, &g, &b);
     Uint8 average = 0.3*r + 0.59*g + 0.11*b;
     //Uint8 average = 0.34*r + 0.33*g + 0.33*b;
     r = g = b = average;
-    Uint32 color = SDL_MapRGB(format, r, g, b);
-    return color;
+    return average;
+    //Uint32 color = SDL_MapRGB(format, r, g, b);
+    //printf("%i: %i\n", average, color);
+    //return color;
     
 }
 
@@ -245,26 +221,26 @@ void median_filter(SDL_Surface *image)
 		}
 	}
 
-	/*for(int col = 0; col < width; col++)
-	{
-		array[0][col] = pixel_to_grayscale(pixels[col*height], format);
-		arr[0][col] = 0;
-	}*/
+	//for(int col = 0; col < width; col++)
+	//{
+	//	array[0][col] = pixel_to_grayscale(pixels[col*height], format);
+	//	arr[0][col] = 0;
+	//}
 
 	//print_array(array, height, width);
 
 	for(int row = 1; row < height-1; row++)
 	{
-		int temp2[6];
-            	temp2[0] = array[row-1][0];
-            	temp2[1] = array[row-1][1];
-            	temp2[2] = array[row][0];
-            	temp2[3] = array[row][1];
-            	temp2[4] = array[row+1][0];
-            	temp2[5] = array[row+1][1];
+		//int temp2[6];
+            	//temp2[0] = array[row-1][0];
+            	//temp2[1] = array[row-1][1];
+            	//temp2[2] = array[row][0];
+            	//temp2[3] = array[row][1];
+            	//temp2[4] = array[row+1][0];
+            	//temp2[5] = array[row+1][1];
 
-		insertion_sort(temp2, 6);
-            	arr[row][0] = temp2[3];
+		//insertion_sort(temp2, 6);
+            	//arr[row][0] = temp2[3];
 
 		for(int col = 1; col < width-1; col++)
 		{
@@ -278,34 +254,34 @@ void median_filter(SDL_Surface *image)
             		temp[7] = array[row+1][col];
             		temp[8] = array[row+1][col+1];
 
-			/*temp[0] = array[row-2][col-2];
-            		temp[1] = array[row-2][col-1];
-            		temp[2] = array[row-2][col];
-            		temp[3] = array[row-2][col+1];
-            		temp[4] = array[row-2][col+2];
-            		temp[5] = array[row-1][col-2];
-            		temp[6] = array[row-1][col-1];
-            		temp[7] = array[row-1][col];
-            		temp[8] = array[row-1][col+1];
-			temp[9] = array[row-1][col+2];
-            		temp[10] = array[row][col-2];
-            		temp[11] = array[row][col-1];
-            		temp[12] = array[row][col];
-            		temp[13] = array[row][col+1];
-            		temp[14] = array[row][col+2];
-            		temp[15] = array[row+1][col-2];
-            		temp[16] = array[row+1][col-1];
-            		temp[17] = array[row+1][col];
-			temp[18] = array[row+1][col+1];
-            		temp[19] = array[row+1][col+2];
-            		temp[20] = array[row+2][col-2];
-            		temp[21] = array[row+2][col-1];
-            		temp[22] = array[row+2][col];
-            		temp[23] = array[row+2][col+1];
-            		temp[24] = array[row+2][col+2];*/
+			//temp[0] = array[row-2][col-2];
+            		//temp[1] = array[row-2][col-1];
+            		//temp[2] = array[row-2][col];
+            		//temp[3] = array[row-2][col+1];
+            		//temp[4] = array[row-2][col+2];
+            		//temp[5] = array[row-1][col-2];
+            		//temp[6] = array[row-1][col-1];
+            		//temp[7] = array[row-1][col];
+            		//temp[8] = array[row-1][col+1];
+			//temp[9] = array[row-1][col+2];
+            		//temp[10] = array[row][col-2];
+            		//temp[11] = array[row][col-1];
+            		//temp[12] = array[row][col];
+            		//temp[13] = array[row][col+1];
+            		//temp[14] = array[row][col+2];
+            		//temp[15] = array[row+1][col-2];
+            		//temp[16] = array[row+1][col-1];
+            		//temp[17] = array[row+1][col];
+			//temp[18] = array[row+1][col+1];
+            		//temp[19] = array[row+1][col+2];
+            		//temp[20] = array[row+2][col-2];
+            		//temp[21] = array[row+2][col-1];
+            		//temp[22] = array[row+2][col];
+            		//temp[23] = array[row+2][col+1];
+            		//temp[24] = array[row+2][col+2];
 
             		insertion_sort(temp, 9);
-            		arr[row][col] = temp[7];
+            		arr[row][col] = temp[4];
 			//arr[row][col] = temp[12];
 		}
 	}
@@ -314,7 +290,17 @@ void median_filter(SDL_Surface *image)
 	{
 		for(int b = 0; b < width; b++)
 		{
-			pixels[a * width + b] = arr[a][b];
+			//if(arr[a][b] >= 8000000)
+			//{
+			//	pixels[a * width + b] = SDL_MapRGB(format, 255, 255, 255);
+			//}
+
+			//else
+			//{
+			//	pixels[a * width + b] = SDL_MapRGB(format, 0, 0, 0);
+			//}
+
+			pixels[a * width + b] = SDL_MapRGB(format, arr[a][b], arr[a][b], arr[a][b]);
 		}
 	}
 
@@ -322,4 +308,4 @@ void median_filter(SDL_Surface *image)
 	//print_array(arr, height, width);
 	free(array);
 	free(arr);
-}
+}*/
