@@ -44,29 +44,6 @@ int get_threshold(SDL_Surface *image)
     free(histogram);
     return threshold;
 }
-
-
-void image_binarize(SDL_Surface *image)
-{
-    int threshold = get_threshold(image);
-
-    for (int h = 0; h < image->h; h++)
-    {
-        for (int w = 0; w < image->w; w++)
-        {
-            Uint8 r, g, b;
-            Uint32 pixel = image_get_pixel(image, h, w);
-            SDL_GetRGB(pixel, image->format, &r, &g, &b);
-
-            Uint32 new_pixel;
-            if (r > threshold)
-                new_pixel = SDL_MapRGB(image->format, 255, 255, 255);
-            else
-                new_pixel = SDL_MapRGB(image->format, 0, 0, 0);
-            image_set_pixel(image, h, w, new_pixel);
-        }
-    }
-}
 */
 
 
@@ -100,40 +77,82 @@ int *build_histo(SDL_Surface *image)
         	}
     	}
 	
-	print_histo(histo, 256);
+	//print_histo(histo, 256);
     	return histo;
+}
+
+
+int get_threshold(SDL_Surface *image)
+{
+	int threshold;
+    	double current_max;
+    	int sum;
+    	int sum_background;
+    	int weight_background;
+    	int nb_pixels = image->h * image->w;
+
+    	int *histogram = build_histo(image);
+    	for (int i = 0; i < 256; i++)
+	{
+		sum += i * histogram[i];
+	}
+
+    	for (int i = 0; i < 256; i++)
+    	{
+        	weight_background += histogram[i];
+        	int weight_foreground = nb_pixels - weight_background;
+       		if (weight_background == 0 || weight_foreground == 0)
+            		continue;
+
+        	sum_background += i * histogram[i];
+        	int sum_foreground = sum - sum_background;
+
+        	double f_weight_background = weight_background;
+        	double f_weight_foreground = weight_foreground;
+        	double mean_background = sum_background / f_weight_background;
+        	double mean_foreground = sum_foreground / f_weight_foreground;
+        	double mean_diff = mean_background - mean_foreground;
+
+        	double variance = f_weight_background * f_weight_foreground * mean_diff * mean_diff;
+        	if (variance > current_max)
+        	{
+            		current_max = variance;
+            		threshold = i;
+        	}
+    	}
+
+    	free(histogram);
+    	return threshold;
 }
 
 
 void image_binarize(SDL_Surface *image)
 {
-	int *histo = build_histo(image);
-	//int threshold = get_threshold(image);
+	int threshold = get_threshold(image);
+	printf("\n%i", threshold);
 
 	Uint32 *pixels = image->pixels;
 	SDL_PixelFormat *format = image->format;
 
-	/*for (int height = 0; height < image->h; height++)
+	for (int height = 0; height < image->h; height++)
     	{
         	for (int width = 0; width < image->w; width++)
         	{
             		Uint8 r, g, b;
 			int index = height * (image->w) + width;
-            		SDL_GetRGB(pixels[i], format, &r, &g, &b);
+            		SDL_GetRGB(pixels[index], format, &r, &g, &b);
 
             		if (r > threshold)
 			{
-                		pixels[i] = SDL_MapRGB(format, 255, 255, 255);
+                		pixels[index] = SDL_MapRGB(format, 255, 255, 255);
 			}
 
             		else
 			{
-                		pixels[i] = SDL_MapRGB(format, 0, 0, 0);
+                		pixels[index] = SDL_MapRGB(format, 0, 0, 0);
 			}
         	}
-    	}*/
-
-	free(histo);
+    	}
 }
 
 /*
