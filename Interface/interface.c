@@ -87,6 +87,63 @@ void quickOCR()
         }*/
     }
 }
+void step_click_OCR()
+{
+	if(file)
+    	{
+        	size_t lenF = strlen(file);
+        	if(lenF == 0) 
+		{
+            		switch(bsolve) 
+	    		{
+            		case 0:
+                		gtk_label_set_text(GTK_LABEL(label), "Choose Your Grid !");
+                		break;
+            		case 1:
+                		gtk_label_set_text(GTK_LABEL(label), "CHOOSE YOUR GRID !");
+                		break;
+            		case 2:
+                		gtk_label_set_text(GTK_LABEL(label), "CHOOSE IT !!!!!!");
+                		break;
+            		}
+           	 	bsolve += bsolve <= 2;
+        	}
+	}
+	/*else* if(lenF >4)
+	{
+		gtk_label_set_text(GTK_LABEL(label), "Processing ...");
+		if(main_ImageProcess(file))
+		{
+			gtk_label_set_text(GTK_LABEL(label), "Grayscale");
+                    	gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*)
+                        "results/step9_Solved.png");
+
+			gtk_label_set_text(GTK_LABEL(label), "Binarization");
+
+			gtk_label_set_text(GTK_LABEL(label), "Sobel Filter");
+
+			gtk_label_set_text(GTK_LABEL(label), "Hough Transform")
+
+			gtk_label_set_text(GTK_LABEL(label), "Separate")
+
+			gtk_label_set_text(GTK_LABEL(label), "Processing ...")
+
+
+
+
+                } 
+		else 
+		{
+                    gtk_label_set_text(GTK_LABEL(label), "No Solution Found !");
+                }
+            } 
+	    else 
+	    {
+                gtk_label_set_text(GTK_LABEL(label), ".PNG OR .JPG");
+            }
+        }
+	 */
+}
 void stepOCR()
 {
 	if(file)
