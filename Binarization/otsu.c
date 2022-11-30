@@ -82,9 +82,9 @@ int *build_histo(SDL_Surface *image)
 }
 
 
-int get_threshold(SDL_Surface *image)
+int get_threshold(SDL_Surface *image, int *histo)
 {
-	int threshold;
+	/*int threshold;
     	double current_max;
     	int sum;
     	int sum_background;
@@ -122,14 +122,59 @@ int get_threshold(SDL_Surface *image)
     	}
 
     	free(histogram);
+    	return threshold;*/
+	
+	unsigned long sum = 0, sum_back = 0;
+	unsigned long weight_fore = 0, weight_back = 0;
+    	unsigned long mean_fore = 0, mean_back = 0;
+    	float variance = 0, max = 0;
+    	int threshold1 = 0, threshold2 = 0;
+	int leng = image->w * image->h;
+
+    	for(int i = 0; i < 256; i++)
+	{
+		sum += i * histo[i];
+	}
+
+    	for(int i = 0; i < 256; i++)
+    	{
+        	weight_back += histo[i];
+        	if(weight_back == 0)
+		{
+            		continue;
+		}
+
+        	weight_fore = leng - weight_back;
+        	if(weight_fore == 0)
+		{
+            		break;
+		}
+
+        	sum_back += i * histo[i];
+        	mean_back = sum_back / weight_back;
+        	mean_fore = (sum - sum_back) / weight_fore;
+        	variance = weight_back * weight_fore * (mean_back - mean_fore) * (mean_back - mean_fore);
+        	
+		if(variance >= max)
+        	{
+            		threshold1 = i;
+
+            		if(variance > max)
+                	threshold2 = i;
+            		max = variance;
+        	}
+    	}
+
+    	int threshold = ((threshold1 + threshold2) / 2);
+    	printf("threshold = %u\n", threshold);
     	return threshold;
 }
 
 
 void image_binarize(SDL_Surface *image)
 {
-	int threshold = get_threshold(image);
-	printf("\n%i", threshold);
+	int *histo = build_histo(image);
+	int threshold = get_threshold(image, histo);
 
 	Uint32 *pixels = image->pixels;
 	SDL_PixelFormat *format = image->format;
@@ -155,9 +200,12 @@ void image_binarize(SDL_Surface *image)
     	}
 }
 
+
 /*
- * NOT WORKING ENOUGHT SADDLY
+ * MEDIAN FILTER NOT WORKING ENOUGHT SADDLY
 */
+
+
 /*Uint8 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
 {
     Uint8 r, g, b;
