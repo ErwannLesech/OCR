@@ -5,9 +5,10 @@
 #include "neuronal_network_functions.h"
 #include "main.h"
 #include "debug_tool.h"
+#include "../Solver/main.h"
 
 const unsigned int input_neurons = 784;
-const unsigned int hidden_neurons = 128;
+const unsigned int hidden_neurons = 10;
 const unsigned int output_neurons = 9;
 
 double learning_rate = 0.1;
@@ -15,7 +16,7 @@ long epochs = 10000;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
-void predict(char *a, char *b);
+void predict();
 
 int main_neural_network(int argc, char *argv[])
 {
@@ -37,7 +38,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1, 9);    
+            train_network(10000, 0.1, 5);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -45,21 +46,10 @@ int main_neural_network(int argc, char *argv[])
         printf("main_xor: load_weights.\n\n");
         load_weights("weights.txt");
     }
-    else if (strcmp(argv[2], "-test") == 0)
+    else if (strcmp(argv[2], "-predict") == 0)
     {
-         matrix input;
-        init_matrix(&input, 784, 9, 0);
-        print_matrix(&input);
-
-        matrix exp_output;
-        init_matrix(&exp_output, 1, 9, 0);
-        //print_matrix(&exp_output);
-
-        init_input_matrix(&input, &exp_output, 9);
-        print_matrix(&input);
-        print_matrix(&exp_output);
-        
-        display_mat(input);
+        printf("predict\n");
+        predict();
     }
     else
     {
@@ -86,18 +76,17 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix Y_t = one_hot(exp_output);
     print_matrix(&Y_t);
 
-    /*multiple_result parameters = initialization(input_neurons, 
+    multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
-    print_matrix(&parameters.a);
+    /*print_matrix(&parameters.a);
     print_matrix(&parameters.b);
     print_matrix(&parameters.c);
     print_matrix(&parameters.d);*/
 
     multiple_result forward_prop;
     multiple_result back_prop;
-
     
-    /*for (long i = 0; i < epochs + 1; i++)
+   /* for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
         forward_prop = forward_propagation(&parameters, &input);
@@ -108,7 +97,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
         upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
         lr);
 
-        if (i % (epochs / 10) == 0)
+        /*if (i % (epochs / 10) == 0)
         {
             
             matrix hw = parameters.a;
@@ -123,8 +112,8 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
             matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
-        }
-    }
+        }*/
+    //}
 
     // Parameters
     matrix hw = parameters.a;
@@ -137,13 +126,13 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix hidden_prop = forward_prop.b;
     matrix output_prop = forward_prop.c;
 
-    print_matrix(&output_prop);
+    //print_matrix(&output_prop);
 
     // Back prop
     matrix dW1 = back_prop.a;
 	matrix dB1 = back_prop.b;
 	matrix dW2 = back_prop.c;
-	matrix dB2 = back_prop.d;*/
+	matrix dB2 = back_prop.d;
 
     // Free all matrices
 
@@ -180,4 +169,87 @@ void load_weights(char *filename)
     printf("\n");
 	print_matrix(&ob);
     printf("\n");
+}
+
+
+void predict()
+{
+    char a[9][9] = {
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.'}
+};
+
+    matrix input;
+    init_matrix(&input, 784, 1, 0);
+    printf("test");
+    
+    /*multiple_result parameters;
+    parameters = load_parameters("weights.txt");
+    matrix hw = parameters.a;
+	matrix hb = parameters.b;
+	matrix ow = parameters.c;
+	matrix ob = parameters.d;*/
+
+    multiple_result parameters = initialization(input_neurons, 
+    hidden_neurons, output_neurons);
+
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            char path[7];
+            path[0] = i + 48;
+            path[1] = j + 48;
+            path[2] = '.';
+            path[3] = 'p';
+            path[4] = 'n';
+            path[5] = 'g';
+            path[6] = '\0';
+            init_input_matrix_test(&input, path);
+            print_matrix(&input);
+            multiple_result forward_prop = forward_propagation(&parameters, &input);
+            matrix output_prop = forward_prop.c;
+            double max = 0;
+            print_matrix(&output_prop);
+            for (size_t k = 0; k < 9; k++)
+            {
+                if (output_prop.data[k] > max && output_prop.data[k] != 0)
+                {
+                    max = output_prop.data[k];
+                }
+            }
+            a[i][j] = max;
+        }
+    }
+    printf("test");
+	FILE* output_file = fopen("ocr_result.txt", "w");
+
+	for(unsigned int i = 0; i < 9; i++)
+	{
+		if(i%3 == 0 && i != 0)
+        {
+			fprintf(output_file, "\n");
+        }
+
+		for(unsigned int j = 0; j < 9; j++)
+		{
+			if(j%3 == 0 && j != 0)
+			{
+				fprintf(output_file, " ");
+			}
+
+			fprintf(output_file, "%c", a[i][j]);
+		}
+
+		fprintf(output_file, "\n");
+	}
+    fprintf(output_file, "\n");
+	fclose(output_file);
 }

@@ -19,6 +19,8 @@ double relu_derivative(double x);
 
 double softmax(double x, size_t index, matrix *m);
 
+void init_input_matrix_test(matrix *input, char *path);
+
 void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs);
 
 multiple_result initialization(int input_neurons, 

@@ -30,6 +30,11 @@ char list_of_paths[9][35] = {
 "08.png",
 };*/
 
+double cost_function(double output, double exp_output)
+{
+	return pow((exp_output - output), 2);
+}
+
 double sigmoid(double x)
 {
 	return 1 / (1 + exp(-x));
@@ -64,6 +69,40 @@ double softmax(double x, size_t index, matrix *m)
 	return exp(get_value(&m, index, 0)) / exp_sum;
 }
 
+void init_input_matrix_test(matrix *input, char *path)
+{
+	SDL_Surface* surface = IMG_Load(path);
+	SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
+		SDL_PIXELFORMAT_RGB888, 0);
+	Uint32* pixels = new_surface->pixels;
+	SDL_PixelFormat* format = new_surface->format;
+	SDL_LockSurface(new_surface);
+	for (int i = 0; i < 784; i++)
+	{
+		if (pixels[i] == NULL)
+		{
+			continue;
+		// errx(EXIT_FAILURE, "%s", SDL_GetError());
+		}
+
+		Uint8 r, g, b;
+		SDL_GetRGB(pixels[i], format, &r, &g, &b);
+		double value = 0;
+		/*if ((r+b+g)/3 >= 127)
+		{
+			value = 1;
+		}
+		else
+		{
+			value = 0;
+		}*/
+		value = (double)((r+b+g)/(double)3)/(double)255;
+		insert_value(input, i, 0, value);
+	}
+	SDL_FreeSurface(new_surface);
+	SDL_UnlockSurface(new_surface);
+}
+
 
 void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 {
@@ -81,7 +120,6 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 		Uint32* pixels = new_surface->pixels;
 		SDL_PixelFormat* format = new_surface->format;
 		SDL_LockSurface(new_surface);
-		printf("test\n");
 		for (int i = 0; i < 784; i++)
 		{
 			if (pixels[i] == NULL)
@@ -93,14 +131,15 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 			Uint8 r, g, b;
 			SDL_GetRGB(pixels[i], format, &r, &g, &b);
 			double value = 0;
-			if ((r+b+g)/3 >= 127)
+			/*if ((r+b+g)/3 >= 127)
 			{
 				value = 1;
 			}
 			else
 			{
 				value = 0;
-			}
+			}*/
+			value = (double)((r+b+g)/(double)3)/(double)255;
 			insert_value(input, i, n, value);
 		}
 		SDL_FreeSurface(new_surface);
@@ -144,19 +183,19 @@ multiple_result forward_propagation(multiple_result *parameters,
 	// HIDDEN LAYER
 	matrix Z1;
 	Z1 = dot_matrix(&hw, inputs);
+	
 
 	add_matrix(&Z1, &hb);
 	matrix A1 = Z1;
-	print_matrix(&A1);
 	relu_matrix(&A1);
-	print_matrix(&A1);
+		
 	
 	// OUTPUT LAYER
 	matrix A2;
 	A2 = dot_matrix(&ow, &A1);
 	add_matrix(&A1, &ob);
 
-	softmax_matrix(&A2);
+	//softmax_matrix(&A2);
 	
 	// Return values
 	multiple_result results;
