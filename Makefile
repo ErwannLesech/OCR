@@ -39,7 +39,8 @@ clean:
 	rm -rf test.txt
 	rm -rf ./Solver/test_grid_01.result
 	rm -rf *.png
-	rm -rf weights.txt
+	rm -rf weights.txt ocr_result.txt
+	rm -rf ./cells
 
 .PHONY: all clean
 

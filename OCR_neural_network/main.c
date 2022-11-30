@@ -9,7 +9,7 @@
 
 const unsigned int input_neurons = 784;
 const unsigned int hidden_neurons = 10;
-const unsigned int output_neurons = 9;
+const unsigned int output_neurons = 10;
 
 double learning_rate = 0.1;
 long epochs = 10000;
@@ -184,11 +184,10 @@ void predict()
 	{'.','.','.','.','.','.','.','.','.'},
 	{'.','.','.','.','.','.','.','.','.'},
 	{'.','.','.','.','.','.','.','.','.'}
-};
+    };
 
     matrix input;
     init_matrix(&input, 784, 1, 0);
-    printf("test");
     
     /*multiple_result parameters;
     parameters = load_parameters("weights.txt");
@@ -200,35 +199,32 @@ void predict()
     multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
 
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
+    for (int i = 0; i < 81; i++)
+    {    
+        char path[12] = "cells/";
+        path[6] = (i/10) + 48;
+        path[7] = (i%10) + 48;
+        path[8] = '.';
+        path[9] = 'p';
+        path[10] = 'n';
+        path[11] = 'g';
+        path[12] = '\0';
+        init_input_matrix_test(&input, path);
+        multiple_result forward_prop = forward_propagation(&parameters, &input);
+        matrix output_prop = forward_prop.c;
+        print_matrix(&output_prop);
+        char max = '0';
+        for (int k = 0; k < 9; k++)
         {
-            char path[7];
-            path[0] = i + 48;
-            path[1] = j + 48;
-            path[2] = '.';
-            path[3] = 'p';
-            path[4] = 'n';
-            path[5] = 'g';
-            path[6] = '\0';
-            init_input_matrix_test(&input, path);
-            print_matrix(&input);
-            multiple_result forward_prop = forward_propagation(&parameters, &input);
-            matrix output_prop = forward_prop.c;
-            double max = 0;
-            print_matrix(&output_prop);
-            for (size_t k = 0; k < 9; k++)
+            printf("%f\n", get_value(&output_prop, k, 0));
+            if (get_value(&output_prop, k, 0) > max - 48 && get_value(&output_prop, k, 0) != 0)
             {
-                if (output_prop.data[k] > max && output_prop.data[k] != 0)
-                {
-                    max = output_prop.data[k];
-                }
+                max = k + 48;
             }
-            a[i][j] = max;
         }
+        a[i/9][i%9] = max;
     }
-    printf("test");
+
 	FILE* output_file = fopen("ocr_result.txt", "w");
 
 	for(unsigned int i = 0; i < 9; i++)
@@ -244,7 +240,6 @@ void predict()
 			{
 				fprintf(output_file, " ");
 			}
-
 			fprintf(output_file, "%c", a[i][j]);
 		}
 

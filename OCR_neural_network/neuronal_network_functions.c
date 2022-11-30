@@ -195,7 +195,7 @@ multiple_result forward_propagation(multiple_result *parameters,
 	A2 = dot_matrix(&ow, &A1);
 	add_matrix(&A1, &ob);
 
-	//softmax_matrix(&A2);
+	softmax_matrix(&A2);
 	
 	// Return values
 	multiple_result results;

@@ -123,19 +123,27 @@ SDL_Surface** separate(SDL_Surface* surface)
             
 void save_image_cut(SDL_Surface** surfaces)
 {
-
-	char name[81][7];
+	mkdir("./cells", 0777);
+	char name[81][14];
 	for (int i = 0; i < 81; i++)
 	{
 		SDL_Surface *new = SDL_CreateRGBSurface(0, 28, 28, 32, 0, 0, 0, 0);
 		SDL_BlitScaled(surfaces[i], NULL, new, NULL);
-		name[i][0] = (i/10) + '0';
-		name[i][1] = (i%10) + '0';
-		name[i][2] = '.';
-		name[i][3] = 'p';
-		name[i][4] = 'n';
-		name[i][5] = 'g';
-		name[i][6] = '\0';
+		name[i][0] = '.';
+		name[i][1] = '/';
+		name[i][2] = 'c';
+		name[i][3] = 'e';
+		name[i][4] = 'l';
+		name[i][5] = 'l';
+		name[i][6] = 's';
+		name[i][7] = '/';
+		name[i][8] = (i/10) + '0';
+		name[i][9] = (i%10) + '0';
+		name[i][10] = '.';
+		name[i][11] = 'p';
+		name[i][12] = 'n';
+		name[i][13] = 'g';
+		name[i][14] = '\0';
 		IMG_SavePNG(new, name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}
