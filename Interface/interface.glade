@@ -32,7 +32,7 @@
         </child>
         <child>
           <object class="GtkButton" id="button1">
-            <property name="label">Solve My Grid Quickely !</property>
+            <property name="label">Print the resolved grid !</property>
             <property name="width-request">230</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
@@ -45,7 +45,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="label">
+          <object class="GtkLabel" id="label1">
             <property name="width-request">230</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
@@ -74,7 +74,7 @@
         </child>
         <child>
           <object class="GtkButton" id="button2">
-            <property name="label" translatable="yes">Solve My Grid Step by Step !</property>
+            <property name="label" translatable="yes">Show me the different steps !</property>
             <property name="width-request">230</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
@@ -84,6 +84,33 @@
           <packing>
             <property name="x">70</property>
             <property name="y">345</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button3">
+            <property name="label" translatable="yes">I will do it !</property>
+            <property name="width-request">230</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">70</property>
+            <property name="y">410</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label2">
+            <property name="width-request">230</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">...</property>
+          </object>
+          <packing>
+            <property name="x">70</property>
+            <property name="y">550</property>
           </packing>
         </child>
       </object>
