@@ -28,6 +28,14 @@ int valid_format(int len)
 	return 0;
 }
 
+/*void resize(char *file)
+{
+	
+	GdkPixbuf *pixbuf = gtk_image_get_pixbuf(file);
+	GdkPixbuf *pixbuf_mini = gdk_pixbuf_scale_simple(pixbuf,500,500, GDK_INTERP_NEAREST);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(preview), pixbuf_mini);
+}*/
+
 void updateImage(GtkFileChooser *fc)
 {
     file = gtk_file_chooser_get_preview_filename(fc);
@@ -41,7 +49,7 @@ void updateImage(GtkFileChooser *fc)
 	{
             gtk_label_set_text(GTK_LABEL(label1), "Please choose a .pneg or .jpg");
         }
-	
+	//resize(file);
         gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*) file);
     }
 }
