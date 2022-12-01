@@ -13,7 +13,7 @@ const unsigned int hidden_neurons = 10;
 const unsigned int output_neurons = 10;
 
 double learning_rate = 0.1;
-long epochs = 1000;
+long epochs = 10000;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1, 13);    
+            train_network(1000, 0.1, 60);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -87,7 +87,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     multiple_result forward_prop;
     multiple_result back_prop;
     
-    /* for (long i = 0; i < epochs + 1; i++)
+     for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
         forward_prop = forward_propagation(&parameters, &input);
@@ -114,7 +114,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
             matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
         }*/
-    //}
+    }
 
     // Parameters
     matrix hw = parameters.a;
@@ -124,7 +124,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
     save_parameters(&parameters, "./OCR_neural_network/weights.txt");
 
-    load_weights("./OCR_neural_network/weights.txt");
+    // load_weights("./OCR_neural_network/weights.txt");
 
     matrix hidden_prop = forward_prop.b;
     matrix output_prop = forward_prop.c;
@@ -158,7 +158,7 @@ void load_weights(char *filename)
 {
     multiple_result parameters;
 
-    parameters = load_parameters(filename);
+    parameters = load_parameters(filename, input_neurons, hidden_neurons, output_neurons);
     matrix hw = parameters.a;
 	matrix hb = parameters.b;
 	matrix ow = parameters.c;

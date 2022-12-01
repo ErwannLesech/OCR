@@ -52,7 +52,6 @@ double softmax(double x, size_t index, matrix *m)
 	{
 		exp_sum = 0.0001;
 	}
-	
 	return exp(get_value(&m, index, 0)) / exp_sum;
 }
 
@@ -153,9 +152,9 @@ multiple_result initialization(int input_neurons,
 	matrix ob;
 
 	init_rand_matrix(&hw, hidden_neurons, input_neurons);
-	init_matrix(&hb, hidden_neurons, 1, 0);
+	init_rand_matrix(&hb, hidden_neurons, 1);
 	init_rand_matrix(&ow, output_neurons, hidden_neurons);
-	init_matrix(&ob, output_neurons, 1, 0);
+	init_rand_matrix(&ob, output_neurons, 1);
 
 	multiple_result neurons;
 	neurons.a = hw;
@@ -178,18 +177,17 @@ multiple_result forward_propagation(multiple_result *parameters,
 	// HIDDEN LAYER
 	matrix Z1;
 	Z1 = dot_matrix(&hw, inputs);
-	
-
 	add_matrix(&Z1, &hb);
+
 	matrix A1 = Z1;
 	relu_matrix(&A1);
 		
-	
 	// OUTPUT LAYER
-	matrix A2;
-	A2 = dot_matrix(&ow, &A1);
-	add_matrix(&A1, &ob);
+	matrix Z2;
+	Z2 = dot_matrix(&ow, &Z2);
+	add_matrix(&Z1, &ob);
 
+	matrix A2 = Z2;
 	softmax_matrix(&A2);
 	
 	// Return values
