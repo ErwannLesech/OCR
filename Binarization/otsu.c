@@ -3,50 +3,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-/*
-int get_threshold(SDL_Surface *image)
-{
-	int threshold;
-    	double current_max;
-    	int sum;
-    	int sum_background;
-    	int weight_background;
-    	int nb_pixels = image->h * image->w;
-
-    	int *histogram = get_histogram(image);
-    	for (int i = 0; i < 256; i++)
-        	sum += i * histogram[i];
-
-    	for (int i = 0; i < 256; i++)
-    	{
-        	weight_background += histogram[i];
-        	int weight_foreground = nb_pixels - weight_background;
-       		if (weight_background == 0 || weight_foreground == 0)
-            		continue;
-
-        	sum_background += i * histogram[i];
-        	int sum_foreground = sum - sum_background;
-
-        	double f_weight_background = weight_background;
-        	double f_weight_foreground = weight_foreground;
-        	double mean_background = sum_background / f_weight_background;
-        	double mean_foreground = sum_foreground / f_weight_foreground;
-        	double mean_diff = mean_background - mean_foreground;
-
-        	double variance = f_weight_background * f_weight_foreground * mean_diff * mean_diff;
-        	if (variance > current_max)
-        	{
-            		current_max = variance;
-            		threshold = i;
-        	}
-    	}
-
-    free(histogram);
-    return threshold;
-}
-*/
-
-
 void print_histo(int *histo, int x)
 {
 	for(int i = 0; i < x; i++)
@@ -84,90 +40,54 @@ int *build_histo(SDL_Surface *image)
 
 int get_threshold(SDL_Surface *image, int *histo)
 {
-	/*int threshold;
-    	double current_max;
-    	int sum;
-    	int sum_background;
-    	int weight_background;
-    	int nb_pixels = image->h * image->w;
-
-    	int *histogram = build_histo(image);
-    	for (int i = 0; i < 256; i++)
-	{
-		sum += i * histogram[i];
-	}
-
-    	for (int i = 0; i < 256; i++)
-    	{
-        	weight_background += histogram[i];
-        	int weight_foreground = nb_pixels - weight_background;
-       		if (weight_background == 0 || weight_foreground == 0)
-            		continue;
-
-        	sum_background += i * histogram[i];
-        	int sum_foreground = sum - sum_background;
-
-        	double f_weight_background = weight_background;
-        	double f_weight_foreground = weight_foreground;
-        	double mean_background = sum_background / f_weight_background;
-        	double mean_foreground = sum_foreground / f_weight_foreground;
-        	double mean_diff = mean_background - mean_foreground;
-
-        	double variance = f_weight_background * f_weight_foreground * mean_diff * mean_diff;
-        	if (variance > current_max)
-        	{
-            		current_max = variance;
-            		threshold = i;
-        	}
-    	}
-
-    	free(histogram);
-    	return threshold;*/
-	
-	unsigned long sum = 0, sum_back = 0;
-	unsigned long weight_fore = 0, weight_back = 0;
-    	unsigned long mean_fore = 0, mean_back = 0;
-    	float variance = 0, max = 0;
-    	int threshold1 = 0, threshold2 = 0;
+	unsigned long sum = 0, sum_back = 0, total_back = 0;
+	double weight_fore = 0, weight_back = 0;
+    	double mean_fore = 0, mean_back = 0;
+    	double variance = 0, max = 0;
+    	int threshold1 = 0;
 	int leng = image->w * image->h;
 
     	for(int i = 0; i < 256; i++)
 	{
 		sum += i * histo[i];
 	}
+	//printf("sum %lu", sum);
 
     	for(int i = 0; i < 256; i++)
     	{
-        	weight_back += histo[i];
-        	if(weight_back == 0)
+        	total_back += histo[i];
+
+		weight_back = (double)total_back / (double)leng;
+		//printf("total_back %lu leng %i = %f ", total_back, leng, weight_back);
+               	weight_fore = 1 - weight_back;
+		//printf("weight_back %f weight_fore %f ", weight_back, weight_fore);
+
+		sum_back += i * histo[i];
+		//printf("sum_back %lu ", sum_back);
+		
+		if(total_back == 0 || total_back == leng)
 		{
-            		continue;
+			continue;
 		}
 
-        	weight_fore = leng - weight_back;
-        	if(weight_fore == 0)
-		{
-            		break;
-		}
+        	mean_back = sum_back / total_back;
+		//printf("mean_back %f ", mean_back);
+        	mean_fore = (sum - sum_back) / (leng - total_back);
+		//printf("mean_fore %f \n", mean_fore);
 
-        	sum_back += i * histo[i];
-        	mean_back = sum_back / weight_back;
-        	mean_fore = (sum - sum_back) / weight_fore;
         	variance = weight_back * weight_fore * (mean_back - mean_fore) * (mean_back - mean_fore);
-        	
+		//printf("variance %f\n", i);
+
 		if(variance >= max)
         	{
+			//printf("threshold %i => variance %f\n", i, variance);
             		threshold1 = i;
-
-            		if(variance > max)
-                	threshold2 = i;
             		max = variance;
         	}
     	}
 
-    	int threshold = ((threshold1 + threshold2) / 2);
-    	printf("threshold = %u\n", threshold);
-    	return threshold;
+    	//printf("threshold = %i\n", threshold1);
+    	return threshold1;
 }
 
 
@@ -187,7 +107,7 @@ void image_binarize(SDL_Surface *image)
 			int index = height * (image->w) + width;
             		SDL_GetRGB(pixels[index], format, &r, &g, &b);
 
-            		if (r > threshold)
+            		if (r >= threshold)
 			{
                 		pixels[index] = SDL_MapRGB(format, 255, 255, 255);
 			}

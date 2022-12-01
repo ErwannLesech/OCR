@@ -35,6 +35,7 @@ $(BUILD)/%.o: %.c
 
 clean:
 	rm -rf $(BUILD) $(TARGET)
+	rm -rf image_otsu.png
 		
 
 .PHONY: all clean
