@@ -13,7 +13,7 @@ const unsigned int hidden_neurons = 10;
 const unsigned int output_neurons = 10;
 
 double learning_rate = 0.1;
-long epochs = 10000;
+long epochs = 1000;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
@@ -123,6 +123,8 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix ob = parameters.d;
 
     save_parameters(&parameters, "./OCR_neural_network/weights.txt");
+
+    load_weights("./OCR_neural_network/weights.txt");
 
     matrix hidden_prop = forward_prop.b;
     matrix output_prop = forward_prop.c;

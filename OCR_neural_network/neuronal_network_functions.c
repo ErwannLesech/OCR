@@ -13,15 +13,18 @@ double cost_function(double output, double exp_output)
 	return pow((exp_output - output), 2);
 }
 
+
 double sigmoid(double x)
 {
 	return 1 / (1 + exp(-x));
 }
 
+
 double sigmoid_derivative(double x)
 {
 	return x * (1 - x);
 }
+
 
 double relu(double x)
 {
@@ -30,10 +33,12 @@ double relu(double x)
 	return 0;
 }
 
+
 double relu_derivative(double x)
 {
 	return x > 0;
 }
+
 
 double softmax(double x, size_t index, matrix *m)
 {
@@ -50,6 +55,7 @@ double softmax(double x, size_t index, matrix *m)
 	
 	return exp(get_value(&m, index, 0)) / exp_sum;
 }
+
 
 void init_input_matrix_test(matrix *input, char *path)
 {
@@ -195,6 +201,7 @@ multiple_result forward_propagation(multiple_result *parameters,
 	return results;
 }
 
+
 matrix exp_output_init(matrix exp_output)
 {
 	matrix one_hot_Y;
@@ -253,6 +260,7 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 
 	return back_prop;
 }
+
 
 multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	multiple_result *forward_prop, multiple_result *back_prop, double lr)

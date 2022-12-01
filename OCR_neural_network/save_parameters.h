@@ -3,4 +3,5 @@
 
 void save_parameters(multiple_result *parameters, char path[]);
 
-multiple_result load_parameters(char path[]);
+multiple_result load_parameters(char path[], int input_neurons,
+	int hidden_neurons, int output_neurons);

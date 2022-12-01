@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "save_parameters.h"
 
+
 void save_parameters(multiple_result *parameters, char path[])
 {
 	FILE *file = fopen(path, "w");
@@ -93,28 +94,31 @@ void save_parameters(multiple_result *parameters, char path[])
 	}
 }
 
-multiple_result load_parameters(char path[])
+
+multiple_result load_parameters(char path[], int input_neurons,
+	int hidden_neurons, int output_neurons)
 {
 	FILE *input_file = fopen(path, "r");
     char c;
     int i = 0;
-    char temp[50];
+    char *temp;
     char *useless;
     double dtemp = 0;
 
     matrix hw;
-    init_matrix(&hw, 2, 2, 0);
+    init_matrix(&hw, hidden_neurons, input_neurons, 0);
 	matrix hb;
-    init_matrix(&hb, 1, 2, 0);
+    init_matrix(&hb, hidden_neurons, 1, 0);
 	matrix ow;
-    init_matrix(&ow, 2, 1, 0);
+    init_matrix(&ow, output_neurons, hidden_neurons, 0);
 	matrix ob;
-    init_matrix(&ob, 1, 1, 0);
+    init_matrix(&ob, output_neurons, 1, 0);
+
     multiple_result parameters;
 
     int z = 0;
 
-    for (size_t j = 0; j < 50; j++)
+    for (size_t j = 0; j < hidden_neurons * input_neurons * 2; j++)
     {
         temp[j] = '\0';
     }
