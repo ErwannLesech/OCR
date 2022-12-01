@@ -38,7 +38,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(10000, 0.1, 5);    
+            train_network(10000, 0.1, 13);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -76,15 +76,15 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix Y_t = one_hot(exp_output);
     print_matrix(&Y_t);
 
-    multiple_result parameters = initialization(input_neurons, 
-    hidden_neurons, output_neurons);
+    //multiple_result parameters = initialization(input_neurons, 
+    //hidden_neurons, output_neurons);
     /*print_matrix(&parameters.a);
     print_matrix(&parameters.b);
     print_matrix(&parameters.c);
     print_matrix(&parameters.d);*/
 
-    multiple_result forward_prop;
-    multiple_result back_prop;
+    //multiple_result forward_prop;
+    //multiple_result back_prop;
     
    /* for (long i = 0; i < epochs + 1; i++)
     {        
@@ -115,24 +115,24 @@ void train_network(long epochs, double lr, size_t nbInputs)
         }*/
     //}
 
-    // Parameters
+    /* Parameters
     matrix hw = parameters.a;
     matrix hb = parameters.b;
     matrix ow = parameters.c;
-    matrix ob = parameters.d;
+    matrix ob = parameters.d;*/
 
     //save_parameters(&parameters, "weights.txt");
 
-    matrix hidden_prop = forward_prop.b;
-    matrix output_prop = forward_prop.c;
+    /*matrix hidden_prop = forward_prop.b;
+    matrix output_prop = forward_prop.c;*/
 
     //print_matrix(&output_prop);
 
     // Back prop
-    matrix dW1 = back_prop.a;
+    /*matrix dW1 = back_prop.a;
 	matrix dB1 = back_prop.b;
 	matrix dW2 = back_prop.c;
-	matrix dB2 = back_prop.d;
+	matrix dB2 = back_prop.d;*/
 
     // Free all matrices
 

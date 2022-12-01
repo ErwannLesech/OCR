@@ -5,30 +5,8 @@
 #include <SDL2/SDL.h>
 #include <time.h>
 #include "neuronal_network_functions.h"
+#include "matrix.h"
 
-char list_of_paths[9][35] = {
-"./OCR_neural_network/dataset/1.jpg"
-"./OCR_neural_network/dataset/2.jpg",
-"./OCR_neural_network/dataset/3.jpg",
-"./OCR_neural_network/dataset/4.jpg",
-"./OCR_neural_network/dataset/5.jpg",
-"./OCR_neural_network/dataset/6.jpg",
-"./OCR_neural_network/dataset/7.jpg",
-"./OCR_neural_network/dataset/8.jpg",
-"./OCR_neural_network/dataset/9.jpg"
-};
-
-/*char list_of_paths[9][35] = {
-"00.png",
-"01.png",
-"02.png",
-"03.png",
-"04.png",
-"05.png",
-"06.png",
-"07.png",
-"08.png",
-};*/
 
 double cost_function(double output, double exp_output)
 {
@@ -110,9 +88,17 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 	srand(time(NULL));
 	for (size_t n = 0; n < nbInputs; n++)
 	{
-		int random = rand() % 9;
-		char *path = list_of_paths[random];
-		insert_value(exp_output, 0, n, (double)path[29] - 48);
+		int random = rand() % 10;
+		int random2 = rand() % 10;
+		char path[44] = "./OCR_neural_network/dataset/training/";
+		path[38] = random + 48;
+		path[39] = random2 + 48;
+		path[40] = '.';
+		path[41] = 'p';
+		path[42] = 'n';
+		path[43] = 'g';
+		path[44] = '\0';
+		insert_value(exp_output, 0, n, (double)path[38] - 48);
 
 		SDL_Surface* surface = IMG_Load(path);
 		SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
@@ -145,9 +131,8 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 		SDL_FreeSurface(new_surface);
 		SDL_UnlockSurface(new_surface);
 	}
-
-	printf("end\n");
 }
+
 
 multiple_result initialization(int input_neurons,
 	int hidden_neurons, int output_neurons)
