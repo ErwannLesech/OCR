@@ -1,0 +1,15 @@
+#Layer1 #weights1
+
+#bias1
+
+#Layer2 #weights2
+
+#bias2
+
+.
+.
+.
+
+#Next_layer #Next_layer_weights
+
+#Next_layer_bias

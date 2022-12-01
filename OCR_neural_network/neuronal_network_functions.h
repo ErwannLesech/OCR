@@ -32,14 +32,10 @@ int hidden_neurons, int output_neurons);
 multiple_result forward_propagation(multiple_result *parameters, 
     matrix *inputs);
 
-matrix one_hot(matrix exp_output);
+matrix exp_output_init(matrix exp_output);
 
 multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
     multiple_result *parameters, multiple_result *forward_prop);
 
 multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
     multiple_result *forward_prop, multiple_result *back_prop, double lr);
-
-void save_parameters(multiple_result *parameters, char path[]);
-
-multiple_result load_parameters(char path[]);
