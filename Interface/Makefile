@@ -21,4 +21,5 @@ clean:
 	rm -rf interface
 	rm -rf saved
 	rm -rf interface.glade~
+	rm -rf saved.png
 
