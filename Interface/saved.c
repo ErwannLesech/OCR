@@ -71,14 +71,16 @@ void FillGrid(SDL_Surface* grid, SDL_Surface* cell, int pos)
 {
     int x = pos % 9;
     int y = pos / 9;
-    x = x * 22 + 2 * (x / 3) + x + 3;
+    x = x+1 * 22 + 2 * (x / 3) + x + 3;
     y = y * 22 + 2 * (y / 3) + y + 3;
     int cellSize = cell->w;
+    
     for(int i = 0; i < cellSize; i++)
     {
         for(int j = 0; j < cellSize; j++)
 	{
-            change_pixel(grid, x + i, y + j, take_pixel(cell, i , j));
+
+            //change_pixel(grid, x + i, y + j, take_pixel(cell, i , j));
         }
     }
 }
@@ -93,24 +95,32 @@ void PrettyGrid(char* old, char* solved)
     char blackstr[] = "Data/0b.png";
     for(int i = 0; i < 9; i++)
     {
-        redstr[6] = i + '1';
-        blackstr[6] = i + '1';
+        redstr[5] = i + '1';
+        blackstr[5] = i + '1';
+	//printf("%s et ",redstr);
+	//printf("%s\n",blackstr);
         red[i] = IMG_Load(redstr);
         black[i] = IMG_Load(blackstr);
     }
     for(int i = 0; i < 81; i++)
     {
-	    //printf("%i,%i\n",old[i],solved[i]);
+	    //printf("%c,%c\n",old[i],solved[i]);
 
 	    if(solved[i] == old[i])
 	    {
-		    //printf("%i\n",solved[i]);
-		    FillGrid(grid,black[solved[i]],i);
+		    //printf("%c,",solved[i]);
+		    //printf("%i\n",solved[i]-49);
+		    int indice = solved[i] - '0';
+		    //printf("%i\n", indice-1);
+		    //printf("miaou\n");
+		    FillGrid(grid,black[indice -1],i);
 	    }
-	    //else
-	    //{
-		//FillGrid(grid,red[solved[i]], i);
-	    //}
+	    else
+	    {
+		    //printf("ouaf\n");
+		int indice = solved[i] - '0';
+		FillGrid(grid,red[indice-1], i);
+	    }
     }
     for(int i = 0; i < 9; i++)
     {
@@ -127,46 +137,55 @@ int main/*_save*/(int argc, char** argv)
 {
 	
 	FILE *old = fopen(argv[1], "r");
-	char* o = calloc(81,sizeof(int));
-	char* n = calloc(81,sizeof(int));
+	char* o = calloc(81,sizeof(char));
+	char* n = calloc(81,sizeof(char));
 	char c;
 	char *i = o;
+	int k = 0;
 	while((c=fgetc(old)) != EOF)
 	{
 		if(c != ' ' && c != '\n')
 		{
+			
 			if(c != '.')
 			{
 				//printf(" %c, %i\n",c,c-48);
-				//printf("%c ->",c);
-				*i = c - 48;
-				//printf("%i\n",*i);
+				//printf("%c -> ",c);
+				*i = c;
+				//printf("%c -> ",*i);
+				//printf("%c\n",o[k]);
 				//printf("%i\n",(*o+*i));
 				i +=1;
 			}
 			else
 			{
-				//printf("%c ->",c);
+				//printf("%c -> ",c);
 				*i = ' ' - 32;
-				//printf("%i\n",*i);
-			}
 
+				//printf("%c -> ",*i);
+				//printf("%c\n", o[k]);
+				i+=1;
+			}
+			k+=1;
 		}
 	}
 	fclose(old);
 	FILE *new = fopen(argv[2], "r");
 	char *j = n;
+	k = 0;
 	while((c=fgetc(new)) != EOF)
 	{
 		if(c != ' ' && c != '\n')
 		{
-			//printf("%c ->",c);
-			*j = c - 48;
-			//printf("%i\n",*j);
+			//printf("%c -> ",c);
+			*j = c;
+			//printf("%c -> ",*j);
+			//printf("%c \n", n[k]);
 			j+=1;
-			
+			k+=1;
 		}
 	}
+	printf("ouaf\n");
 	PrettyGrid(o,n);
 	fclose(new);
 	free(o);
