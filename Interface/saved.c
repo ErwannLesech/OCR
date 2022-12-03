@@ -129,6 +129,10 @@ void PrettyGrid(char* old, char* solved)
 
 int main/*_save*/(int argc, char** argv)
 {
+	if(argc != 3)
+	{
+		errx(EXIT_FAILURE, "You need two files");
+	}
 	
 	FILE *old = fopen(argv[1], "r");
 	char* o = calloc(81,sizeof(char));

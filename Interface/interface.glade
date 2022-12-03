@@ -113,6 +113,20 @@
             <property name="y">550</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkScale" id="scale">
+            <property name="width-request">230</property>
+            <property name="height-request">80</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="round-digits">0</property>
+            <property name="digits">0</property>
+          </object>
+          <packing>
+            <property name="x">70</property>
+            <property name="y">482</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>

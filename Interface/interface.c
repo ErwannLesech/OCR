@@ -1,16 +1,22 @@
 #include <gtk/gtk.h>
 #include <string.h>
+#include "saved.h"
+//#include "../Rotate/main.c"
+
 
 static GtkBuilder* builder;
 static GtkWidget* window;
 static GtkWidget* fixed;
 static GtkWidget* fileChooser;
+static GdkPixbuf* pixbuf_2;
 static GtkWidget* button1;
 static GtkWidget* button2;
 static GtkWidget* button3;
 static GtkWidget* label1;
 static GtkWidget* label2;
 static GtkWidget* preview;
+//static GtkWidget* entry;
+static GtkScale* scale;
 static char* file;
 static int bsolve;
 static int stepc;
@@ -28,13 +34,14 @@ int valid_format(int len)
 	return 0;
 }
 
-/*void resize(char *file)
+GdkPixbuf* resize(char *file)
 {
 	
-	GdkPixbuf *pixbuf = gtk_image_get_pixbuf(file);
-	GdkPixbuf *pixbuf_mini = gdk_pixbuf_scale_simple(pixbuf,500,500, GDK_INTERP_NEAREST);
-	gtk_image_set_from_pixbuf(GTK_IMAGE(preview), pixbuf_mini);
-}*/
+	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(file,NULL);
+	pixbuf_2 = gdk_pixbuf_scale_simple(pixbuf,600,600, GDK_INTERP_NEAREST);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(preview), pixbuf_2);
+	return pixbuf_2;
+}
 
 void updateImage(GtkFileChooser *fc)
 {
@@ -49,8 +56,9 @@ void updateImage(GtkFileChooser *fc)
 	{
             gtk_label_set_text(GTK_LABEL(label1), "Please choose a .pneg or .jpg");
         }
-	//resize(file);
-        gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*) file);
+	pixbuf_2 = resize(file);
+        //gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*) file);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
     }
 }
 
@@ -76,30 +84,31 @@ void quickOCR()
             }
             bsolve += bsolve <= 2;
         }
-        /*else if(lenF > 4) 
+        else if(lenF > 4) 
 	 {
             	if(valid_format(lenF)) 
 	    	{
                 
-                	gtk_label_set_text(GTK_LABEL(label), "Processing...");
-                	if(main_ImageProcess(file))
-			{
-                    		gtk_label_set_text(GTK_LABEL(label), "Tadaaaaaa!");
+                	gtk_label_set_text(GTK_LABEL(label1), "Processing...");
+                	//if(main_ImageProcess(file))
+			//{
+				//main_Save(3,test_grid_01 test_grid_02);
+                    		gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
                     		gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*)
-                        	"results/step9_Solved.png");
-                	}
-			else 
+                        	"saved.png");
+                	//}
+			/*else 
 			{
                     		gtk_label_set_text(GTK_LABEL(label), "No Solution Found !");
 				gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*)
 				"error_image2.png");
-                	}
+                	}*/
             	} 
 	    	else 
 	    	{
-                	gtk_label_set_text(GTK_LABEL(label), ".PNG OR .JPG");
+                	gtk_label_set_text(GTK_LABEL(label1), ".PNG OR .JPG");
             	}
-        }*/
+        }
     }
 }
 
@@ -120,7 +129,9 @@ void step_click_OCR()
                 		break;
             		case 2:
                 		gtk_label_set_text(GTK_LABEL(label1), "CHOOSE IT !!!!!!");
-				gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*) "error_image1.jpg");
+				pixbuf_2 = resize("error_image1.jpg");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				//gtk_image_set_from_file(GTK_IMAGE(preview), (const gchar*) "error_image1.jpg");
                 		break;
             		}
            	 	bsolve += bsolve <= 2;
@@ -272,7 +283,7 @@ int main/*_interface*/ (int argc, char **argv)
     	file = "";
     	bsolve = 0;
 	stepc = 0;
-
+	
     	builder = gtk_builder_new_from_file("interface.glade");
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
     	fixed = GTK_WIDGET(gtk_builder_get_object(builder, "fixed"));
@@ -283,17 +294,31 @@ int main/*_interface*/ (int argc, char **argv)
 	label1 = GTK_WIDGET(gtk_builder_get_object(builder, "label1"));
 	label2 = GTK_WIDGET(gtk_builder_get_object(builder, "label2"));
     	preview = GTK_WIDGET(gtk_builder_get_object(builder, "preview"));
+	//entry = GTK_ENTRY(gtk_builder_get_object(builder, "entry"));
+	scale = GTK_SCALE(gtk_builder_get_object(builder, "scale"));
+
+	
 
     	g_signal_connect(window, "destroy",
         	G_CALLBACK(gtk_main_quit), NULL);
     	g_signal_connect(GTK_FILE_CHOOSER(fileChooser), "update-preview",
         	G_CALLBACK (updateImage), NULL);
+	gtk_range_set_range(GTK_RANGE(scale), 1, 360);
+    	gtk_range_set_value(GTK_RANGE(scale), 1);
+	//int angle = gtk_range_set_value(GTK_RANGE(scale));
+	/*if(angle =! 1)
+	{
+		main_rotate(
+	}*/
+
     	g_signal_connect(GTK_BUTTON(button1), "clicked",
         	G_CALLBACK(quickOCR), NULL);
 	g_signal_connect(GTK_BUTTON(button2),"clicked",
 		G_CALLBACK(step_OCR),NULL);
 	g_signal_connect(GTK_BUTTON(button3),"clicked",
 		G_CALLBACK(step_click_OCR), NULL);
+	//g_signal_connect(entry,"activate",
+		//G_CALLBACK(
 
     gtk_widget_show(window);
     gtk_main();
