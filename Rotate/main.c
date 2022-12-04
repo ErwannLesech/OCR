@@ -71,7 +71,7 @@ SDL_Surface* rotate_img(SDL_Surface* surface, double degree)
 }
 
 
-int main_rotate(int argc, char** argv)
+int main/*_rotate*/(int argc, char** argv)
 {
 	//Check the number of arguments
 	if (argc != 4)
@@ -92,7 +92,7 @@ int main_rotate(int argc, char** argv)
 	SDL_Surface* turned = rotate_img(surface, -angler);
 
 	//Save of the rotation
-	SDL_SaveBMP(turned, "test2.bmp");
+	IMG_SavePNG(turned, "rotate.png");
 	
 	SDL_FreeSurface(surface);
 	SDL_FreeSurface(turned);
