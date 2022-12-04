@@ -184,8 +184,8 @@ multiple_result forward_propagation(multiple_result *parameters,
 		
 	// OUTPUT LAYER
 	matrix Z2;
-	Z2 = dot_matrix(&ow, &Z2);
-	add_matrix(&Z1, &ob);
+	Z2 = dot_matrix(&ow, &A1);
+	add_matrix(&Z2, &ob);
 
 	matrix A2 = Z2;
 	softmax_matrix(&A2);
@@ -222,13 +222,15 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix ow = parameters->c;
 	double m = exp_outputs->cols;
 
+	
+
 	matrix dZ2;
 	dZ2 = substract_matrix(&A2, exp_outputs);
 	
-	matrix A2_t;
-	A2_t = transpose_matrix(&A1);
+	matrix A1_t;
+	A1_t = transpose_matrix(&A1);
 	matrix dW2;
-	dW2 = dot_matrix(&dZ2, &A2_t);
+	dW2 = dot_matrix(&dZ2, &A1_t);
 	dW2 = multiply_matrix(&dW2, (1/m));
 
 	matrix dB2;
@@ -286,7 +288,7 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	hw = substract_matrix(&hw, &dHW);
 
 	matrix dHB;
-	dHB = multiply_matrix(&dW1, lr);
+	dHB = multiply_matrix(&dB1, lr);
 	hb = substract_matrix(&hb, &dHB);
 
 	parameters->a = hw;
