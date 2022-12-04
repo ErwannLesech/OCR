@@ -22,4 +22,4 @@ clean:
 # END
 
 #test: load_img.c load_img.h main.c array_utils.c array_utils.h display_img.c display_img.h 
-#	gcc -o test main.c focus_grid.c find_square.c load_img.c utils.c canny_filter.c display_img.c hough_translate.c utils_hough_translate.c $(sdl2-config --cflags --libs) -lSDL2_image -lm
+#	gcc -o test auto_rot.c main.c focus_grid.c find_square.c load_img.c utils.c canny_filter.c display_img.c hough_translate.c utils_hough_translate.c $(sdl2-config --cflags --libs) -lSDL2_image -lm

@@ -51,7 +51,6 @@ SDL_Surface * focus_grid(SDL_Surface * sdl, struct Squares squares){
         {
               if (pmin.x <x && pmin.y< y && pmax.x > x && pmax.y > y)
               {
-                printf("+1\n");
                  pixels_new[(y-pmin.y)*sdl_surface->w + (x-pmin.x)] =  pixels[y*sdl->w + x];
               }
               // pixels[y*sdl_surface->w + x]=

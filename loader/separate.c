@@ -44,14 +44,23 @@ void change_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
         case 2:
             *(Uint16 *)p = pixel;
             break;
-        case 3:
+       case 3:
             if(SDL_BYTEORDER == SDL_BIG_ENDIAN){
                 p[0] = (pixel >> 16) & 0xFF;
                 p[1] = (pixel >> 8) & 0xFF;
-                p[#include "separate.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+                p[2] = pixel & 0xFF;
+            }
+            else{
+                p[0] = pixel & 0xFF;
+                p[1] = (pixel >> 8) & 0xFF;
+                p[2] = (pixel >> 16) & 0xFF;
+            }
+            break;
+        case 4:
+            *(Uint32 *)p = pixel;
+            break;
+    }
+}
 
 //Take the pixel
 
@@ -146,21 +155,7 @@ SDL_Surface** separate(SDL_Surface* surface)
 				{
 					int xsurface = j * size + x;
         	            		int ysurface = i * size + y;
-       	             
-					if (is_in_image(surface, xsurface, 
-								ysurface))
-        	            		{
-       	                 
-						change_pixel(surfaces[index],
-						x, y, take_pixel(surface,
-						    xsurface,ysurface));
-					} 
-					
-					else 
-					{
-      	                  			change_pixel(surfaces[index], 
-							x, y, 0xFFFFFFFF);
-      	              			}
+       	        
       	          		}
      	       		}
     	    	}
@@ -189,18 +184,6 @@ void save_image_cut(SDL_Surface** surfaces)
 		SDL_SaveBMP(new, name[i]);
 		SDL_FreeSurface(surfaces[i]);
 	}
-}2] = pixel & 0xFF;
-            }
-            else{
-                p[0] = pixel & 0xFF;
-                p[1] = (pixel >> 8) & 0xFF;
-                p[2] = (pixel >> 16) & 0xFF;
-            }
-            break;
-        case 4:
-            *(Uint32 *)p = pixel;
-            break;
-    }
 }
 
 //Verify if the (x,y) is in the surface

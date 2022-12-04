@@ -120,23 +120,23 @@ void draw_square(SDL_Surface * sdl, struct Square square){
     int w = sdl->w;
     for (int i = square.pA.x; i < square.pB.x; i++)
     {
-        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
-        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
     }
     for (int i = square.pB.y; i > square.pC.y; i--)
     {
-        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 127,32,127);
-        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 255,32,0);
     }
     for (int i = square.pB.x; i < square.pA.x; i++)
     {
-        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
-        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
     }
     for (int i = square.pC.y; i > square.pB.y; i--)
     {
-        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 127,32,127);
-        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 127,32,127);
+        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 255,32,0);
     }
     SDL_UnlockSurface(sdl);
 }

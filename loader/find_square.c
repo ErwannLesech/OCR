@@ -73,7 +73,7 @@ int isSquare(struct Square square){
     {
         min = l4;
     }
-    if (abs(max - min) > 5)
+    if (abs(max - min) > 2)
     {
         return 0;
     }
@@ -105,13 +105,16 @@ struct Squares simplify_squares(struct Squares squares){
 }
 
 
-struct Squares find_square(struct Lines lines, int min_size, int max_size){
+struct Squares find_square(struct Lines lines, int max_size){
     int a = 0;
      struct Square * squares = malloc(sizeof(struct Square)*30000);
     for (size_t i = 0; i < lines.size; i++)
     {
+        if(lines.lines[i].x_end >= 0 && lines.lines[i].x_start >= 0 
+        &&lines.lines[i].y_end >= 0 && lines.lines[i].y_start >= 0)
+        {
         if (lines.lines[i].theta >= 80 && lines.lines[i].theta <=100 
-        ||(lines.lines[i].theta >= -10 && lines.lines[i].theta <=10 ) )
+        ||(lines.lines[i].theta >= -10 && lines.lines[i].theta <=10))
         {
             for (size_t j = 0; j < lines.size; j++)
             {
@@ -119,11 +122,15 @@ struct Squares find_square(struct Lines lines, int min_size, int max_size){
                 {
                     continue;
                 }
+            if (lines.lines[j].x_end >= 0 && lines.lines[j].x_start >= 0 
+        &&lines.lines[j].y_end >= 0 && lines.lines[j].y_start >= 0)
+                   
                 if (lines.lines[j].theta >= 80 && lines.lines[j].theta <=100 
-        ||(lines.lines[j].theta >= -10 && lines.lines[j].theta <=10 ) )
+        ||(lines.lines[j].theta >= -10 && lines.lines[j].theta <=10 
+       ) )
             {
                 struct Point pB = find_intersection(lines.lines[i], lines.lines[j]);
-                if (pB.x != -1)
+                if (pB.x != -1 && pB.x > 0 && pB.x < max_size && pB.y > 0 && pB.y < max_size)
                 {
                     for (size_t k = 0; k < lines.size; k++)
                     {
@@ -131,11 +138,14 @@ struct Squares find_square(struct Lines lines, int min_size, int max_size){
                     {
                         continue;
                     }
+                    if(lines.lines[k].x_end >= 0 && lines.lines[k].x_start >= 0 
+        &&lines.lines[k].y_end >= 0 && lines.lines[k].y_start >= 0 )
+        {
                         if (lines.lines[k].theta >= 80 && lines.lines[k].theta <=100 
         ||(lines.lines[k].theta >= -10 && lines.lines[k].theta <=10))
                         {
                             struct Point pC = find_intersection(lines.lines[k], lines.lines[j]);
-                            if(pC.x != -1)
+                            if(pC.x != -1 && pC.x >= 0 && pC.x < max_size && pC.y >= 0 && pC.y < max_size)
                             {
                                 for (size_t l = 0; l < lines.size; l++)
                                 {
@@ -143,29 +153,34 @@ struct Squares find_square(struct Lines lines, int min_size, int max_size){
                                     {
                                         continue;
                                     }
+                                    if (lines.lines[l].x_end >= 0 && lines.lines[l].x_start >= 0 
+        &&lines.lines[l].y_end >= 0 && lines.lines[l].y_start >= 0)
+                                    {
                                      if (lines.lines[l].theta >= 80 && lines.lines[l].theta <=100 
-        || (lines.lines[l].theta >= -10 && lines.lines[l].theta <=10))
+        || (lines.lines[l].theta >= -10 && lines.lines[l].theta <=10) )
                                     {
                                         struct Point pD = find_intersection(lines.lines[k], lines.lines[l]);
                                         struct Point pA = find_intersection(lines.lines[l], lines.lines[i]);
                                         struct Square square = {.pA = pA, .pB = pB, .pC = pC, .pD = pD, .len = dist(square.pA.x, square.pA.y, square.pB.x, square.pB.y)};
-                                        if (pD.x != -1 && pA.x != -1 && isSquare(square) == 1)
+                                        if (pD.x != -1 && pA.x != -1 && isSquare(square) == 1
+                                        && pC.x > 0 && pC.x < max_size && pC.y > 0 && pC.y < max_size
+                                        )
                                         {
-                                       /* printf("x:a: %d, b: %d, c: %d, d: %d\n" ,pA.x, pB.x, pC.x, pD.x);
-                                        printf("y:a: %d, b: %d, c: %d, d: %d\n", pA.y, pB.y, pC.y, pD.y);  */                          
+                                        /*printf("x:a: %d, b: %d, c: %d, d: %d\n" ,pA.x, pB.x, pC.x, pD.x);
+                                        printf("y:a: %d, b: %d, c: %d, d: %d\n", pA.y, pB.y, pC.y, pD.y);   */                     
                            
                                             squares[a] = square;
                                             a++;
                                         }
                                         
-                                    }
+                                    }}
                                 }
                                 
                             }
-                        }
+                        }}
                     }   
                 }   
-            }
+            }}
         }
     }
     }

@@ -96,9 +96,9 @@ struct Lines Hough(SDL_Surface *sdl_surface){
     int num_points = 0;
   
    
-        for (int y = 0; y < sdl_surface->h; y++)
+        for (int y = 4; y < sdl_surface->h-4; y++)
         {
-        for (int x = 0; x < sdl_surface->w; x++)
+        for (int x = 4; x < sdl_surface->w-4; x++)
         {
            Uint8 r,g,b;
            SDL_GetRGB(pixels[y*(sdl_surface->w) + x], 
