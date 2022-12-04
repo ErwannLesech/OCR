@@ -45,7 +45,7 @@ int main_neural_network(int argc, char *argv[])
     else if (strcmp(argv[2], "-weights") == 0)
     {
         printf("main_xor: load_weights.\n\n");
-        load_weights("weights.txt");
+        load_weights("./OCR_neural_network/weights.txt");
     }
     else if (strcmp(argv[2], "-predict") == 0)
     {
@@ -87,7 +87,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     multiple_result forward_prop;
     multiple_result back_prop;
     
-     for (long i = 0; i < epochs + 1; i++)
+    /* for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
         forward_prop = forward_propagation(&parameters, &input);
@@ -98,7 +98,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
         upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
         lr);
 
-        /*if (i % (epochs / 10) == 0)
+        if (i % (epochs / 10) == 0)
         {
             
             matrix hw = parameters.a;
@@ -113,8 +113,8 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
             matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
-        }*/
-    }
+        }
+    }*/
 
     // Parameters
     matrix hw = parameters.a;

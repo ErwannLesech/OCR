@@ -100,14 +100,14 @@ multiple_result load_parameters(char path[], int input_neurons,
 {
     FILE *input_file = fopen(path, "r");
     char c;
-
-    //int i = 0;
-    /*char *temp;
-    char *useless;*/
-    char temp_value[8];
+    double dtemp;
+    //char temp_value[8];
+    char *temp_value = calloc(8, sizeof(char));
+    //char *p = temp_value;
     int temp_index = 0;
     int negative = 0;
-    int matrix_number = 1;
+    int matrix_number = 0;
+    int rows = 0, cols = 0;
 
     matrix hw;
     init_matrix(&hw, hidden_neurons, input_neurons, 0);
@@ -118,96 +118,160 @@ multiple_result load_parameters(char path[], int input_neurons,
     matrix ow;
     init_matrix(&ow, output_neurons, hidden_neurons, 0);
 
-    matrix ob;
+    matrix ob ;
     init_matrix(&ob, output_neurons, 1, 0);
 
     multiple_result parameters;
 
-    /*int z = 0;
-
-    for (size_t j = 0; j < hidden_neurons * input_neurons * 2; j++)
-    {
-        temp[j] = '\0';
-    }*/
 
     while((c=fgetc(input_file)) != EOF)
     {
-        /*temp[i] = c;
-        i++;*/
-        if(c == '\n')
+	//printf("%f", hw.data[0]);
+	//printf("mn: %i\n", matrix_number);
+        
+
+	/*if(i <= hidden_neurons * input_neurons * 8)
 	{
-		matrix_number++;
-		temp_index = 0;
-	}
-
-	else if (c == ' ')
+		if(c != ' ' && c != '\n' && c != '-')
+		{
+			i++;
+		}
+	}*/
+	
+	if ((c == ' ' || c == '\n') && temp_index >= 7)
         {
-            if(temp[1] != '\0' && temp[1] != ' ')
-            {
-                dtemp = strtod(temp_value);
+	    dtemp = strtod(temp_value, NULL);
 
-                switch (z)
-                {
-                    case 0:
-                        insert_value(&hw, 0, 0, dtemp);
-                        break;
+	    if(negative)
+	    {
+		    dtemp *= -1;
+	    }
+	   
+            switch(matrix_number)
+	    {
+		    case 0:
+			    /*if(rows == 0 && cols == 0)
+			    {
+			    	for(int i = 0; i < 8; i++)
+				{
+			    		printf("%c", temp_value[i]);
+				}
+			    	printf("\n");
+
+				printf("%f\n", dtemp);
+				insert_value(&hw, 0, 0, dtemp);
+				printf("%f", hw.data[0]);
+				rows++;
+				cols++;
+				
+			    }*/
+
+			 insert_value(&hw, rows, cols, dtemp);
+			 //printf("row: %i, col: %i\n", rows, cols);
+			 if(rows  >= hidden_neurons-1 && cols >= input_neurons-1)
+			 {
+				//iprintf("%f", dtemp);
+			 	rows = 0;
+				cols = 0;
+				matrix_number++;
+			 }
+			 
+			 else if(cols >= input_neurons-1)
+			 {
+			 	rows++;
+				cols = 0;
+			 }
+
+			 else
+			 {
+			 	cols++;
+			 }
+
+			 break;
 
                     case 1:
-                        insert_value(&hw, 0, 1, dtemp);
-                        break;
+			/*for(int i = 0; i < 8; i++)
+			{
+			    printf("%c", temp_value[i]);
+			}*/
 
+			//printf("row: %i, col: %i, temp: %f\n", rows, cols, dtemp);
+                        insert_value(&hb, rows, 0, dtemp);
+			if(rows == hidden_neurons-1)
+			{
+			 	rows = 0;
+				cols = 0;
+				matrix_number++;
+			}
+			 
+			else
+			{
+			 	rows++;
+			}
+
+                        break;
+                    
                     case 2:
-                        insert_value(&hw, 1, 0, dtemp);
-                        break;
+                        insert_value(&ow, rows, cols, dtemp);
+			if(rows == output_neurons-1 && cols == hidden_neurons-1)
+			{
+			 	rows = 0;
+				cols = 0;
+				matrix_number++;
+			}
+			 
+			else if(cols == hidden_neurons-1)
+			{
+			 	rows++;
+				cols = 0;
+			}
 
+			else
+			{
+			 	cols++;
+			}
+
+                        break;
+                    
                     case 3:
-                        insert_value(&hw, 1, 1, dtemp);
-                        break;
+                        insert_value(&ob, rows, 0, dtemp);
+			if(rows == output_neurons-1)
+			{
+			 	rows = 0;
+				cols = 0;
+				matrix_number++;
+			}
 
-                    case 4:
-                        insert_value(&hb, 0, 0, dtemp);
-                        break;
-                    
-                    case 5:
-                        insert_value(&hb, 0, 1, dtemp);
-                        break;
-                    case 6:
-                        insert_value(&ow, 0, 0, dtemp);
-                        break;
-                    
-                    case 7:
-                        insert_value(&ow, 1, 0, dtemp);
-                        break;
+			else
+			{
+			 	rows++;
+			}
 
-                    case 8:
-                        insert_value(&ob, 0, 0, dtemp);
                         break;
                     
                     default:
                         break;
-                }
-
-                for (size_t j = 0; j < 50; j++)
-                {
-                    temp[j] = '\0';
-                }
-
-                i = 0;
-                z++;
-                dtemp = 0;
-            }
+	    }
 
 	    temp_index = 0;
+	    negative = 0;
         }
+	
+	else if(c == '-')
+	{
+		negative = 1;
+	}
 
 	else
 	{
 		temp_value[temp_index] = c;
 		temp_index++;
 	}
+   
     }
-
+ 
     fclose(input_file);
+    free(temp_value);
     
     parameters.a = hw;
     parameters.b = hb;
