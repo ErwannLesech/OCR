@@ -6,7 +6,7 @@
 #include "SDL2/SDL_image.h"
 
 
-int main_separate(int argc, char** argv)
+int main/*_separate*/(int argc, char** argv)
 {
 	//Verify the number of arguments
 	if (argc != 3)
@@ -22,8 +22,14 @@ int main_separate(int argc, char** argv)
 	// Creat a surface from the path
 	SDL_Surface* surface = IMG_Load(argv[2]);
 	
-	//Separate + save the surface
+	//Separate + clean +save the surface
 	SDL_Surface **surfaces = separate(surface);
+	for (int i = 0; i < 81; i++)
+	{
+		surfaces[i]= clear(surfaces[i]);
+	}
+
+	
 	save_image_cut(surfaces);
 
 	SDL_FreeSurface(surface);

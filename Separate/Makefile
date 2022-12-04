@@ -12,5 +12,6 @@ separate: ${OBJ}
 clean:
 	${RM} ${OBJ}
 	${RM} ${DEP}
+	rm -rf cells
 	rm -rf separate
 	rm -rf *.png

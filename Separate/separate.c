@@ -69,6 +69,39 @@ int is_in_image(SDL_Surface *surface, int x, int y)
     return 0 <= x && x < surface->w && 0 <= y && y < surface->h;
 }
 
+//Clean the black on surfaces
+
+SDL_Surface* clear(SDL_Surface* surface)
+{
+	Uint32 pixelb =SDL_MapRGBA(surface->format, 255, 255, 255, 255);
+	for(int i =0; i < surface->w; i ++)
+	{
+		if(i<=surface->w/6 || i>=5*surface->w/6)
+		{
+			for(int j = 0;j<surface->h; j++)
+			{
+				change_pixel(surface,i,j, pixelb);
+			}
+		}
+		
+	}
+	for(int i = 0; i<surface->h;i ++)
+	{	
+		if(i<=surface->h/6 || i>=5*surface->h/6)
+		{
+
+			for(int j = 0; j < surface->w; j++)
+			{
+				change_pixel(surface,j,i,pixelb);
+			}
+		}
+	}
+
+
+
+	return surface;
+}
+
 //Separate the surface in 9x9 surfaces
 
 SDL_Surface** separate(SDL_Surface* surface)
@@ -119,16 +152,18 @@ SDL_Surface** separate(SDL_Surface* surface)
 	return surfaces;
 }
 
-//Save the 9x9 surfaces in .bmp
+
+//Save the 9x9 surfaces in .png
             
 void save_image_cut(SDL_Surface** surfaces)
 {
 	mkdir("./cells", 0777);
-	char name[81][14];
+	char name[81][15];
 	for (int i = 0; i < 81; i++)
 	{
 		SDL_Surface *new = SDL_CreateRGBSurface(0, 28, 28, 32, 0, 0, 0, 0);
 		SDL_BlitScaled(surfaces[i], NULL, new, NULL);
+
 		name[i][0] = '.';
 		name[i][1] = '/';
 		name[i][2] = 'c';
