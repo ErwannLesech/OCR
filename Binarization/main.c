@@ -16,7 +16,9 @@ int main(int argc, char **argv)
 {
 	SDL_Surface *image = init_img(argv[1]);
 	
-	//median_filter(image);
+	//blur_filter(image);
+	median_filter(image);
+	blur_filter(image);
 	image_binarize(image);
 	//median_filter(image);
 

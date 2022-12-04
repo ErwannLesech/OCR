@@ -121,12 +121,58 @@ void image_binarize(SDL_Surface *image)
 }
 
 
+float gaussian_kernel[5][5] = {{1.0, 4.0,  6.0,  4.0 , 1.0 },
+                   {4.0 , 16.0 , 24.0 , 16.0 , 4.0 },
+                   {6.0 , 24.0 , 36.0 , 24.0 , 6.0 },
+                   {4.0 , 16.0 , 24.0 , 16.0 , 4.0 },
+                   {1.0 , 4.0  ,  6.0 ,  4.0 , 1.0 }};
+
+
+void blur_filter(SDL_Surface* image)
+{
+ 	SDL_LockSurface(image);
+  	Uint32* pixels = image->pixels;
+	SDL_PixelFormat *format = image->format;
+
+    	for (int x = 2; x < image->w-2; x++)
+    	{
+        	for (int y = 2; y < image->h-2; y++)
+        	{
+            		float red = 0;
+            		float green = 0;
+            		float blue = 0;
+            		for (size_t i = 0; i < 5; i++)
+            		{   
+                		for (size_t j = 0; j < 5; j++)
+                		{  
+                    			int xn = x + i - 2;
+                    			int yn = y + j - 2;  
+                    			Uint32 RGB = (Uint32)pixels[yn*(image->w) + xn];
+                    			Uint8 r, g, b;
+                    			SDL_GetRGB(RGB, format, &r, &g, &b);
+                    			red += ((float)r)*((gaussian_kernel[i][j])/256.0);
+                   			green += ((float)g)*((gaussian_kernel[i][j])/256.0);      
+                    			blue+= ((float)b)*((gaussian_kernel[i][j])/256.0);
+                		}
+			}
+
+           		Uint32 color = SDL_MapRGB(format, 
+					(Uint8)red,(Uint8)green,(Uint8) blue);
+            		pixels[y*(image->w) + x] = color;
+        	}
+    	}
+
+     	SDL_UnlockSurface(image);
+
+   // print_array(mat, h, w);
+}
+
 /*
  * MEDIAN FILTER NOT WORKING ENOUGHT SADDLY
 */
 
 
-/*Uint8 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
+Uint8 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
 {
     Uint8 r, g, b;
     SDL_GetRGB(pixel_color, format, &r, &g, &b);
@@ -295,4 +341,5 @@ void median_filter(SDL_Surface *image)
 	//print_array(arr, height, width);
 	free(array);
 	free(arr);
-}*/
+}
+
