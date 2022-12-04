@@ -98,43 +98,53 @@ void save_parameters(multiple_result *parameters, char path[])
 multiple_result load_parameters(char path[], int input_neurons,
 	int hidden_neurons, int output_neurons)
 {
-	FILE *input_file = fopen(path, "r");
+    FILE *input_file = fopen(path, "r");
     char c;
-    int i = 0;
-    char *temp;
-    char *useless;
-    double dtemp = 0;
+
+    //int i = 0;
+    /*char *temp;
+    char *useless;*/
+    char temp_value[8];
+    int temp_index = 0;
+    int negative = 0;
+    int matrix_number = 1;
 
     matrix hw;
     init_matrix(&hw, hidden_neurons, input_neurons, 0);
-	matrix hb;
+
+    matrix hb;
     init_matrix(&hb, hidden_neurons, 1, 0);
-	matrix ow;
+
+    matrix ow;
     init_matrix(&ow, output_neurons, hidden_neurons, 0);
-	matrix ob;
+
+    matrix ob;
     init_matrix(&ob, output_neurons, 1, 0);
 
     multiple_result parameters;
 
-    int z = 0;
+    /*int z = 0;
 
     for (size_t j = 0; j < hidden_neurons * input_neurons * 2; j++)
     {
         temp[j] = '\0';
-    }
-    i = 0;
+    }*/
 
     while((c=fgetc(input_file)) != EOF)
+    {
+        /*temp[i] = c;
+        i++;*/
+        if(c == '\n')
 	{
-        temp[i] = c;
-        i++;
-        
-        if (c == ' ' || c == '\n')
+		matrix_number++;
+		temp_index = 0;
+	}
+
+	else if (c == ' ')
         {
-            
             if(temp[1] != '\0' && temp[1] != ' ')
             {
-                dtemp = strtod(temp, &useless);
+                dtemp = strtod(temp_value);
 
                 switch (z)
                 {
@@ -161,7 +171,6 @@ multiple_result load_parameters(char path[], int input_neurons,
                     case 5:
                         insert_value(&hb, 0, 1, dtemp);
                         break;
-
                     case 6:
                         insert_value(&ow, 0, 0, dtemp);
                         break;
@@ -177,22 +186,33 @@ multiple_result load_parameters(char path[], int input_neurons,
                     default:
                         break;
                 }
+
                 for (size_t j = 0; j < 50; j++)
                 {
                     temp[j] = '\0';
                 }
+
                 i = 0;
                 z++;
                 dtemp = 0;
             }
+
+	    temp_index = 0;
         }
+
+	else
+	{
+		temp_value[temp_index] = c;
+		temp_index++;
 	}
+    }
+
     fclose(input_file);
-
-	parameters.a = hw;
-	parameters.b = hb;
-	parameters.c = ow;
-	parameters.d = ob;
-
-	return parameters;
+    
+    parameters.a = hw;
+    parameters.b = hb;
+    parameters.c = ow;
+    parameters.d = ob;
+    
+    return parameters;
 }
