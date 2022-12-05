@@ -52,8 +52,7 @@ void surface_to_grayscale_and_black_white(SDL_Surface* surface)
 
 SDL_Surface* init_img(char* path){
      SDL_Surface* surface = IMG_Load(path);
-    SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
-        SDL_PIXELFORMAT_RGB888, 0);
+    SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGB888, 0);
     SDL_FreeSurface(surface);
     //surface_to_grayscale(new_surface);
     return new_surface;

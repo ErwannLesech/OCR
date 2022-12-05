@@ -113,3 +113,53 @@ void change_mat(SDL_Surface * sdl_surface,struct Lines lines){
     //draw_line(sdl_surface, lines.lines[100]);
     SDL_UnlockSurface(sdl_surface);
 }
+
+void draw_square(SDL_Surface * sdl, struct Square square){
+    SDL_LockSurface(sdl);
+    Uint32* pixels = sdl->pixels;
+    int w = sdl->w;
+    for (int i = square.pA.x; i < square.pB.x; i++)
+    {
+        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
+    }
+    for (int i = square.pB.y; i > square.pC.y; i--)
+    {
+        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 255,32,0);
+    }
+    for (int i = square.pB.x; i < square.pA.x; i++)
+    {
+        pixels[square.pA.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[square.pD.y*w + i] = SDL_MapRGB(sdl->format, 255,32,0);
+    }
+    for (int i = square.pC.y; i > square.pB.y; i--)
+    {
+        pixels[i*w + square.pC.x] = SDL_MapRGB(sdl->format, 255,32,0);
+        pixels[i*w + square.pD.x] = SDL_MapRGB(sdl->format, 255,32,0);
+    }
+    SDL_UnlockSurface(sdl);
+}
+
+void draw_squares(SDL_Surface * sdl_surface, struct Squares squares){
+    for (size_t i = 0; i < squares.size; i++)
+    {
+        draw_square(sdl_surface, squares.squares[i]);
+    }
+    
+}
+
+void draw_points(SDL_Surface * sdl, struct Points points){
+    SDL_LockSurface(sdl);
+    Uint32* pixels = sdl->pixels;
+    int w = sdl->w; 
+    for (size_t i = 0; i < points.size; i++)
+    {
+        pixels[(points.points[i].y-1)*w + points.points[i].x -1] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[points.points[i].y*w + points.points[i].x] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[(points.points[i].y)*w + points.points[i].x +1] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[(points.points[i].y+1)*w + points.points[i].x +1] = SDL_MapRGB(sdl->format, 255,0,0);
+        pixels[(points.points[i].y+1)*w + points.points[i].x ] = SDL_MapRGB(sdl->format, 255,0,0);
+    }
+    
+}

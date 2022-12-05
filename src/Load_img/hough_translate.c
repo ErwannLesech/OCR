@@ -44,7 +44,7 @@ struct Line make_line(double theta, double rho, int w, int h, int val){
             centerX);
 
 struct Line line = { .x_start = x1, .y_start = y1, .x_end = x2, .y_end = y2, 
-        .val = val};
+        .val = val, .theta = degrees_ToRadians(theta) };
     return line;
     }
     else {
@@ -56,7 +56,7 @@ struct Line line = { .x_start = x1, .y_start = y1, .x_end = x2, .y_end = y2,
         y2=(int) ((((rho - houghHeight) - ((x2 - centerX) * tcos)) / tsin) + 
             centerY); 
         struct Line line = { .x_start = x1, .y_start = y1, .x_end = x2, 
-            .y_end = y2, .val = val};
+            .y_end = y2, .val = val, .theta = theta };
     return line;
 }
 }
@@ -96,22 +96,20 @@ struct Lines Hough(SDL_Surface *sdl_surface){
     int num_points = 0;
   
    
-        for (int y = 0; y < sdl_surface->h; y++)
+        for (int y = 4; y < sdl_surface->h-4; y++)
         {
-        for (int x = 0; x < sdl_surface->w; x++)
+        for (int x = 4; x < sdl_surface->w-4; x++)
         {
            Uint8 r,g,b;
            SDL_GetRGB(pixels[y*(sdl_surface->w) + x], 
                 sdl_surface->format, &r, &g,&b);
             if (r ==255)
             {
-                //printf("+1\n");
                 for (int theta = 0; theta < 180; theta++)
                 {
                     double rho = (x-centerX)*saveCos[theta]+ 
                         (y-centerY)*saveSin[theta];
                     int rrho = (int)rho + diagonal;
-                    //printf("%i\n", rho);
                     if (r >= 2*diagonal)
                     {
                         continue;
@@ -119,7 +117,6 @@ struct Lines Hough(SDL_Surface *sdl_surface){
                     accum_mat[rrho][theta]++;
                     if (accum_mat[rrho][theta] > max )
                     {
-                     //   printf("%i,%i,%i,%f, %f, %f\n", x, y, theta, rho, saveCos[theta], saveSin[theta]);
                         max = accum_mat[rrho][theta];
                     }
                     
@@ -164,8 +161,6 @@ struct Lines Hough(SDL_Surface *sdl_surface){
           if (ismax == 0)
           {
               double theta = t * (M_PI/180);
-        //printf("%i, %f\n", r,theta); 
-        //struct Line ligne = make_line(theta, r, sdl_surface->w, sdl_surface->h, val);
              lines[e] = make_line(theta, r, sdl_surface->w, sdl_surface->h, 
                 val);
             e++;
@@ -173,15 +168,7 @@ struct Lines Hough(SDL_Surface *sdl_surface){
             }
         }
     }
-sort_Lines(lines, e);
-   /* for (int j = 0; j < e; j++)
-    {
-        struct Line line = lines[j];
-      
-     printf("x:%i,%i and y:%i,%i, val = %i \n", line.x_start, line.x_end, 
-            line.y_start, line.y_end,line.val);
-    }
-    */
+//sort_Lines(lines, e);
     
     struct Lines linnes = {.lines = lines, .size = e};
      SDL_UnlockSurface(sdl_surface);

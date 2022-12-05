@@ -2,10 +2,10 @@ CC := gcc
 BUILD := build
 TARGET := main
 
-CPPFLAGS = 
-CFLAGS = 
-LDFLAGS := $(sdl2-config --cflags --libs) 
-LDLIBS := -lm -lSDL2_image -lSDL2
+CPPFLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --cflags sdl2`
+CFLAGS = -Wall -Wextra -std=c99 -O3 -lm
+LDFLAGS := $(sdl2-config --cflags --libs) -fsanitize=address
+LDLIBS := -lm -lSDL2_image -lSDL2 -lasan `pkg-config --libs gtk+-3.0` `pkg-config --libs sdl2` -lpthread
 
 RELEASE := 1
 ifneq ($(RELEASE), 0)

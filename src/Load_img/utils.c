@@ -25,6 +25,12 @@ int** init_array_i(int m, int n)
     }
     return rows;
 }
+
+void destroy_array(unsigned int** arr)
+{
+   /* free(*arr);
+    free(arr);*/
+}
 void print_array(float** arr, int height, int weight)
 {
     printf("[");

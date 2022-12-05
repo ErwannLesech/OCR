@@ -1,2 +1,3 @@
- #pragma once
- void main_load(int argc, char* argv[]);
+#pragma once
+
+void main_load(char* img_path);

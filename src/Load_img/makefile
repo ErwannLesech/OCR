@@ -1,14 +1,25 @@
 CC = gcc
-CPPFLAGS=  `pkg-config --cflags --libs sdl2 SDL2_image`
-CFLAGS= -Wall -Wextra -O3 `pkg-config --cflags --libs sdl2 SDL2_image` 
-LDFLAGS= $(sdl2-config --cflags --libs) 
-LDLIBS=  -lSDL2_image -lm
+CPPFLAGS = -MMD
+CFLAGS = #-Wall -Wextra
+LDFLAGS = $(sdl2-config --cflags --libs)
+LDLIBS = -lSDL2_image 
 
-SRC= main_image.c
-OBJ=$(SRC:.c=.o)
-DEP=$(SRC:.c=.d)
+SRC = load_img.c utils.c canny_filter.c main.c turn_img.c display_img.c 
+OBJ = ${SRC:.c=.o}
+DEP = ${SRC:.c=.d}
 
-separate: ${OBJ}
-all: main
+main: ${OBJ}
+
+-include ${DEP}
+
+.PHONY: clean
+
 clean:
-	rm -rf main
+	${RM} ${OBJ}
+	${RM} ${DEP}
+	${RM} main
+
+# END
+
+#test: load_img.c load_img.h main.c array_utils.c array_utils.h display_img.c display_img.h 
+#	gcc -o test auto_rot.c main.c focus_grid.c find_square.c load_img.c utils.c canny_filter.c display_img.c hough_translate.c utils_hough_translate.c $(sdl2-config --cflags --libs) -lSDL2_image -lm
