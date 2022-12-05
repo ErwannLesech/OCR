@@ -19,5 +19,5 @@ all: main
 clean: 
 	rm -rf $(OBJ)
 	rm -rf main
-	rm -rf interface.glade~
+	rm -rf saved.png
 

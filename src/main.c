@@ -6,7 +6,8 @@
 #include "Solver/main.h"
 #include "Load_img/main.h"
 #include "Separate/main.h"
-// #include "Interface/main.h"
+#include "Interface/main.h"
+#include "Saved/main.h"
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +40,14 @@ int main(int argc, char *argv[])
     else if(strcmp(argv[1], "-separate") == 0)
     {
         main_separate(argc, argv);
+    }
+    else if(strcmp(argv[1], "-save") == 0)
+    {
+	main_save(argc,argv);
+    }
+    else if(strcmp(argv[1], "-interface") == 0)
+    {
+	main_interface(argc,argv);
     }
 
     else if (strcmp(argv[1], "-help") == 0)
