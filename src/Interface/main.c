@@ -36,7 +36,7 @@ GdkPixbuf* resize(char *file)
 {
 	
 	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(file,NULL);
-	pixbuf_2 = gdk_pixbuf_scale_simple(pixbuf,600,600, GDK_INTERP_NEAREST);
+	pixbuf_2 = gdk_pixbuf_scale_simple(pixbuf,900,900, GDK_INTERP_NEAREST);
 	gtk_image_set_from_pixbuf(GTK_IMAGE(preview), pixbuf_2);
 	return pixbuf_2;
 }
@@ -137,8 +137,8 @@ void step_click_OCR()
 		else if(lenF >4)
 		{
 			gtk_label_set_text(GTK_LABEL(label1), "Let's gooooooo");
-			if(main_load(file))
-			{
+			//if(main_load(file))
+			//{
 				switch(stepc)
 				{
 				case 0:
@@ -162,7 +162,7 @@ void step_click_OCR()
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				}
-			}
+			//}
 		}
 	}
 				/*case 4:
@@ -281,7 +281,7 @@ void step_OCR()
 */
 }
 
-int main/*_interface*/ (int argc, char **argv)
+int main_interface(int argc, char **argv)
 {
 	gtk_init(&argc, &argv);
     	file = "";
