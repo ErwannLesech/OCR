@@ -1,3 +1,4 @@
+#include <stddef.h>
 #pragma once
 
 int main_xor(int argc, char *argv[]);

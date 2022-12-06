@@ -1,3 +1,3 @@
 #pragma once
 
-int main_separate(int argc, char **argv);
+int main_separate(char*path);

@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     else if(strcmp(argv[1], "-separate") == 0)
     {
-        main_separate(argc, argv);
+        main_separate(argv[2]);
     }
     else if(strcmp(argv[1], "-save") == 0)
     {

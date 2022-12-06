@@ -171,7 +171,7 @@ int main_save(char* grille1, char* grille2)
 }
 
 
-int main(int argc, char** argv)
+/*int main(int argc, char** argv)
 {
 	if(argc != 4)
 	{
@@ -217,3 +217,4 @@ int main(int argc, char** argv)
 	free(n);
 	return 1;
 }
+*/

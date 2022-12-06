@@ -25,7 +25,7 @@ int main_separate(char*path)
 	return EXIT_SUCCESS;
 }
 
-int main(int argc, char** argv)
+/*int main(int argc, char** argv)
 {
 	//Verify the number of arguments
 	if (argc != 3)
@@ -57,3 +57,4 @@ int main(int argc, char** argv)
 
 	return EXIT_SUCCESS;
 }
+*/

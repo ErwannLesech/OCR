@@ -139,7 +139,7 @@ int main_solver(char* sudoku)
 	save_sudoku(filename);
 	
 }
-int main(int argc, char **argv)
+/*int main(int argc, char **argv)
 {
 	if(argc < 3)
 	{
@@ -225,3 +225,4 @@ int main(int argc, char **argv)
 
 	return EXIT_SUCCESS;
 }
+*/
