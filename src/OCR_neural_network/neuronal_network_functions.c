@@ -184,25 +184,25 @@ multiple_result forward_propagation(multiple_result *parameters,
 	
 	// HIDDEN LAYER
 	matrix Z1;
-	//Z1 = dot_matrix(&hw, inputs);
+	Z1 = dot_matrix(&hw, inputs);
 	add_matrix(&Z1, &hb);
 
-	/*matrix A1 = Z1;
-	relu_matrix(&A1);*/
+	matrix A1 = Z1;
+	relu_matrix(&A1);
 		
 	// OUTPUT LAYER
-	/*matrix Z2;
+	matrix Z2;
 	Z2 = dot_matrix(&ow, &A1);
 	add_matrix(&Z2, &ob);
 
 	matrix A2 = copy_matrix(&Z2);
-	softmax_matrix(&A2);*/
+	softmax_matrix(&A2);
 	
 	// Return values
 	multiple_result results;
 	results.a = Z1;
-	/*results.b = A1;
-	results.c = A2;*/
+	results.b = A1;
+	results.c = A2;
 
 	return results;
 }
@@ -220,7 +220,7 @@ matrix exp_output_init(matrix exp_output)
 	return one_hot_Y;
 }
 
-
+// Backpropagation
 multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 	multiple_result *parameters, multiple_result *forward_prop)
 {
@@ -229,8 +229,6 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix A2 = forward_prop->c;
 	matrix ow = parameters->c;
 	double m = exp_outputs->cols;
-
-	
 
 	matrix dZ2;
 	dZ2 = substract_matrix(&A2, exp_outputs);

@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(0, 0.001, 60);    
+            train_network(1000, 0.01, 8);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -71,18 +71,18 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
     
     init_input_matrix(&input, &exp_output, nbInputs);
-    // print_matrix(&input);
-    // print_matrix(&exp_output);
+    print_matrix(&input);
+    print_matrix(&exp_output);
 
     matrix Y_t = exp_output_init(exp_output);
-    // print_matrix(&Y_t);
+    print_matrix(&Y_t);
 
     multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
-    print_matrix(&parameters.a);
+    /*print_matrix(&parameters.a);
     print_matrix(&parameters.b);
     print_matrix(&parameters.c);
-    print_matrix(&parameters.d);
+    print_matrix(&parameters.d);*/
 
     multiple_result forward_prop;
     multiple_result back_prop;
@@ -90,9 +90,10 @@ void train_network(long epochs, double lr, size_t nbInputs)
     for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
+        
         forward_prop = forward_propagation(&parameters, &input);
 
-        /*back_prop = back_propagation(&exp_output, &input,
+        back_prop = back_propagation(&exp_output, &input,
         &parameters, &forward_prop);
 
         upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
@@ -113,7 +114,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
             matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
-        }*/
+        }
     }
 
     // Parameters
@@ -122,12 +123,17 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix ow = parameters.c;
     matrix ob = parameters.d;
 
-    //save_parameters(&parameters, "./OCR_neural_network/weights.txt");
+    print_matrix(&hw);
+    print_matrix(&hb);
+    print_matrix(&ow);
+    print_matrix(&ob);
 
-    free_matrix(&hw);
+    save_parameters(&parameters, "./OCR_neural_network/weights.txt");
+
+    /*free_matrix(&hw);
     free_matrix(&hb);
     free_matrix(&ow);
-    free_matrix(&ob);
+    free_matrix(&ob);*/
 
     //load_weights("./OCR_neural_network/weights.txt");
 
@@ -135,17 +141,17 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix A1 = forward_prop.b;
     matrix A2 = forward_prop.c;
 
-    free_matrix(&Z1);
+    /*free_matrix(&Z1);
     free_matrix(&A1);
-    free_matrix(&A2);
+    free_matrix(&A2);*/
 
-    // print_matrix(&output_prop);
+    print_matrix(&A2);
 
     // Back prop
-    /*matrix dW1 = back_prop.a;
+    matrix dW1 = back_prop.a;
 	matrix dB1 = back_prop.b;
 	matrix dW2 = back_prop.c;
-	matrix dB2 = back_prop.d;*/
+	matrix dB2 = back_prop.d;
 
     // Free all matrices
 
@@ -153,11 +159,11 @@ void train_network(long epochs, double lr, size_t nbInputs)
     /*free_matrix(&dW1);
     free_matrix(&dB1);
     free_matrix(&dW2);
-    free_matrix(&dB2);*/
+    free_matrix(&dB2);
 
     free_matrix(&input);
     free_matrix(&exp_output);
-    free_matrix(&Y_t);
+    free_matrix(&Y_t);*/
 }
 
 
