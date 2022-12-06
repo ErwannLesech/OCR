@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.01, 8);    
+            train_network(1000, 0.01, 60);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -75,7 +75,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     print_matrix(&exp_output);
 
     matrix Y_t = exp_output_init(exp_output);
-    print_matrix(&Y_t);
+    //print_matrix(&Y_t);
 
     multiple_result parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
@@ -87,7 +87,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     multiple_result forward_prop;
     multiple_result back_prop;
     
-    for (long i = 0; i < epochs + 1; i++)
+    /*for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
         
@@ -115,7 +115,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
             matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
         }
-    }
+    }*/
 
     // Parameters
     matrix hw = parameters.a;
@@ -230,11 +230,9 @@ void predict()
         init_input_matrix_test(&input, path);
         multiple_result forward_prop = forward_propagation(&parameters, &input);
         matrix output_prop = forward_prop.c;
-        print_matrix(&output_prop);
         char max = '0';
         for (int k = 0; k < 9; k++)
         {
-            printf("%f\n", get_value(&output_prop, k, 0));
             if (get_value(&output_prop, k, 0) > max - 48 && get_value(&output_prop, k, 0) != 0)
             {
                 max = k + 48;
@@ -243,7 +241,7 @@ void predict()
         a[i/9][i%9] = max;
     }
 
-	FILE* output_file = fopen("ocr_result.txt", "w");
+	FILE* output_file = fopen("grid.txt", "w");
 
 	for(unsigned int i = 0; i < 9; i++)
 	{
@@ -265,4 +263,5 @@ void predict()
 	}
     fprintf(output_file, "\n");
 	fclose(output_file);
+    printf("Done\n");
 }

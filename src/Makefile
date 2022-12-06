@@ -39,7 +39,7 @@ clean:
 	rm -rf test.txt
 	rm -rf ./Solver/test_grid_01.result
 	rm -rf *.png
-	rm -rf ./OCR_neural_network/weights.txt ocr_result.txt
+	rm -rf ./OCR_neural_network/weights.txt grid.txt
 	rm -rf ./cells
 
 .PHONY: all clean

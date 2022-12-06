@@ -97,16 +97,19 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 	srand(time(NULL));
 	for (size_t n = 0; n < nbInputs; n++)
 	{
-		int random = rand() % 10;
+		int number = rand() % 10;
+		int random = rand() % 8;
 		int random2 = rand() % 10;
-		char path[44] = "./OCR_neural_network/dataset/training/";
-		path[38] = random + 48;
-		path[39] = random2 + 48;
-		path[40] = '.';
-		path[41] = 'p';
-		path[42] = 'n';
-		path[43] = 'g';
-		path[44] = '\0';
+		char path[46] = "./OCR_neural_network/dataset/training/";
+		path[38] = number + 48;
+		path[39] = '/';
+		path[40] = random + 48;
+		path[41] = random2 + 48;
+		path[42] = '.';
+		path[43] = 'j';
+		path[44] = 'p';
+		path[45] = 'g';
+		path[46] = '\0';
 		printf("%s\n", path);
 		printf("%lu\n", n);
 		insert_value(exp_output, 0, n, (double)path[38] - 48);
