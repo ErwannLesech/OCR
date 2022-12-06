@@ -60,10 +60,10 @@ void bilinear_interpolate(SDL_Surface* new_surface,SDL_Surface* surface, double 
 
 SDL_Surface* auto_rotate_img(SDL_Surface* surface, double degree)
 {
-	if (degree == 0)
+	/*if (degree == 0)
 	{
 		return surface;
-	}
+	}*/
 	
 	//Lock the surface
 	SDL_LockSurface(surface);
@@ -109,6 +109,7 @@ SDL_Surface* auto_rotate_img(SDL_Surface* surface, double degree)
 				/*Uint8 r,g,b;
            			SDL_GetRGB(pixels[((int)ry)*(new_surface->w) +
 				(int)rx], new_surface->format, &r, &g,&b);
+
 				pixels_copy[((int)y)*(new_surface->w) + (int)x] 
 				= SDL_MapRGB(new_surface->format, r,g,b);*/
 			

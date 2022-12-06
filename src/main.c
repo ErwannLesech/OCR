@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
 
     else if(strcmp(argv[1], "-load_img") == 0)
     {
-        main_load(argv[2]);
+        //main_load(argv[2]);
+        main_load("src/Images/image_01.jpeg");
     }
 
     else if(strcmp(argv[1], "-separate") == 0)
