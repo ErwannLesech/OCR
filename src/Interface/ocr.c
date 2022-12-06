@@ -1,7 +1,9 @@
 #include "../Load_img/main.h"
-#include "../Separate/separate.h"
+#include "../Separate/main.h"
 #include "../Solver/solver.h"
 #include "../Saved/main.h"
+#include "../Solver/main.h"
+#include "../OCR_neural_network/main.h"
 
 #include <err.h>
 #include <math.h>
@@ -13,23 +15,25 @@
 
 void ocr(char* path)
 {
-	//MANU-ROTATE
-	//VALENTIN
+	//LOADER
+	printf("loader");
 	main_load(path);    	
 
 	//SEPARATE
-	
-	SDL_Surface* surface = IMG_Load(path);
-	SDL_Surface **surfaces = separate(surface);
-	for (int i = 0; i < 81; i++)
-	{
-		surfaces[i]= clear(surfaces[i]);
-	}
-	save_image_cut(surfaces);
-	SDL_FreeSurface(surface);
-
+	printf("separate");
+	main_separate("grid.png");
 	
 	//IA
+	printf("ia");
+	predict();	
+	char* grille1 = "../OCR_neural_network/grid.txt";
+
 	//SOLVER
+	printf("solver");
+	main_solver(grille1);
+	char* grille2 = "../Solver/grid.result.txt"
+	
 	//SAVED
+	printf("saved");
+	main_save(grille1,grille2);
 }

@@ -126,7 +126,52 @@ void PrettyGrid(char* old, char* solved)
     SDL_FreeSurface(grid);
 }
 
-int main_save(int argc, char** argv)
+
+int main_save(char* grille1, char* grille2)
+{
+	
+	FILE *old = fopen(grille1, "r");
+	char* o = calloc(81,sizeof(char));
+	char* n = calloc(81,sizeof(char));
+	char c;
+	char *i = o;
+	while((c=fgetc(old)) != EOF)
+	{
+		if(c != ' ' && c != '\n')
+		{
+			
+			if(c != '.')
+			{
+				*i = c;
+				i +=1;
+			}
+			else
+			{
+				*i = ' ' - 32;
+				i+=1;
+			}
+		}
+	}
+	fclose(old);
+	FILE *new = fopen(grille2, "r");
+	char *j = n;
+	while((c=fgetc(new)) != EOF)
+	{
+		if(c != ' ' && c != '\n')
+		{
+			*j = c;
+			j+=1;
+		}
+	}
+	PrettyGrid(o,n);
+	fclose(new);
+	free(o);
+	free(n);
+	return 1;
+}
+
+
+int main(int argc, char** argv)
 {
 	if(argc != 4)
 	{

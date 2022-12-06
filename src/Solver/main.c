@@ -118,8 +118,28 @@ void save_sudoku(char *filename)
 	fclose(output_file);
 }
 
-
-int main_solver(int argc, char **argv)
+int main_solver(char* sudoku)
+{
+	read_sudoku(sudoku);
+	solver(a);
+	char filename[strlen((sudoku + 8))];
+	size_t i = 0;
+	for (i = 0; i < strlen((sudoku)); i++)
+	{
+		filename[i] = sudoku[i];
+	}
+	filename[i] = '.';
+	filename[i+1] = 'r';
+	filename[i+2] = 'e';
+	filename[i+3] = 's';
+	filename[i+4] = 'u';
+	filename[i+5] = 'l';
+	filename[i+6] = 't';
+	filename[i+7] = '\0';
+	save_sudoku(filename);
+	
+}
+int main(int argc, char **argv)
 {
 	if(argc < 3)
 	{
