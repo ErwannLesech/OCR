@@ -11,6 +11,12 @@ matrix *init_matrix(matrix *m, int rows, int cols, double value)
     m->cols = cols;
     m->data = malloc(sizeof(double) * (rows * cols));
 
+    if (m->data == NULL)
+    {
+        printf("init_matrix: malloc failed.\n");
+        exit(EXIT_FAILURE);
+    }
+
     for (int idx = 0; idx < (rows * cols); idx++)
     {
         m->data[idx] = value;
@@ -26,6 +32,13 @@ matrix *init_rand_matrix(matrix *m, int rows, int cols)
     m->rows = rows;
     m->cols = cols;
     m->data = malloc(sizeof(double) * (rows * cols));
+
+    if (m->data == NULL)
+    {
+        printf("init_rand_matrix: malloc failed.\n");
+        exit(EXIT_FAILURE);
+
+    }
 
     for (int idx = 0; idx < (rows * cols); idx++)
     {
@@ -314,6 +327,24 @@ matrix *softmax_matrix(matrix *m)
     return m;
 }
 
+matrix copy_matrix(matrix *m)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    matrix copy_m;
+    init_matrix(&copy_m, m_rows, m_cols, 0);
+
+    for (int i = 0; i < m_rows; i++)
+    {
+        for (int j = 0; j < m_cols; j++)
+        {
+            double x = get_value(m, i, j);
+            insert_value(&copy_m, i, j, x);
+        }
+    }
+    return copy_m;
+}
 
 void print_matrix(matrix *m)
 {

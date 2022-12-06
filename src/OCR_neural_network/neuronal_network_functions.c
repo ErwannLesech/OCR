@@ -107,13 +107,21 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 		path[42] = 'n';
 		path[43] = 'g';
 		path[44] = '\0';
+		printf("%s\n", path);
+		printf("%lu\n", n);
 		insert_value(exp_output, 0, n, (double)path[38] - 48);
 
 		SDL_Surface* surface = IMG_Load(path);
+		if (surface == NULL)
+		{
+			printf("Error: %s\n", SDL_GetError());
+			exit(EXIT_FAILURE);
+		}
 		SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
 			SDL_PIXELFORMAT_RGB888, 0);
 		Uint32* pixels = new_surface->pixels;
 		SDL_PixelFormat* format = new_surface->format;
+		SDL_FreeSurface(surface);
 		SDL_LockSurface(new_surface);
 		for (int i = 0; i < 784; i++)
 		{
@@ -126,19 +134,19 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 			Uint8 r, g, b;
 			SDL_GetRGB(pixels[i], format, &r, &g, &b);
 			double value = 0;
-			/*if ((r+b+g)/3 >= 127)
+			if ((r+b+g)/3 >= 127)
 			{
 				value = 1;
 			}
 			else
 			{
 				value = 0;
-			}*/
-			value = (double)((r+b+g)/(double)3)/(double)255;
+			}
+			//value = (double)((r+b+g)/(double)3)/(double)255;
 			insert_value(input, i, n, value);
 		}
-		SDL_FreeSurface(new_surface);
 		SDL_UnlockSurface(new_surface);
+		SDL_FreeSurface(new_surface);
 	}
 }
 
@@ -176,25 +184,25 @@ multiple_result forward_propagation(multiple_result *parameters,
 	
 	// HIDDEN LAYER
 	matrix Z1;
-	Z1 = dot_matrix(&hw, inputs);
+	//Z1 = dot_matrix(&hw, inputs);
 	add_matrix(&Z1, &hb);
 
-	matrix A1 = Z1;
-	relu_matrix(&A1);
+	/*matrix A1 = Z1;
+	relu_matrix(&A1);*/
 		
 	// OUTPUT LAYER
-	matrix Z2;
+	/*matrix Z2;
 	Z2 = dot_matrix(&ow, &A1);
 	add_matrix(&Z2, &ob);
 
-	matrix A2 = Z2;
-	softmax_matrix(&A2);
+	matrix A2 = copy_matrix(&Z2);
+	softmax_matrix(&A2);*/
 	
 	// Return values
 	multiple_result results;
 	results.a = Z1;
-	results.b = A1;
-	results.c = A2;
+	/*results.b = A1;
+	results.c = A2;*/
 
 	return results;
 }

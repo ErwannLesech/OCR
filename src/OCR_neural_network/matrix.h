@@ -60,5 +60,8 @@ matrix *d_relu_matrix(matrix *m, matrix *m_two);
 // apply the softmax function to the matrix m
 matrix *softmax_matrix(matrix *m);
 
+// create a copy of the matrix m
+matrix copy_matrix(matrix *m);
+
 // print a matrix
 void print_matrix(matrix *m);
