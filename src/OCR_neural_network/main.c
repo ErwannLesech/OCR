@@ -87,7 +87,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     multiple_result forward_prop;
     multiple_result back_prop;
     
-    /*for (long i = 0; i < epochs + 1; i++)
+    for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
         
@@ -115,7 +115,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
             matrix output_prop = forward_prop.b;
             print_matrix(&output_prop);
         }
-    }*/
+    }
 
     // Parameters
     matrix hw = parameters.a;

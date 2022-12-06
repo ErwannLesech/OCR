@@ -98,6 +98,25 @@ matrix *add_matrix(matrix *m_one, matrix *m_two)
     return m_one;
 }
 
+
+matrix *add_matrix_bias(matrix *m_one, matrix *m_two)
+{
+    int rows = m_one->rows;
+    int cols = m_one->cols;
+
+    double sum = 0;
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            sum = get_value(m_one, i, j) + get_value(m_two, i, 0);
+            insert_value(m_one, i, j, sum);
+        }
+    }
+    return m_one;
+}
+
 matrix add_col_matrix(matrix *m)
 {
     int rows = m->rows;
@@ -310,18 +329,53 @@ matrix *d_relu_matrix(matrix *m, matrix *m_two)
     return m;
 }
 
-// apply the softmax function to the matrix m
-matrix *softmax_matrix(matrix *m)
+double max_value(matrix *m)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
+
+    double max = 0;
 
     for (int i = 0; i < m_rows; i++)
     {
         for (int j = 0; j < m_cols; j++)
         {
             double x = get_value(m, i, j);
-            insert_value(m, i, j, softmax(x, i, m));
+            if (x > max)
+            {
+                max = x;
+            }
+        }
+    }
+    return max;
+}
+
+// apply the softmax function to the matrix m
+matrix *softmax_matrix(matrix *m)
+{
+    int m_rows = m->rows;
+    int m_cols = m->cols;
+
+    double exp_sum = 0;
+	for (size_t i = 0; i < m_rows; i++)
+    {
+        for (size_t j = 0; j < m_cols; j++)
+        {
+            exp_sum += exp(get_value(m, i, j));
+        }
+    }
+
+    if (exp_sum == 0)
+    {
+        exp_sum = 0.001;
+    }
+    
+    for (size_t i = 0; i < m_rows; i++)
+    {
+        for (size_t j = 0; j < m_cols; j++)
+        {
+            double x = get_value(m, i, j);
+            insert_value(m, i, j, exp(x) / exp_sum);
         }
     }
     return m;

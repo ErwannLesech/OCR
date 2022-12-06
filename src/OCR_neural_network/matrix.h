@@ -27,6 +27,9 @@ double get_value(matrix *m, int rows, int cols);
 // add matrix m_two in matrix m_one
 matrix *add_matrix(matrix *m_one, matrix *m_two);
 
+// add matrix resized to fit in m_on dimention, m_two in matrix m_one 
+matrix *add_matrix_bias(matrix *m_one, matrix *m_two);
+
 // sum colomns of matrix m
 matrix add_col_matrix(matrix *m);
 
@@ -56,6 +59,9 @@ matrix *relu_matrix(matrix *m);
 
 // apply the derivative relu function to the matrix m
 matrix *d_relu_matrix(matrix *m, matrix *m_two);
+
+// return max value of the matrix m
+double max_value(matrix *m);
 
 // apply the softmax function to the matrix m
 matrix *softmax_matrix(matrix *m);

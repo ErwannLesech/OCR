@@ -40,22 +40,6 @@ double relu_derivative(double x)
 }
 
 
-double softmax(double x, size_t index, matrix *m)
-{
-	double exp_sum = 0;
-	
-	for(size_t i = 0; i < 10; i++)
-	{
-		exp_sum += exp(get_value(&m, i, 0));
-	}
-	if (exp_sum == 0)
-	{
-		exp_sum = 0.0001;
-	}
-	return exp(get_value(&m, index, 0)) / exp_sum;
-}
-
-
 void init_input_matrix_test(matrix *input, char *path)
 {
 	SDL_Surface* surface = IMG_Load(path);
@@ -188,7 +172,7 @@ multiple_result forward_propagation(multiple_result *parameters,
 	// HIDDEN LAYER
 	matrix Z1;
 	Z1 = dot_matrix(&hw, inputs);
-	add_matrix(&Z1, &hb);
+	add_matrix_bias(&Z1, &hb);
 
 	matrix A1 = Z1;
 	relu_matrix(&A1);
@@ -196,7 +180,7 @@ multiple_result forward_propagation(multiple_result *parameters,
 	// OUTPUT LAYER
 	matrix Z2;
 	Z2 = dot_matrix(&ow, &A1);
-	add_matrix(&Z2, &ob);
+	add_matrix_bias(&Z2, &ob);
 
 	matrix A2 = copy_matrix(&Z2);
 	softmax_matrix(&A2);
@@ -205,7 +189,7 @@ multiple_result forward_propagation(multiple_result *parameters,
 	multiple_result results;
 	results.a = Z1;
 	results.b = A1;
-	results.c = A2;
+	results.c = Z2;
 
 	return results;
 }
