@@ -1,3 +1,3 @@
 #pragma once
 
-int main_rotate(int argc, char** argv);
+int main_rotate(char* path,int angle);

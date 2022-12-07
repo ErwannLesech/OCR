@@ -12,6 +12,7 @@ static GdkPixbuf* pixbuf_2;
 static GtkWidget* button1;
 static GtkWidget* button2;
 static GtkWidget* button3;
+static GtkWidget* button4;
 static GtkWidget* label1;
 static GtkWidget* label2;
 static GtkWidget* preview;
@@ -36,7 +37,7 @@ GdkPixbuf* resize(char *file)
 {
 	
 	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(file,NULL);
-	pixbuf_2 = gdk_pixbuf_scale_simple(pixbuf,900,900, GDK_INTERP_NEAREST);
+	pixbuf_2 = gdk_pixbuf_scale_simple(pixbuf,775,750, GDK_INTERP_NEAREST);
 	gtk_image_set_from_pixbuf(GTK_IMAGE(preview), pixbuf_2);
 	return pixbuf_2;
 }
@@ -280,6 +281,14 @@ void step_OCR()
         }
 */
 }
+int rotate_i(char* path)
+{
+	double value = gtk_range_get_value(GTK_RANGE(scale));
+	main_rotate(path,(int)value);
+	pixbuf_2 = resize("../Rotate/rotate.png");
+	gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+	return 1;
+}
 
 int main_interface(int argc, char **argv)
 {
@@ -295,12 +304,12 @@ int main_interface(int argc, char **argv)
     	button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
 	button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button2"));
 	button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button3"));
+	button4 = GTK_WIDGET(gtk_builder_get_object(builder, "button4"));
 	label1 = GTK_WIDGET(gtk_builder_get_object(builder, "label1"));
 	label2 = GTK_WIDGET(gtk_builder_get_object(builder, "label2"));
     	preview = GTK_WIDGET(gtk_builder_get_object(builder, "preview"));
 	scale = GTK_SCALE(gtk_builder_get_object(builder, "scale"));
-
-	
+	//ocr = gtk_image_new_from_file("../Images/OCR.png");
 
     	g_signal_connect(window, "destroy",
         	G_CALLBACK(gtk_main_quit), NULL);
@@ -308,7 +317,8 @@ int main_interface(int argc, char **argv)
         	G_CALLBACK (updateImage), NULL);
 	gtk_range_set_range(GTK_RANGE(scale), 1, 360);
     	gtk_range_set_value(GTK_RANGE(scale), 1);
-
+	g_signal_connect(GTK_BUTTON(button4),"clicked",
+		G_CALLBACK(rotate_i),NULL);
     	g_signal_connect(GTK_BUTTON(button1), "clicked",
         	G_CALLBACK(quickOCR), NULL);
 	g_signal_connect(GTK_BUTTON(button2),"clicked",
