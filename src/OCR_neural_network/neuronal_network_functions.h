@@ -9,6 +9,15 @@ typedef struct
     matrix d;
 } multiple_result;
 
+typedef struct multiple_result_bis
+{
+    matrix a;
+    double b;
+    matrix c;
+    double d;
+} multiple_result_bis;
+
+
 double sigmoid(double x);
 
 double sigmoid_derivative(double x);
@@ -32,8 +41,8 @@ multiple_result forward_propagation(multiple_result *parameters,
 
 matrix exp_output_init(matrix exp_output);
 
-multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
+multiple_result_bis back_propagation(matrix *exp_outputs, matrix *inputs,
     multiple_result *parameters, multiple_result *forward_prop);
 
 multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
-    multiple_result *forward_prop, multiple_result *back_prop, double lr);
+    multiple_result *forward_prop, multiple_result_bis *back_prop, double lr);

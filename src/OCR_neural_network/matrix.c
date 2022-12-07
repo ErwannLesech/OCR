@@ -157,6 +157,21 @@ matrix add_row_matrix(matrix *m)
     return sum;
 }
 
+double sum_matrix(matrix *m)
+{
+    int rows = m->rows;
+    int cols = m->cols;
+
+    double sum = 0.0;
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            sum += get_value(m, i, j);
+        }
+    }
+    return sum;
+}
 
 matrix substract_matrix(matrix *m_one, matrix *m_two)
 {
@@ -171,6 +186,25 @@ matrix substract_matrix(matrix *m_one, matrix *m_two)
             for (int j = 0; j < cols; j++)
             {
                 diff = get_value(m_one, i, j) - get_value(m_two, i, j);
+                insert_value(&substract_matrix, i, j, diff);
+            }
+        }
+        return substract_matrix;
+}
+
+matrix substract_matrix_scal(matrix *m_one, double scal)
+{
+    int rows = m_one->rows;
+    int cols = m_one->cols;
+    double diff;
+    matrix substract_matrix;
+    init_matrix(&substract_matrix, rows, cols, 0);
+
+    for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                diff = get_value(m_one, i, j) - scal;
                 insert_value(&substract_matrix, i, j, diff);
             }
         }
@@ -329,56 +363,38 @@ matrix *d_relu_matrix(matrix *m, matrix *m_two)
     return m;
 }
 
-double max_value(matrix *m)
+double sum_exp(matrix *m, int col)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
 
-    double max = 0;
+    double sum = 0;
 
-    for (int i = 0; i < m_rows; i++)
+    for (int j = 0; j < m_rows; j++)
     {
-        for (int j = 0; j < m_cols; j++)
-        {
-            double x = get_value(m, i, j);
-            if (x > max)
-            {
-                max = x;
-            }
-        }
+        sum += exp(get_value(m, j, col));
     }
-    return max;
+
+    return sum;
 }
 
 // apply the softmax function to the matrix m
-matrix *softmax_matrix(matrix *m)
+void softmax_matrix(matrix *m)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
 
-    double exp_sum = 0;
-	for (size_t i = 0; i < m_rows; i++)
-    {
-        for (size_t j = 0; j < m_cols; j++)
-        {
-            exp_sum += exp(get_value(m, i, j));
-        }
-    }
+    double sum = 0;
 
-    if (exp_sum == 0)
+    for (int i = 0; i < m_cols; i++)
     {
-        exp_sum = 0.001;
-    }
-    
-    for (size_t i = 0; i < m_rows; i++)
-    {
-        for (size_t j = 0; j < m_cols; j++)
+        sum = sum_exp(m, i);
+        for (int j = 0; j < m_rows; j++)
         {
-            double x = get_value(m, i, j);
-            insert_value(m, i, j, exp(x) / exp_sum);
+            double x = get_value(m, j, i);
+            insert_value(m, j, i, exp(x)/sum);
         }
     }
-    return m;
 }
 
 matrix copy_matrix(matrix *m)

@@ -40,6 +40,12 @@ double relu_derivative(double x)
 }
 
 
+double softmax(x, sum)
+{
+	return exp(x) / sum;
+}
+
+
 void init_input_matrix_test(matrix *input, char *path)
 {
 	SDL_Surface* surface = IMG_Load(path);
@@ -121,15 +127,15 @@ void init_input_matrix(matrix *input, matrix *exp_output, size_t nbInputs)
 			Uint8 r, g, b;
 			SDL_GetRGB(pixels[i], format, &r, &g, &b);
 			double value = 0;
-			if ((r+b+g)/3 >= 127)
+			/*if ((r+b+g)/3 >= 127)
 			{
 				value = 1;
 			}
 			else
 			{
 				value = 0;
-			}
-			//value = (double)((r+b+g)/(double)3)/(double)255;
+			}*/
+			value = (double)((r+b+g)/(double)3)/(double)255;
 			insert_value(input, i, n, value);
 		}
 		SDL_UnlockSurface(new_surface);
@@ -174,16 +180,28 @@ multiple_result forward_propagation(multiple_result *parameters,
 	Z1 = dot_matrix(&hw, inputs);
 	add_matrix_bias(&Z1, &hb);
 
+	printf("test0\n");
+	print_matrix(&Z1);
+
 	matrix A1 = Z1;
 	relu_matrix(&A1);
+
+	printf("test\n");
+	print_matrix(&A1);
 		
 	// OUTPUT LAYER
 	matrix Z2;
 	Z2 = dot_matrix(&ow, &A1);
 	add_matrix_bias(&Z2, &ob);
 
+	printf("test1\n");
+	print_matrix(&Z2);
+
 	matrix A2 = copy_matrix(&Z2);
 	softmax_matrix(&A2);
+
+	printf("test2\n");
+	print_matrix(&A2);
 	
 	// Return values
 	multiple_result results;
@@ -208,7 +226,7 @@ matrix exp_output_init(matrix exp_output)
 }
 
 // Backpropagation
-multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
+multiple_result_bis back_propagation(matrix *exp_outputs, matrix *inputs,
 	multiple_result *parameters, multiple_result *forward_prop)
 {
 	matrix Z1 = forward_prop->a;
@@ -226,9 +244,9 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 	dW2 = dot_matrix(&dZ2, &A1_t);
 	dW2 = multiply_matrix(&dW2, (1/m));
 
-	matrix dB2;
-	dB2 = add_col_matrix(&dZ2);
-	dB2 = multiply_matrix(&dB2, (1/m));
+	double dB2 = 0;
+	double sum = sum_matrix(&dZ2);
+	dB2 = sum/m;
 
 	matrix dZ1;
 	matrix ow_t = transpose_matrix(&ow);
@@ -241,11 +259,11 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 	dW1 = dot_matrix(&dZ1, &A0_t);
 	dW1 = multiply_matrix(&dW1, (1/m));
 
-	matrix dB1;
-	dB1 = add_col_matrix(&dZ1);
-	dB1 = multiply_matrix(&dB1, (1/m));
+	double dB1 = 0;
+	sum = sum_matrix(&dZ1);
+	dB1 = sum/m;
 
-	multiple_result back_prop;
+	multiple_result_bis back_prop;
 	back_prop.a = dW2;
 	back_prop.b = dB2;
 	back_prop.c = dW1;
@@ -256,7 +274,7 @@ multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
 
 
 multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
-	multiple_result *forward_prop, multiple_result *back_prop, double lr)
+	multiple_result *forward_prop, multiple_result_bis *back_prop, double lr)
 {
 	matrix hw = parameters->a;
 	matrix hb = parameters->b;
@@ -264,25 +282,23 @@ multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
 	matrix ob = parameters->d;
 
 	matrix dW2 = back_prop->a;
-	matrix dB2 = back_prop->b;
+	double dB2 = back_prop->b;
 	matrix dW1 = back_prop->c;
-	matrix dB1 = back_prop->d;
+	double dB1 = back_prop->d;
 	
 	matrix dOW;
 	dOW = multiply_matrix(&dW2, lr);
 	ow = substract_matrix(&ow, &dOW);
 	
 	matrix dOB;
-	dOB = multiply_matrix(&dB2, lr);
-	ob = substract_matrix(&ob, &dOB);
+	ob = substract_matrix_scal(&ob, dB2*lr);
 
 	matrix dHW;
 	dHW = multiply_matrix(&dW1, lr);
 	hw = substract_matrix(&hw, &dHW);
 
 	matrix dHB;
-	dHB = multiply_matrix(&dB1, lr);
-	hb = substract_matrix(&hb, &dHB);
+	hb = substract_matrix_scal(&hb, dB1*lr);
 
 	parameters->a = hw;
 	parameters->b = hb;

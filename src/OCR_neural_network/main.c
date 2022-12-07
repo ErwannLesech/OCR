@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.01, 250);    
+            train_network(1, 0.1, 4);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -85,7 +85,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     print_matrix(&parameters.d);*/
 
     multiple_result forward_prop;
-    multiple_result back_prop;
+    multiple_result_bis back_prop;
     
     for (long i = 0; i < epochs + 1; i++)
     {        
@@ -107,12 +107,12 @@ void train_network(long epochs, double lr, size_t nbInputs)
             matrix ow = parameters.c;
             matrix ob = parameters.d;
             
-            print_matrix(&hw);
+            /*print_matrix(&hw);
             print_matrix(&hb);
             print_matrix(&ow);
-            print_matrix(&ob);
+            print_matrix(&ob);*/
 
-            matrix output_prop = forward_prop.b;
+            matrix output_prop = forward_prop.c;
             print_matrix(&output_prop);
         }
     }
@@ -123,10 +123,10 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix ow = parameters.c;
     matrix ob = parameters.d;
 
-    print_matrix(&hw);
+    /*print_matrix(&hw);
     print_matrix(&hb);
     print_matrix(&ow);
-    print_matrix(&ob);
+    print_matrix(&ob);*/
 
     save_parameters(&parameters, "./OCR_neural_network/weights.txt");
 
@@ -145,13 +145,11 @@ void train_network(long epochs, double lr, size_t nbInputs)
     free_matrix(&A1);
     free_matrix(&A2);*/
 
-    print_matrix(&A2);
+    //print_matrix(&A2);
 
     // Back prop
     matrix dW1 = back_prop.a;
-	matrix dB1 = back_prop.b;
 	matrix dW2 = back_prop.c;
-	matrix dB2 = back_prop.d;
 
     // Free all matrices
 
@@ -230,6 +228,7 @@ void predict()
         init_input_matrix_test(&input, path);
         multiple_result forward_prop = forward_propagation(&parameters, &input);
         matrix output_prop = forward_prop.c;
+        print_matrix(&output_prop);
         char max = '0';
         for (int k = 0; k < 9; k++)
         {

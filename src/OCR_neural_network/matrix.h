@@ -36,8 +36,14 @@ matrix add_col_matrix(matrix *m);
 // sum rows of matrix m
 matrix add_row_matrix(matrix *m);
 
+// sum all values of matrix m
+double sum_matrix(matrix *m);
+
 // substract matrix m_two and matrix m_one
 matrix substract_matrix(matrix *m_one, matrix *m_two);
+
+// substract the scalar 'scal' to the matrix m_one
+matrix substract_matrix_scal(matrix *m_one, double scal);
 
 // multiply the matrix m_one and matrix m_two
 matrix dot_matrix(matrix *m_one, matrix *m_two);
@@ -61,10 +67,10 @@ matrix *relu_matrix(matrix *m);
 matrix *d_relu_matrix(matrix *m, matrix *m_two);
 
 // return max value of the matrix m
-double max_value(matrix *m);
+double sum_exp(matrix *m, int col);
 
 // apply the softmax function to the matrix m
-matrix *softmax_matrix(matrix *m);
+void softmax_matrix(matrix *m);
 
 // create a copy of the matrix m
 matrix copy_matrix(matrix *m);
