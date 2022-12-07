@@ -69,9 +69,37 @@ SDL_Surface* rotate_img(SDL_Surface* surface, double degree)
 	SDL_UnlockSurface(surface);
 	return surface_copy;
 }
+int main_rotate(char* path,int angle)
+{
+	//Init the SDL
+	SDL_Init(SDL_INIT_VIDEO);
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+		errx(EXIT_FAILURE, "%s", SDL_GetError());
+	
+	//Create the SDL_Surface from a .jpeg
+	SDL_Surface* surface = IMG_Load(path);
+	
+	//Convert the angle given in long int
+	long int angler = angle;
+	
+	//Rotation of the surface
+	SDL_Surface* turned = rotate_img(surface, -angler);
 
+	//Save of the rotation
+	SDL_Surface *new = SDL_CreateRGBSurface(0, turned->w-10, turned->h-10, 32, 0, 0, 0, 0);
+	SDL_BlitScaled(turned, NULL, new, NULL);
 
-int main_rotate(int argc, char** argv)
+	IMG_SavePNG(new, "rotate.png");
+	
+	SDL_FreeSurface(surface);
+	SDL_FreeSurface(turned);
+	SDL_Quit();
+	
+	return EXIT_SUCCESS; 
+	
+}
+
+/*int main(int argc, char** argv)
 {
 	//Check the number of arguments
 	if (argc != 4)
@@ -103,5 +131,5 @@ int main_rotate(int argc, char** argv)
 	
 	return EXIT_SUCCESS; 
 	
-}
+}*/
 
