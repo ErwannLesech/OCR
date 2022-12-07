@@ -41,8 +41,8 @@ multiple_result forward_propagation(multiple_result *parameters,
 
 matrix exp_output_init(matrix exp_output);
 
-multiple_result_bis back_propagation(matrix *exp_outputs, matrix *inputs,
+multiple_result back_propagation(matrix *exp_outputs, matrix *inputs,
     multiple_result *parameters, multiple_result *forward_prop);
 
 multiple_result *upgrade_parameters(matrix inputs, multiple_result *parameters,
-    multiple_result *forward_prop, multiple_result_bis *back_prop, double lr);
+    multiple_result *forward_prop, multiple_result *back_prop, double lr);

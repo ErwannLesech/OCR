@@ -44,7 +44,7 @@ matrix *init_rand_matrix(matrix *m, int rows, int cols)
     {
         double random = 0;
         
-        random = (rand() % 2001 - 1000) / 2.e3;
+        random = (((double)rand()/(double) RAND_MAX) - 0.5);
         m->data[idx] = (random);
     }
     
@@ -389,6 +389,11 @@ void softmax_matrix(matrix *m)
     for (int i = 0; i < m_cols; i++)
     {
         sum = sum_exp(m, i);
+        if (sum == 0)
+        {
+            sum = 0.0001;
+        }
+        
         for (int j = 0; j < m_rows; j++)
         {
             double x = get_value(m, j, i);

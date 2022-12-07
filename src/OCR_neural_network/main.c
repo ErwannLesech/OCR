@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1, 0.1, 4);    
+            train_network(1000, 0.005, 500);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -51,6 +51,22 @@ int main_neural_network(int argc, char *argv[])
     {
         printf("predict\n");
         predict();
+    }
+    else if (strcmp(argv[2], "-test") == 0)
+    {
+        printf("test\n");
+        matrix input;
+        init_matrix(&input, 784, 1, 0);
+
+        init_input_matrix_test(&input, "./cells/01.png");
+        display_mat(input);
+    }
+    else if (strcmp(argv[2], "-help") == 0)
+    {
+        printf("main_xor: -train to train the network.\n");
+        printf("main_xor: -weights to load weights.\n");
+        printf("main_xor: -predict to predict.\n");
+        printf("main_xor: -test to test.\n");
     }
     else
     {
@@ -65,14 +81,12 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix input;
     init_matrix(&input, 784, nbInputs, 0);
 
-
     matrix exp_output;
     init_matrix(&exp_output, 1, nbInputs, 0);
-
     
     init_input_matrix(&input, &exp_output, nbInputs);
-    print_matrix(&input);
-    print_matrix(&exp_output);
+    /*print_matrix(&input);
+    print_matrix(&exp_output);*/
 
     matrix Y_t = exp_output_init(exp_output);
     //print_matrix(&Y_t);
@@ -85,7 +99,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     print_matrix(&parameters.d);*/
 
     multiple_result forward_prop;
-    multiple_result_bis back_prop;
+    multiple_result back_prop;
     
     for (long i = 0; i < epochs + 1; i++)
     {        
@@ -107,10 +121,10 @@ void train_network(long epochs, double lr, size_t nbInputs)
             matrix ow = parameters.c;
             matrix ob = parameters.d;
             
-            /*print_matrix(&hw);
+            print_matrix(&hw);
             print_matrix(&hb);
             print_matrix(&ow);
-            print_matrix(&ob);*/
+            print_matrix(&ob);
 
             matrix output_prop = forward_prop.c;
             print_matrix(&output_prop);
@@ -130,10 +144,10 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
     save_parameters(&parameters, "./OCR_neural_network/weights.txt");
 
-    /*free_matrix(&hw);
+    free_matrix(&hw);
     free_matrix(&hb);
     free_matrix(&ow);
-    free_matrix(&ob);*/
+    free_matrix(&ob);
 
     //load_weights("./OCR_neural_network/weights.txt");
 
@@ -141,27 +155,29 @@ void train_network(long epochs, double lr, size_t nbInputs)
     matrix A1 = forward_prop.b;
     matrix A2 = forward_prop.c;
 
-    /*free_matrix(&Z1);
+    free_matrix(&Z1);
     free_matrix(&A1);
-    free_matrix(&A2);*/
+    free_matrix(&A2);
 
     //print_matrix(&A2);
 
     // Back prop
     matrix dW1 = back_prop.a;
+    matrix dB1 = back_prop.b;
 	matrix dW2 = back_prop.c;
+    matrix dB2 = back_prop.d;
 
     // Free all matrices
 
 
-    /*free_matrix(&dW1);
+    free_matrix(&dW1);
     free_matrix(&dB1);
     free_matrix(&dW2);
     free_matrix(&dB2);
 
     free_matrix(&input);
     free_matrix(&exp_output);
-    free_matrix(&Y_t);*/
+    free_matrix(&Y_t);
 }
 
 
@@ -229,15 +245,22 @@ void predict()
         multiple_result forward_prop = forward_propagation(&parameters, &input);
         matrix output_prop = forward_prop.c;
         print_matrix(&output_prop);
-        char max = '0';
-        for (int k = 0; k < 9; k++)
+        double max = get_value(&output_prop, 0, 0);
+        char index = '0';
+        for (int k = 1; k < 10; k++)
         {
-            if (get_value(&output_prop, k, 0) > max - 48 && get_value(&output_prop, k, 0) != 0)
+            if (get_value(&output_prop, k, 0) > max)
             {
-                max = k + 48;
+                index = k + 48;
+                max = get_value(&output_prop, k, 0);
             }
         }
-        a[i/9][i%9] = max;
+        printf("%c \n", index);
+        if (index != '0')
+        {
+            printf("%d \n", i);
+            a[i/9][i%9] = index;
+        }
     }
 
 	FILE* output_file = fopen("grid.txt", "w");
