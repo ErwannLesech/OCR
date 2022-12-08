@@ -195,6 +195,7 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	Z1 = add_matrix_bias(Z1, hb);
 
 	matrix *A1 = copy_matrix(Z1);
+	
 	A1 = relu_matrix(A1);
 		
 	// OUTPUT LAYER
@@ -204,16 +205,13 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	matrix *A2 = copy_matrix(Z2);
 	A2 = softmax_matrix(A2);
 
-	// Free useless memory
-
-	free_matrix(Z2);
-
 	// Return values
 	
 	multiple_matrices results;
 	results.a = Z1;
 	results.b = A1;
-	results.c = A2;
+	results.c = Z2;
+	results.d = A2;
 
 	return results;
 }
@@ -238,30 +236,22 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 {
 	matrix *Z1 = forward_prop->a;
 	matrix *A1 = forward_prop->b;
-	matrix *A2 = forward_prop->c;
+	matrix *A2 = forward_prop->d;
 	matrix *ow = parameters->c;
 	double m = exp_outputs->cols;
-	printf("m: %f \n", m);
-
-	print_matrix(exp_outputs);
-	print_matrix(A2);
 
 	matrix *dZ2 = substract_matrix(A2, exp_outputs);
 	
 	matrix *A1_t = transpose_matrix(A1);
 
 	matrix *dW2 = dot_matrix(dZ2, A1_t);
+	
 	dW2 = multiply_matrix(dW2, (1/m));
-
-	print_matrix(dZ2);
 
 	double dB2_value = 0;
 	double sum = sum_matrix(dZ2);
-	printf("sum: %f \n", sum);
 	dB2_value = sum/m;
-	printf("dB2_value: %f \n", dB2_value);
-	matrix *dB2 = init_matrix(dZ2->rows, dZ2->cols, dB2_value);
-	print_matrix(dB2);
+	matrix *dB2 = init_matrix(dZ2->rows, 1, dB2_value);
 
 	matrix *ow_t = transpose_matrix(ow);
 	matrix *dZ1 = dot_matrix(ow_t, dZ2);
@@ -275,7 +265,7 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	double dB1_value = 0;
 	sum = sum_matrix(dZ1);
 	dB1_value = sum/m;
-	matrix *dB1 = init_matrix(dZ1->rows, dZ1->cols, dB1_value);
+	matrix *dB1 = init_matrix(dZ1->rows, 1, dB1_value);
 
 	// Free useless memory
 
@@ -312,14 +302,14 @@ multiple_matrices *upgrade_parameters(matrix *inputs, multiple_matrices *paramet
 	
 	matrix *dOW = multiply_matrix(dW2, lr);
 	ow = substract_matrix(ow, dOW);
-	
-	matrix *dOB = multiply_matrix(&dB2, lr);
-	ob = substract_matrix(ob, dOB);
 
-	matrix *dHW = multiply_matrix(&dW1, lr);
+	matrix *dOB = multiply_matrix(dB2, lr);
+	ob = substract_matrix(ob, dOB);
+	
+	matrix *dHW = multiply_matrix(dW1, lr);
 	hw = substract_matrix(hw, dHW);
 
-	matrix *dHB = multiply_matrix(&dB1, lr);
+	matrix *dHB = multiply_matrix(dB1, lr);
 	hb = substract_matrix(hb, dHB);
 
 	// Free useless memory
