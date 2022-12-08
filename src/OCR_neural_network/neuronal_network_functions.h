@@ -3,17 +3,17 @@
 
 typedef struct 
 {
-    matrix a;
-    matrix b;
-    matrix c;
-    matrix d;
+    matrix *a;
+    matrix *b;
+    matrix *c;
+    matrix *d;
 } multiple_result;
 
 typedef struct multiple_result_bis
 {
-    matrix a;
+    matrix *a;
     double b;
-    matrix c;
+    matrix *c;
     double d;
 } multiple_result_bis;
 

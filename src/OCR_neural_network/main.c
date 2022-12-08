@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.005, 500);    
+            train_network(1000, 0.001, 1000);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
