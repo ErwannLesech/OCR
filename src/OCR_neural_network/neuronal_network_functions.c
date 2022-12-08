@@ -194,7 +194,6 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	matrix *Z1 = dot_matrix(hw, inputs);
 	Z1 = add_matrix_bias(Z1, hb);
 
-
 	matrix *A1 = copy_matrix(Z1);
 	A1 = relu_matrix(A1);
 		
@@ -205,12 +204,16 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	matrix *A2 = copy_matrix(Z2);
 	A2 = softmax_matrix(A2);
 
+	// Free useless memory
+
+	free_matrix(Z2);
+
 	// Return values
 	
 	multiple_matrices results;
 	results.a = Z1;
 	results.b = A1;
-	results.c = Z2;
+	results.c = A2;
 
 	return results;
 }
@@ -218,7 +221,7 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 
 matrix *exp_output_init(matrix *exp_output)
 {
-	matrix *one_hot_Y = init_matrix(9, exp_output->cols, 0);
+	matrix *one_hot_Y = init_matrix(10, exp_output->cols, 0);
 
 	for (size_t i = 0; i < exp_output->cols; i++)
 	{
@@ -238,6 +241,10 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix *A2 = forward_prop->c;
 	matrix *ow = parameters->c;
 	double m = exp_outputs->cols;
+	printf("m: %f \n", m);
+
+	print_matrix(exp_outputs);
+	print_matrix(A2);
 
 	matrix *dZ2 = substract_matrix(A2, exp_outputs);
 	
@@ -246,10 +253,15 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix *dW2 = dot_matrix(dZ2, A1_t);
 	dW2 = multiply_matrix(dW2, (1/m));
 
+	print_matrix(dZ2);
+
 	double dB2_value = 0;
 	double sum = sum_matrix(dZ2);
+	printf("sum: %f \n", sum);
 	dB2_value = sum/m;
+	printf("dB2_value: %f \n", dB2_value);
 	matrix *dB2 = init_matrix(dZ2->rows, dZ2->cols, dB2_value);
+	print_matrix(dB2);
 
 	matrix *ow_t = transpose_matrix(ow);
 	matrix *dZ1 = dot_matrix(ow_t, dZ2);

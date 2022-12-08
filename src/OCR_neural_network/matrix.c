@@ -97,6 +97,11 @@ double get_value(matrix *m, int rows, int cols)
     }
 
     double value = m->data[rows * m->cols + cols];
+    if (value != value)
+    {
+        return 0;
+    }
+    
     return value;
 }
 
@@ -227,8 +232,17 @@ matrix *substract_matrix(matrix *m_one, matrix *m_two)
 {
     int rows = m_one->rows;
     int cols = m_one->cols;
+    int rows_two = m_two->rows;
+    int cols_two = m_two->cols;
     double diff;
     matrix *substract_matrix = init_matrix(rows, cols, 0);
+
+    if(rows != rows_two || cols != cols_two)
+    {
+        printf("substract_matrix: matrix dimensions do not match.\n");
+        printf("rows: %d, rows_two: %d, cols: %d, cols_two: %d \n", rows, rows_two, cols, cols_two);
+        return NULL;
+    }
 
     if(substract_matrix == NULL)
     {
