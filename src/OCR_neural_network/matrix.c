@@ -8,9 +8,15 @@
 matrix *init_matrix(int rows, int cols, double value)
 {
     matrix *m = malloc(sizeof(matrix));
+    if(m == NULL)
+    {
+        printf("init_matrix: malloc failed.\n");
+        exit(EXIT_FAILURE);
+    }
+
     m->rows = rows;
     m->cols = cols;
-    m->data = malloc(sizeof(double) * (rows * cols));
+    m->data = calloc((rows * cols), sizeof(double));
 
     if (m->data == NULL)
     {
@@ -31,6 +37,12 @@ matrix *init_rand_matrix(int rows, int cols)
     srand(time(NULL));
 
     matrix *m = malloc(sizeof(matrix));
+    if(m == NULL)
+    {
+        printf("init_matrix: malloc failed.\n");
+        exit(EXIT_FAILURE);
+    }
+    
     m->rows = rows;
     m->cols = cols;
     m->data = malloc(sizeof(double) * (rows * cols));
@@ -269,6 +281,7 @@ matrix *dot_matrix(matrix *m_one, matrix *m_two)
     if (m_one_cols != m_two_rows)
     {
         printf("multiply_matrix: Incorrect dimensions.\n");
+        printf("m_one_rows: %d, m_one_cols: %d, m_two_rows: %d, m_two_cols: %d\n", m_one_rows, m_one_cols, m_two_rows, m_two_cols);
         /*print_matrix(m_one);
         print_matrix(m_two);*/
         exit(EXIT_FAILURE);
@@ -308,6 +321,8 @@ matrix *multiply_matrix(matrix *m, double val)
     int m_rows = m->rows;
     int m_cols = m->cols;
 
+    printf("multiply_matrix: m_rows: %d, m_cols: %d \n", m_rows, m_cols);
+
     matrix *undot_m = init_matrix(m_rows, m_cols, 0);
 
     if (undot_m == NULL)
@@ -318,15 +333,13 @@ matrix *multiply_matrix(matrix *m, double val)
 
     for (int i = 0; i < m_rows; i++)
     {
-        double data;
+        double data = 0;
         for (int j = 0; j < m_cols; j++)
         {
             data = get_value(m, i, j) * val;
             insert_value(undot_m, i, j, data);
-        }
-        
+        }   
     }
-
     return undot_m;
 }
 

@@ -8,12 +8,16 @@
 #include "matrix.h"
 
 
-void free_multiple_matrices(multiple_matrices *matrices)
+void free_multiple_matrices(multiple_matrices matrices)
 {
-	free_matrix(matrices->a);
-	free_matrix(matrices->b);
-	free_matrix(matrices->c);
-	free_matrix(matrices->d);
+	if(matrices.a != NULL)
+		free_matrix(matrices.a);
+	if(matrices.b != NULL)
+		free_matrix(matrices.b);
+	if(matrices.c != NULL)
+		free_matrix(matrices.c);
+	if(matrices.d != NULL)
+		free_matrix(matrices.d);
 }
 
 double cost_function(double output, double exp_output)
@@ -95,7 +99,7 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 {
 	multiple_matrices matrices;
 	matrix *input = init_matrix(784, nbInputs, 0);
-	matrix *exp_output = init_matrix(10, nbInputs, 0);
+	matrix *exp_output = init_matrix(1, nbInputs, 0);
 	srand(time(NULL));
 	for (size_t n = 0; n < nbInputs; n++)
 	{
@@ -153,6 +157,8 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 		SDL_UnlockSurface(new_surface);
 		SDL_FreeSurface(new_surface);
 	}
+	matrices.a = input;
+	matrices.b = exp_output;
 	return matrices;
 }
 
@@ -186,7 +192,7 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	// HIDDEN LAYER
 
 	matrix *Z1 = dot_matrix(hw, inputs);
-	Z1 = add_matrix(Z1, hb);
+	Z1 = add_matrix_bias(Z1, hb);
 
 
 	matrix *A1 = copy_matrix(Z1);
@@ -194,12 +200,13 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 		
 	// OUTPUT LAYER
 	matrix *Z2 = dot_matrix(ow, A1);
-	Z2 = add_matrix(Z2, ob);
+	Z2 = add_matrix_bias(Z2, ob);
 
 	matrix *A2 = copy_matrix(Z2);
 	A2 = softmax_matrix(A2);
-	
+
 	// Return values
+	
 	multiple_matrices results;
 	results.a = Z1;
 	results.b = A1;
@@ -245,7 +252,7 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix *dB2 = init_matrix(dZ2->rows, dZ2->cols, dB2_value);
 
 	matrix *ow_t = transpose_matrix(ow);
-	matrix *dZ1 =dot_matrix(ow_t, dZ2);
+	matrix *dZ1 = dot_matrix(ow_t, dZ2);
 	dZ1 = d_relu_matrix(dZ1, Z1);
 	
 	
@@ -257,6 +264,16 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	sum = sum_matrix(dZ1);
 	dB1_value = sum/m;
 	matrix *dB1 = init_matrix(dZ1->rows, dZ1->cols, dB1_value);
+
+	// Free useless memory
+
+	free_matrix(A1_t);
+	free_matrix(ow_t);
+	free_matrix(A0_t);
+	free_matrix(dZ2);
+	free_matrix(dZ1);
+
+	// Return values
 
 	multiple_matrices back_prop;
 	back_prop.a = dW2;
@@ -292,6 +309,13 @@ multiple_matrices *upgrade_parameters(matrix *inputs, multiple_matrices *paramet
 
 	matrix *dHB = multiply_matrix(&dB1, lr);
 	hb = substract_matrix(hb, dHB);
+
+	// Free useless memory
+
+	free_matrix(dOW);
+	free_matrix(dOB);
+	free_matrix(dHW);
+	free_matrix(dHB);
 
 	parameters->a = hw;
 	parameters->b = hb;

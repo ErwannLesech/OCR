@@ -39,7 +39,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.001, 1000);    
+            train_network(1000, 0.001, 10);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -75,26 +75,23 @@ int main_neural_network(int argc, char *argv[])
 
 void train_network(long epochs, double lr, size_t nbInputs)
 {
-    matrix *input = init_matrix(784, nbInputs, 0);
-
-    matrix *exp_output = init_matrix(1, nbInputs, 0);
-    
     multiple_matrices entries = init_input_matrix(nbInputs);
-    /*print_matrix(&input);
-    print_matrix(&exp_output);*/
-
-    input = entries.a;
-    exp_output = entries.b;
+    
+    matrix *input = entries.a;
+    matrix *exp_output = entries.b;
+    
+    /*print_matrix(input);
+    print_matrix(exp_output);*/
 
     matrix *exp_output_hot = exp_output_init(exp_output);
-    //print_matrix(&Y_t);
+    print_matrix(exp_output_hot);
 
     multiple_matrices parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
-    /*print_matrix(&parameters.a);
-    print_matrix(&parameters.b);
-    print_matrix(&parameters.c);
-    print_matrix(&parameters.d);*/
+    print_matrix(parameters.a);
+    print_matrix(parameters.b);
+    print_matrix(parameters.c);
+    print_matrix(parameters.d);
 
     multiple_matrices forward_prop;
     multiple_matrices back_prop;
@@ -103,9 +100,9 @@ void train_network(long epochs, double lr, size_t nbInputs)
     {        
         printf("%i\n", i);
         
-        forward_prop = forward_propagation(&parameters, &input);
+        forward_prop = forward_propagation(&parameters, input);
 
-        back_prop = back_propagation(&exp_output_hot, &input,
+        back_prop = back_propagation(exp_output_hot, input,
         &parameters, &forward_prop);
 
         upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
@@ -113,19 +110,12 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
         if (i % (epochs / 10) == 0)
         {
-            
-            matrix *hw = parameters.a;
-            matrix *hb = parameters.b;
-            matrix *ow = parameters.c;
-            matrix *ob = parameters.d;
-            
-            print_matrix(hw);
-            print_matrix(hb);
-            print_matrix(ow);
-            print_matrix(ob);
+            print_matrix(parameters.a);
+            print_matrix(parameters.b);
+            print_matrix(parameters.c);
+            print_matrix(parameters.d);
 
-            matrix *output_prop = forward_prop.c;
-            print_matrix(output_prop);
+            print_matrix(forward_prop.c);
         }
     }
 
@@ -140,18 +130,16 @@ void train_network(long epochs, double lr, size_t nbInputs)
     print_matrix(&ow);
     print_matrix(&ob);*/
 
-    save_parameters(&parameters, "./OCR_neural_network/weights.txt");
+    save_parameters(parameters, "./OCR_neural_network/weights.txt");
 
-    // Free all matrices
-    free_multiple_matrices(&parameters);
-    free_multiple_matrices(&forward_prop);
-    free_multiple_matrices(&back_prop);
+    // Free all matrices*/
+    free_multiple_matrices(parameters);
+    free_multiple_matrices(forward_prop);
+    free_multiple_matrices(back_prop);
 
-    free_matrix(input);
-    free_matrix(exp_output);
+    free_multiple_matrices(entries);
     free_matrix(exp_output_hot);
 }
-
 
 void load_weights(char *filename)
 {
@@ -172,7 +160,7 @@ void load_weights(char *filename)
 	print_matrix(ob);
     printf("\n");
 
-    free_multiple_matrices(&parameters);
+    free_multiple_matrices(parameters);
 }
 
 
@@ -191,6 +179,8 @@ void predict()
     };
 
     matrix *input;
+    multiple_matrices forward_prop;
+    matrix *output_prop;
     
     multiple_matrices parameters;
     parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons, output_neurons);
@@ -210,17 +200,17 @@ void predict()
         path[11] = 'g';
         path[12] = '\0';
         input = init_input_matrix_test(path);
-        multiple_matrices forward_prop = forward_propagation(&parameters, input);
-        matrix *output_prop = forward_prop.c;
+        forward_prop = forward_propagation(&parameters, input);
+        output_prop = forward_prop.c;
         print_matrix(&output_prop);
-        double max = get_value(&output_prop, 0, 0);
+        double max = get_value(output_prop, 0, 0);
         char index = '0';
         for (int k = 1; k < 10; k++)
         {
-            if (get_value(&output_prop, k, 0) > max)
+            if (get_value(output_prop, k, 0) > max)
             {
                 index = k + 48;
-                max = get_value(&output_prop, k, 0);
+                max = get_value(output_prop, k, 0);
             }
         }
         printf("%c \n", index);

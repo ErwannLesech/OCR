@@ -3,14 +3,14 @@
 #include "save_parameters.h"
 
 
-void save_parameters(multiple_matrices *parameters, char path[])
+void save_parameters(multiple_matrices parameters, char path[])
 {
 	FILE *file = fopen(path, "w");
 
-	matrix *hw = parameters->a;
-	matrix *hb = parameters->b;
-	matrix *ow = parameters->c;
-	matrix *ob = parameters->d;
+	matrix *hw = parameters.a;
+	matrix *hb = parameters.b;
+	matrix *ow = parameters.c;
+	matrix *ob = parameters.d;
 
 	int rows = hw->rows;
 	int cols = hw->cols;
@@ -162,7 +162,7 @@ multiple_matrices load_parameters(char path[], int input_neurons,
 				
 			    }*/
 
-			 insert_value(&hw, rows, cols, dtemp);
+			 insert_value(hw, rows, cols, dtemp);
 			 //printf("row: %i, col: %i\n", rows, cols);
 			 if(rows  >= hidden_neurons-1 && cols >= input_neurons-1)
 			 {
@@ -192,7 +192,7 @@ multiple_matrices load_parameters(char path[], int input_neurons,
 			}*/
 
 			//printf("row: %i, col: %i, temp: %f\n", rows, cols, dtemp);
-                        insert_value(&hb, rows, 0, dtemp);
+                        insert_value(hb, rows, 0, dtemp);
 			if(rows == hidden_neurons-1)
 			{
 			 	rows = 0;
@@ -208,7 +208,7 @@ multiple_matrices load_parameters(char path[], int input_neurons,
                         break;
                     
                     case 2:
-                        insert_value(&ow, rows, cols, dtemp);
+                        insert_value(ow, rows, cols, dtemp);
 			if(rows == output_neurons-1 && cols == hidden_neurons-1)
 			{
 			 	rows = 0;
@@ -230,7 +230,7 @@ multiple_matrices load_parameters(char path[], int input_neurons,
                         break;
                     
                     case 3:
-                        insert_value(&ob, rows, 0, dtemp);
+                        insert_value(ob, rows, 0, dtemp);
 			if(rows == output_neurons-1)
 			{
 			 	rows = 0;

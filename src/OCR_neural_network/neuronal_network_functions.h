@@ -9,7 +9,7 @@ typedef struct
     matrix *d;
 } multiple_matrices;
 
-void free_multiple_matrices(multiple_matrices *matrices);
+void free_multiple_matrices(multiple_matrices matrices);
 
 double sigmoid(double x);
 
