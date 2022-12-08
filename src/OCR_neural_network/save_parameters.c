@@ -3,17 +3,17 @@
 #include "save_parameters.h"
 
 
-void save_parameters(multiple_result *parameters, char path[])
+void save_parameters(multiple_matrices *parameters, char path[])
 {
 	FILE *file = fopen(path, "w");
 
-	matrix hw = parameters->a;
-	matrix hb = parameters->b;
-	matrix ow = parameters->c;
-	matrix ob = parameters->d;
+	matrix *hw = parameters->a;
+	matrix *hb = parameters->b;
+	matrix *ow = parameters->c;
+	matrix *ob = parameters->d;
 
-	int rows = hw.rows;
-	int cols = hw.cols;
+	int rows = hw->rows;
+	int cols = hw->cols;
 
 	//fprintf(file, "#1weights:\n");
 	/*fprintf(file, "%d rows - ", rows);
@@ -24,16 +24,16 @@ void save_parameters(multiple_result *parameters, char path[])
 		//fprintf(file, "[");
 		for (int j = 0; j < cols - 1; j++)
 		{
-			fprintf(file, "%f ", get_value(&hw, i, j));
+			fprintf(file, "%f ", get_value(hw, i, j));
 		}
-		fprintf(file, "%f", get_value(&hw, i, cols - 1));
+		fprintf(file, "%f", get_value(hw, i, cols - 1));
 		fprintf(file, "\n");
 	}
 
 	fprintf(file, "\n");
 
-	rows = hb.rows;
-	cols = hb.cols;
+	rows = hb->rows;
+	cols = hb->cols;
 
 	/*fprintf(file, "hb dim: ");
 	fprintf(file, "%d rows - ", rows);
@@ -45,16 +45,16 @@ void save_parameters(multiple_result *parameters, char path[])
 		//fprintf(file, "[");
 		for (int j = 0; j < cols - 1; j++)
 		{
-			fprintf(file, "%f ", get_value(&hb, i, j));
+			fprintf(file, "%f ", get_value(hb, i, j));
 		}
-		fprintf(file, "%f", get_value(&hb, i, cols - 1));
+		fprintf(file, "%f", get_value(hb, i, cols - 1));
 		fprintf(file, "\n");
 	}
 
 	fprintf(file, "\n");
 
-	rows = ow.rows;
-	cols = ow.cols;
+	rows = ow->rows;
+	cols = ow->cols;
 
 	/*fprintf(file, "ow dim: ");
 	fprintf(file, "%d rows - ", rows);
@@ -66,16 +66,16 @@ void save_parameters(multiple_result *parameters, char path[])
 		//fprintf(file, "[");
 		for (int j = 0; j < cols - 1; j++)
 		{
-			fprintf(file, "%f ", get_value(&ow, i, j));
+			fprintf(file, "%f ", get_value(ow, i, j));
 		}
-		fprintf(file, "%f", get_value(&ow, i, cols - 1));
+		fprintf(file, "%f", get_value(ow, i, cols - 1));
 		fprintf(file, "\n");
 	}
 
 	fprintf(file, "\n");
 
-	rows = ob.rows;
-	cols = ob.cols;
+	rows = ob->rows;
+	cols = ob->cols;
 
 	/*fprintf(file, "ob dim: ");
 	fprintf(file, "%d rows - ", rows);
@@ -87,15 +87,15 @@ void save_parameters(multiple_result *parameters, char path[])
 		//fprintf(file, "[");
 		for (int j = 0; j < cols - 1; j++)
 		{
-			fprintf(file, "%f ", get_value(&ob, i, j));
+			fprintf(file, "%f ", get_value(ob, i, j));
 		}
-		fprintf(file, "%f", get_value(&ob, i, cols - 1));
+		fprintf(file, "%f", get_value(ob, i, cols - 1));
 		fprintf(file, "\n");
 	}
 }
 
 
-multiple_result load_parameters(char path[], int input_neurons,
+multiple_matrices load_parameters(char path[], int input_neurons,
 	int hidden_neurons, int output_neurons)
 {
     FILE *input_file = fopen(path, "r");
@@ -109,19 +109,15 @@ multiple_result load_parameters(char path[], int input_neurons,
     int matrix_number = 0;
     int rows = 0, cols = 0;
 
-    matrix hw;
-    init_matrix(&hw, hidden_neurons, input_neurons, 0);
+    matrix *hw = init_matrix(hidden_neurons, input_neurons, 0);
 
-    matrix hb;
-    init_matrix(&hb, hidden_neurons, 1, 0);
+    matrix *hb = init_matrix(hidden_neurons, 1, 0);
 
-    matrix ow;
-    init_matrix(&ow, output_neurons, hidden_neurons, 0);
+    matrix *ow = init_matrix(output_neurons, hidden_neurons, 0);
 
-    matrix ob ;
-    init_matrix(&ob, output_neurons, 1, 0);
+    matrix *ob = init_matrix(output_neurons, 1, 0);
 
-    multiple_result parameters;
+    multiple_matrices parameters;
 
 
     while((c=fgetc(input_file)) != EOF)
