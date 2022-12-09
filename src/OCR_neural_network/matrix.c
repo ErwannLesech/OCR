@@ -508,6 +508,7 @@ double sum_exp(matrix *m, int col)
     return sum;
 }
 
+
 // apply the softmax function to the matrix m
 matrix *softmax_matrix(matrix *m)
 {
@@ -540,6 +541,7 @@ matrix *softmax_matrix(matrix *m)
 
     return softmax_m;
 }
+
 
 matrix *copy_matrix(matrix *m)
 {

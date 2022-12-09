@@ -42,7 +42,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(500, 0.0001, 200);    
+            train_network(1000, 0.001, 1000);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -92,7 +92,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
     print_matrix(exp_output);*/
 
     matrix *exp_output_hot = exp_output_init(exp_output);
-    print_matrix(exp_output_hot);
+    //print_matrix(exp_output_hot);
 
     multiple_matrices parameters = initialization(input_neurons, 
     hidden_neurons1, hidden_neurons2, output_neurons);
@@ -272,10 +272,12 @@ void accuracy()
     
     multiple_matrices parameters;
     parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons1, hidden_neurons2, output_neurons);
-    matrix *hw = parameters.a;
-	matrix *hb = parameters.b;
-	matrix *ow = parameters.c;
-	matrix *ob = parameters.d;
+    print_matrix(parameters.a);
+    print_matrix(parameters.b);
+    print_matrix(parameters.c);
+    print_matrix(parameters.d);
+    print_matrix(parameters.e);
+    print_matrix(parameters.f);
 
     for (int i = 0; i < 100; i++)
     {    
@@ -294,20 +296,19 @@ void accuracy()
 		path[46] = '\0';
         printf("%s \n", path);
         input = init_input_matrix_test(path);
-        printf("test");
         forward_prop = forward_propagation(&parameters, input);
         output_prop = forward_prop.f;
         double max = get_value(output_prop, 0, 0);
         char index = '0';
-        /*for (int k = 1; k < 10; k++)
+        for (int k = 1; k < 10; k++)
         {
             if (get_value(output_prop, k, 0) > max)
             {
                 index = k + 48;
                 max = get_value(output_prop, k, 0);
             }
-        }*/
-        //printf("got %c - expected %c - ", index, number + 48);
+        }
+        printf("got %c - expected %c - ", index, number + 48);
         if (index == number + 48)
         {
             printf("Correct \n");

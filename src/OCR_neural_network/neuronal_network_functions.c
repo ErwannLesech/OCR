@@ -68,7 +68,6 @@ void shuffle(matrix *inputs, matrix *exp_outputs)
 	for (size_t i = 0; i < inputs->cols; i++)
 	{
 		size_t r = rand() % inputs->cols;
-		printf("r = %zu i = %zu \n", r, i);
 
 		for (size_t j = 0; j < inputs->rows; j++)
 		{
@@ -122,7 +121,6 @@ matrix *init_input_matrix_test(char *path)
 	SDL_FreeSurface(new_surface);
 	SDL_UnlockSurface(new_surface);
 	return input;
-	return init_matrix(784, 1, 0);
 }
 
 
@@ -148,7 +146,6 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 		path[45] = 'g';
 		path[46] = '\0';
 		/*printf("%s\n", path);*/
-		printf("%c\n", path[38]);
 		insert_value(exp_output, 0, n, (double)path[38] - 48);
 
 		SDL_Surface* surface = IMG_Load(path);
@@ -232,7 +229,7 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	Z1 = add_matrix_bias(Z1, b1);
 
 	matrix *A1 = copy_matrix(Z1);
-	A1 = sigmoid_matrix(A1);
+	A1 = relu_matrix(A1);
 		
 	// HIDDEN LAYER2
 
@@ -240,19 +237,19 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	Z2 = add_matrix_bias(Z2, b2);
 
 	matrix *A2 = copy_matrix(Z2);
-	A2 = sigmoid_matrix(A2);
+	A2 = relu_matrix(A2);
+
 
 	// OUTPUT LAYER
 
 	matrix *Z3 = dot_matrix(w3, A2);
 	Z3 = add_matrix_bias(Z3, b3);
 
+	
 	matrix *A3 = copy_matrix(Z3);
 	A3 = softmax_matrix(A3);
 
-	print_matrix(A3);
-
-	printf("forward_propagation done\n");
+	//printf("forward_propagation done\n");
 
 	// Return values
 	
@@ -316,7 +313,7 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 
 	matrix *w3_t = transpose_matrix(w3);
 	matrix *dZ2 = dot_matrix(w3_t, dZ3);
-	dZ2 = d_sigmoid_matrix(dZ2, Z2);
+	dZ2 = d_relu_matrix(dZ2, Z2);
 
 	matrix *A1_t = transpose_matrix(A1);
 	matrix *dW2 = dot_matrix(dZ2, A1_t);
@@ -331,7 +328,7 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 
 	matrix *w2_t = transpose_matrix(w2);
 	matrix *dZ1 = dot_matrix(w2_t, dZ2);
-	dZ1 = d_sigmoid_matrix(dZ1, Z1);
+	dZ1 = d_relu_matrix(dZ1, Z1);
 
 	matrix *A0_t = transpose_matrix(inputs);
 	matrix *dW1 = dot_matrix(dZ1, A0_t);
@@ -350,7 +347,7 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	free_matrix(w2_t);
 	free_matrix(A0_t);
 
-	printf("back_propagation done\n");
+	//printf("back_propagation done\n");
 
 	// Return values
 
@@ -410,7 +407,7 @@ multiple_matrices *upgrade_parameters(matrix *inputs, multiple_matrices *paramet
 	free_matrix(dw1);
 	free_matrix(db1);
 
-	printf("upgrade_parameters done\n");
+	//printf("upgrade_parameters done\n");
 
 	// Return values
 

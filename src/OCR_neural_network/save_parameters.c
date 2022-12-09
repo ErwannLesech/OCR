@@ -364,6 +364,8 @@ multiple_matrices load_parameters(char path[], int input_neurons,
     parameters.b = b1;
     parameters.c = w2;
     parameters.d = b2;
+	parameters.e = w3;
+	parameters.f = b3;
     
     return parameters;
 }
