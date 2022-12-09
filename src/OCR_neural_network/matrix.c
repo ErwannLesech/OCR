@@ -71,6 +71,18 @@ void free_matrix(matrix *m)
     free(m);
 }
 
+void shuffle_matrix(matrix *a[], int n)
+{
+	srand(time(NULL));
+	for (int i = n - 1; i > 0; i--)
+	{
+		int j = rand() % (i + 1);
+		matrix *temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
+	}
+}
+
 
 int insert_value(matrix *m, int rows, int cols, double val)
 {
@@ -334,8 +346,6 @@ matrix *multiply_matrix(matrix *m, double val)
 {
     int m_rows = m->rows;
     int m_cols = m->cols;
-
-    printf("multiply_matrix: m_rows: %d, m_cols: %d \n", m_rows, m_cols);
 
     matrix *undot_m = init_matrix(m_rows, m_cols, 0);
 

@@ -62,10 +62,33 @@ double softmax_derivative(double x)
 	return x * (1 - x);
 }
 
+void shuffle(matrix *inputs, matrix *exp_outputs)
+{
+	srand(time(NULL));
+	for (size_t i = 0; i < inputs->cols; i++)
+	{
+		size_t r = rand() % inputs->cols;
+		printf("r = %zu i = %zu \n", r, i);
+
+		for (size_t j = 0; j < inputs->rows; j++)
+		{
+			double tmp = get_value(inputs, j, i);
+			insert_value(inputs, j, i, get_value(inputs, j, r));
+			insert_value(inputs, j, r, tmp);
+		}
+		for (size_t k = 0; k < exp_outputs->rows; k++)
+		{
+			double tmp = get_value(exp_outputs, k, 0);
+			insert_value(exp_outputs, k, 0, get_value(exp_outputs, k, r));
+			insert_value(exp_outputs, k, r, tmp);
+		}
+	}
+}
+
 
 matrix *init_input_matrix_test(char *path)
 {
-	/*matrix *input = init_matrix(784, 1, 0);
+	matrix *input = init_matrix(784, 1, 0);
 	SDL_Surface* surface = IMG_Load(path);
 	
 	SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
@@ -98,7 +121,7 @@ matrix *init_input_matrix_test(char *path)
 	}
 	SDL_FreeSurface(new_surface);
 	SDL_UnlockSurface(new_surface);
-	return input;*/
+	return input;
 	return init_matrix(784, 1, 0);
 }
 
@@ -124,8 +147,8 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 		path[44] = 'p';
 		path[45] = 'g';
 		path[46] = '\0';
-		/*printf("%s\n", path);
-		printf("%lu\n", n);*/
+		/*printf("%s\n", path);*/
+		printf("%c\n", path[38]);
 		insert_value(exp_output, 0, n, (double)path[38] - 48);
 
 		SDL_Surface* surface = IMG_Load(path);
@@ -252,7 +275,7 @@ matrix *exp_output_init(matrix *exp_output)
 	for (size_t i = 0; i < exp_output->cols; i++)
 	{
 		size_t value = (int)(get_value(exp_output, 0, i));
-		insert_value(one_hot_Y, value - 1, i, 1);
+		insert_value(one_hot_Y, value, i, 1);
 	}
 
 	return one_hot_Y;
@@ -277,6 +300,8 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix *b1 = parameters->b;
 	matrix *w1 = parameters->a;
 
+	// OUTPUT LAYER
+
 	matrix *dZ3 = substract_matrix(A3, exp_outputs);
 	matrix *A2_t = transpose_matrix(A2);
 	matrix *dW3 = dot_matrix(dZ3, A2_t);
@@ -287,8 +312,9 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	dB3_value = sum/m;
 	matrix *dB3 = init_matrix(dZ3->rows, 1, dB3_value);
 
-	matrix *w3_t = transpose_matrix(w3);
+	// HIDDEN LAYER2
 
+	matrix *w3_t = transpose_matrix(w3);
 	matrix *dZ2 = dot_matrix(w3_t, dZ3);
 	dZ2 = d_sigmoid_matrix(dZ2, Z2);
 
@@ -301,8 +327,9 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	dB2_value = sum/m;
 	matrix *dB2 = init_matrix(dZ2->rows, 1, dB2_value);
 
-	matrix *w2_t = transpose_matrix(w2);
+	// HIDDEN LAYER1
 
+	matrix *w2_t = transpose_matrix(w2);
 	matrix *dZ1 = dot_matrix(w2_t, dZ2);
 	dZ1 = d_sigmoid_matrix(dZ1, Z1);
 

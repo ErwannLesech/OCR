@@ -42,7 +42,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.0001, 2);    
+            train_network(500, 0.0001, 200);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -96,10 +96,13 @@ void train_network(long epochs, double lr, size_t nbInputs)
 
     multiple_matrices parameters = initialization(input_neurons, 
     hidden_neurons1, hidden_neurons2, output_neurons);
-    print_matrix(parameters.a);
+    /*print_matrix(parameters.a);
     print_matrix(parameters.b);
     print_matrix(parameters.c);
     print_matrix(parameters.d);
+    print_matrix(parameters.e);
+    print_matrix(parameters.f);
+    */
 
     multiple_matrices forward_prop;
     multiple_matrices back_prop;
@@ -107,6 +110,8 @@ void train_network(long epochs, double lr, size_t nbInputs)
     for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
+
+        shuffle(input, exp_output_hot);
         
         forward_prop = forward_propagation(&parameters, input);
 

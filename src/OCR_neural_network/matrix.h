@@ -18,6 +18,9 @@ matrix *init_rand_matrix(int rows, int cols);
 // free the allocation of memory of the matrix
 void free_matrix(matrix *m);
 
+// shuffle the matrix
+void shuffle_matrix(matrix *a[], int n);
+
 // insert a value 'val' in matrix m at location rows/cols
 int insert_value(matrix *m, int rows, int cols, double val);
 

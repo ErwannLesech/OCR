@@ -25,10 +25,11 @@ double softmax(double x, double sum);
 
 double softmax_derivative(x);
 
+void shuffle(matrix *inputs, matrix *exp_outputs);
+
 matrix *init_input_matrix_test(char *path);
 
 multiple_matrices init_input_matrix(size_t nbInputs);
-
 
 multiple_matrices initialization(int input_neurons,
 	int hidden_neurons1, int hidden_neurons2, int output_neurons);
