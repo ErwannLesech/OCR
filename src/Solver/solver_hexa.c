@@ -18,7 +18,7 @@ int isValidMove(char sudoku[16][16], int row, int col, char c)
 
         if (sudoku[row][i] != '.' && sudoku[row][i] == c)
         {
-                return 0;
+            return 0;
         }
 
         if (sudoku[4*(row/4) + i/4][4*(col/4) + i%4] != '.' 
@@ -39,8 +39,9 @@ int solve_hexadoku(char sudoku[16][16])
         {
             if(sudoku[i][j] == '.')
             {
-                for(char c = '1'; c <= '9'; c++)
+                for(char c = '1'; c <= 'F'; c++)
                 {
+                    printf("c = %c", c);
                     if(isValidMove(sudoku, i, j, c))
                     {
                         sudoku[i][j] = c;
@@ -55,23 +56,10 @@ int solve_hexadoku(char sudoku[16][16])
                             sudoku[i][j] = '.';
                         }
                     }
-                }
 
-                for(char c = 'A'; c <= 'F'; c++)
-                {
-                    if(isValidMove(sudoku, i, j, c))
+                    if (c == '9')
                     {
-                        sudoku[i][j] = c;
-
-                        if(isValidMove(sudoku, i, j, c))
-                        {
-                            return 1;
-                        }
-
-                        else
-                        {
-                            sudoku[i][j] = '.';
-                        }
+                        c = ('A' - 1);
                     }
                 }
 

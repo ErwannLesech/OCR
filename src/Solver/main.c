@@ -268,6 +268,10 @@ int main_solver_hexa(char* sudoku)
 		printf("No solution found\n");
 		return 1;
 	}
+	else
+	{
+		printf("Solution found\n");
+	}
 	print_sudoku_hexa(hexa_grid);
 	char filename[strlen((sudoku + 8))];
 	size_t i = 0;
