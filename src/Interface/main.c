@@ -1,5 +1,9 @@
 #include <gtk/gtk.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "ocr.h"
 #include "../Saved/main.h"
 #include "../Rotate/main.h"
 #include "../Load_img/main.h"
@@ -89,14 +93,13 @@ void quickOCR()
 	    	{
                 
                 	gtk_label_set_text(GTK_LABEL(label1), "Processing...");
-                	//if(main_ImageProcess(file))
-			//{
-				//main_save(3,test_grid_01 test_grid_02);
+                	if(ocr(file))
+			{
                     		gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
-                    		pixbuf_2 = resize("../Saved/saved.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+                    		//pixbuf_2 = resize("error_image2.png");
+				//gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 
-                	//}
+			}
 			/*else 
 			{
                     		gtk_label_set_text(GTK_LABEL(label), "No Solution Found !");
@@ -281,11 +284,12 @@ void step_OCR()
         }
 */
 }
-int rotate_i(char* path)
+int rotate_i()
 {
+	char* path = gtk_file_chooser_get_preview_filename(fileChooser);
 	double value = gtk_range_get_value(GTK_RANGE(scale));
-	main_rotate(path,(int)value);
-	pixbuf_2 = resize("../Rotate/rotate.png");
+	main_rotate(path,round(value));
+	pixbuf_2 = resize("rotate.png");
 	gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 	return 1;
 }
@@ -309,14 +313,13 @@ int main_interface(int argc, char **argv)
 	label2 = GTK_WIDGET(gtk_builder_get_object(builder, "label2"));
     	preview = GTK_WIDGET(gtk_builder_get_object(builder, "preview"));
 	scale = GTK_SCALE(gtk_builder_get_object(builder, "scale"));
-	//ocr = gtk_image_new_from_file("../Images/OCR.png");
 
     	g_signal_connect(window, "destroy",
         	G_CALLBACK(gtk_main_quit), NULL);
     	g_signal_connect(GTK_FILE_CHOOSER(fileChooser), "update-preview",
         	G_CALLBACK (updateImage), NULL);
-	gtk_range_set_range(GTK_RANGE(scale), 1, 360);
-    	gtk_range_set_value(GTK_RANGE(scale), 1);
+	gtk_range_set_range(GTK_RANGE(scale), -180, 180);
+    	gtk_range_set_value(GTK_RANGE(scale),0);
 	g_signal_connect(GTK_BUTTON(button4),"clicked",
 		G_CALLBACK(rotate_i),NULL);
     	g_signal_connect(GTK_BUTTON(button1), "clicked",

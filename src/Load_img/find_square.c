@@ -188,6 +188,5 @@ struct Squares find_square(struct Lines lines, int max_size){
     struct Squares s = {.squares = squares, .size = a};
     struct Squares simp = simplify_squares(s);
     free(squares);
-    printf("%i\n",simp.size);
     return simp;
 }

@@ -81,12 +81,12 @@ int main_rotate(char* path,int angle)
 	
 	//Convert the angle given in long int
 	long int angler = angle;
-	
+
 	//Rotation of the surface
-	SDL_Surface* turned = rotate_img(surface, -angler);
+	SDL_Surface* turned= rotate_img(surface, -angler);
 
 	//Save of the rotation
-	SDL_Surface *new = SDL_CreateRGBSurface(0, turned->w-10, turned->h-10, 32, 0, 0, 0, 0);
+	SDL_Surface *new = SDL_CreateRGBSurface(0, 550, 550, 32, 0, 0, 0, 0);
 	SDL_BlitScaled(turned, NULL, new, NULL);
 
 	IMG_SavePNG(new, "rotate.png");

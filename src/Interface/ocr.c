@@ -16,24 +16,26 @@
 void ocr(char* path)
 {
 	//LOADER
-	printf("loader");
+	printf("loader\n");
 	main_load(path);    	
 
 	//SEPARATE
-	printf("separate");
-	main_separate("grid.png");
+	printf("separate\n");
+	main_separate("grid.bmp");
 	
 	//IA
-	printf("ia");
-	predict();	
-	char* grille1 = "../OCR_neural_network/grid.txt";
+	printf("ia\n");
+	//predict();	
+	//char* grille1 = "../OCR_neural_network/grid.txt";
+	char* grille1 = "../Saved/test_grid_01";
 
 	//SOLVER
-	printf("solver");
-	main_solver(grille1);
-	char* grille2 = "../Solver/grid.result.txt";
+	printf("solver\n");
+	//main_solver(grille1);
+	//char* grille2 = "../Solver/grid.result.txt";
+	char* grille2 = "../Saved/test_grid_02";
 	
 	//SAVED
-	printf("saved");
-	main_save(grille1,grille2);
+	printf("saved\n");
+	//main_save(grille1,grille2);
 }
