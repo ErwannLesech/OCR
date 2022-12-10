@@ -149,25 +149,19 @@ void step_click_OCR()
 				{
 				case 0:
 					printf("0");
-					gtk_label_set_text(GTK_LABEL(label2), "Grayscale -->");
-					pixbuf_2 = resize("grayscale.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					break;
-				case 1:
-					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
 					pixbuf_2 = resize("image_otsu.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
-				case 2:
+				case 1:
 					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
 					pixbuf_2 = resize("sobel_filter.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
-				case 3:
+				case 2:
 					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
@@ -175,14 +169,14 @@ void step_click_OCR()
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				
-				case 4:
+				case 3:
 					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
 					pixbuf_2 = resize("grid.bmp");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
-				case 5:
+				case 4:
 					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
@@ -193,7 +187,7 @@ void step_click_OCR()
 					break;
 				}
 			}
-			stepc += stepc <= 5;
+			stepc += stepc <= 4;
 		}
 		else
 		{

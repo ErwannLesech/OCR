@@ -8,6 +8,7 @@
 #include "find_square.h"
 #include "focus_grid.h"
 #include "auto_rot.h"
+#include "../Binarization/main.h"
 #include "string.h"
 #include <SDL2/SDL_image.h>
 
