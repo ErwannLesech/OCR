@@ -63,28 +63,28 @@ int isValidMove(char sudoku[16][16], int row, int col, char c)
 }
 
 
-int solver_hexa(char sudoku[16][16])
+int solver_hexa()
 {
     for(unsigned int i = 0; i < 16; i++)
     {
         for(unsigned int j = 0; j < 16; j++)
         {
-            if(sudoku[i][j] == '.')
+            if(hexa_grid[i][j] == '.')
             {
                 for(char c = '1'; c <= 'F'; c++)
                 {
-                    if(isValidMove(sudoku, i, j, c))
+                    if(isValidMove(hexa_grid, i, j, c))
                     {
-                        sudoku[i][j] = c;
+                        hexa_grid[i][j] = c;
 
-                        if(solver_hexa(sudoku))
+                        if(solver_hexa(hexa_grid))
                         {
                             return 1;
                         }
 
                         else
                         {
-                            sudoku[i][j] = '.';
+                            hexa_grid[i][j] = '.';
                         }
                     }
 
