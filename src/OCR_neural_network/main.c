@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stddef.h>
 #include "matrix.h"
 #include "neuronal_network_functions.h"
 #include "main.h"
@@ -9,7 +11,8 @@
 #include "save_parameters.h"
 
 const unsigned int input_neurons = 784;
-const unsigned int hidden_neurons = 10;
+const unsigned int hidden_neurons1 = 128;
+const unsigned int hidden_neurons2 = 32;
 const unsigned int output_neurons = 10;
 
 double learning_rate = 0.1;
@@ -39,7 +42,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.005, 500);    
+            train_network(200, 0.001, 500);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -52,14 +55,16 @@ int main_neural_network(int argc, char *argv[])
         printf("predict\n");
         predict();
     }
+    else if (strcmp(argv[2], "-accuracy") == 0)
+    {
+        printf("predict_train\n");
+        accuracy();
+    }
     else if (strcmp(argv[2], "-test") == 0)
     {
         printf("test\n");
-        matrix input;
-        init_matrix(&input, 784, 1, 0);
-
-        init_input_matrix_test(&input, "./cells/01.png");
-        display_mat(input);
+        matrix *input = init_input_matrix_test("./OCR_neural_network/dataset/training/1/01.jpg");
+        display_mat(*input);
     }
     else if (strcmp(argv[2], "-help") == 0)
     {
@@ -78,132 +83,97 @@ int main_neural_network(int argc, char *argv[])
 
 void train_network(long epochs, double lr, size_t nbInputs)
 {
-    matrix input;
-    init_matrix(&input, 784, nbInputs, 0);
-
-    matrix exp_output;
-    init_matrix(&exp_output, 1, nbInputs, 0);
+    multiple_matrices entries = init_input_matrix(nbInputs);
     
-    init_input_matrix(&input, &exp_output, nbInputs);
-    /*print_matrix(&input);
-    print_matrix(&exp_output);*/
+    matrix *input = entries.a;
+    matrix *exp_output = entries.b;
+    
+    /*print_matrix(input);
+    print_matrix(exp_output);*/
 
-    matrix Y_t = exp_output_init(exp_output);
-    //print_matrix(&Y_t);
+    matrix *exp_output_hot = exp_output_init(exp_output);
+    //print_matrix(exp_output_hot);
 
-    multiple_result parameters = initialization(input_neurons, 
-    hidden_neurons, output_neurons);
-    /*print_matrix(&parameters.a);
-    print_matrix(&parameters.b);
-    print_matrix(&parameters.c);
-    print_matrix(&parameters.d);*/
+    multiple_matrices parameters = initialization(input_neurons, 
+    hidden_neurons1, hidden_neurons2, output_neurons);
+    /*print_matrix(parameters.a);
+    print_matrix(parameters.b);
+    print_matrix(parameters.c);
+    print_matrix(parameters.d);
+    print_matrix(parameters.e);
+    print_matrix(parameters.f);
+    */
 
-    multiple_result forward_prop;
-    multiple_result back_prop;
+    multiple_matrices forward_prop;
+    multiple_matrices back_prop;
     
     for (long i = 0; i < epochs + 1; i++)
     {        
         printf("%i\n", i);
-        
-        forward_prop = forward_propagation(&parameters, &input);
 
-        back_prop = back_propagation(&exp_output, &input,
+        shuffle(input, exp_output_hot);
+        
+        forward_prop = forward_propagation(&parameters, input);
+
+        back_prop = back_propagation(exp_output_hot, input,
         &parameters, &forward_prop);
 
         upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
         lr);
 
-        if (i % (epochs / 10) == 0)
+        /*if (i % (epochs / 10) == 0)
         {
-            
-            matrix hw = parameters.a;
-            matrix hb = parameters.b;
-            matrix ow = parameters.c;
-            matrix ob = parameters.d;
-            
-            print_matrix(&hw);
-            print_matrix(&hb);
-            print_matrix(&ow);
-            print_matrix(&ob);
+            print_matrix(parameters.a);
+            print_matrix(parameters.b);
+            print_matrix(parameters.c);
+            print_matrix(parameters.d);
 
-            matrix output_prop = forward_prop.c;
-            print_matrix(&output_prop);
-        }
+            print_matrix(forward_prop.c);
+        }*/
     }
 
     // Parameters
-    matrix hw = parameters.a;
-    matrix hb = parameters.b;
-    matrix ow = parameters.c;
-    matrix ob = parameters.d;
+    /*matrix *hw = parameters.a;
+    matrix *hb = parameters.b;
+    matrix *ow = parameters.c;
+    matrix *ob = parameters.d;*/
 
     /*print_matrix(&hw);
     print_matrix(&hb);
     print_matrix(&ow);
     print_matrix(&ob);*/
 
-    save_parameters(&parameters, "./OCR_neural_network/weights.txt");
+    save_parameters(parameters, "./OCR_neural_network/weights.txt");
 
-    free_matrix(&hw);
-    free_matrix(&hb);
-    free_matrix(&ow);
-    free_matrix(&ob);
+    // Free all matrices*/
+    free_multiple_matrices(parameters);
+    free_multiple_matrices(forward_prop);
+    free_multiple_matrices(back_prop);
 
-    //load_weights("./OCR_neural_network/weights.txt");
-
-    matrix Z1 = forward_prop.a;
-    matrix A1 = forward_prop.b;
-    matrix A2 = forward_prop.c;
-
-    free_matrix(&Z1);
-    free_matrix(&A1);
-    free_matrix(&A2);
-
-    //print_matrix(&A2);
-
-    // Back prop
-    matrix dW1 = back_prop.a;
-    matrix dB1 = back_prop.b;
-	matrix dW2 = back_prop.c;
-    matrix dB2 = back_prop.d;
-
-    // Free all matrices
-
-
-    free_matrix(&dW1);
-    free_matrix(&dB1);
-    free_matrix(&dW2);
-    free_matrix(&dB2);
-
-    free_matrix(&input);
-    free_matrix(&exp_output);
-    free_matrix(&Y_t);
+    free_multiple_matrices(entries);
+    free_matrix(exp_output_hot);
 }
-
 
 void load_weights(char *filename)
 {
-    multiple_result parameters;
+    multiple_matrices parameters;
 
-    parameters = load_parameters(filename, input_neurons, hidden_neurons, output_neurons);
-    matrix hw = parameters.a;
-	matrix hb = parameters.b;
-	matrix ow = parameters.c;
-	matrix ob = parameters.d;
+    parameters = load_parameters(filename, input_neurons, hidden_neurons1, hidden_neurons2, output_neurons);
+    matrix *hw = parameters.a;
+	matrix *hb = parameters.b;
+	matrix *ow = parameters.c;
+	matrix *ob = parameters.d;
 
-    print_matrix(&hw);
+    print_matrix(hw);
 	printf("\n");
-    print_matrix(&hb);
+    print_matrix(hb);
 	printf("\n");
-    print_matrix(&ow);
+    print_matrix(ow);
     printf("\n");
-	print_matrix(&ob);
+	print_matrix(ob);
     printf("\n");
 
-    free_matrix(&hw);
-    free_matrix(&hb);
-    free_matrix(&ow);
-    free_matrix(&ob);
+    free_multiple_matrices(parameters);
 }
 
 
@@ -221,15 +191,18 @@ void predict()
 	{'.','.','.','.','.','.','.','.','.'}
     };
 
-    matrix input;
-    init_matrix(&input, 784, 1, 0);
+    matrix *input;
+    multiple_matrices forward_prop;
+    matrix *output_prop;
     
-    multiple_result parameters;
-    parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons, output_neurons);
-    matrix hw = parameters.a;
-	matrix hb = parameters.b;
-	matrix ow = parameters.c;
-	matrix ob = parameters.d;
+    multiple_matrices parameters;
+    parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons1, hidden_neurons2, output_neurons);
+    /*matrix *w1 = parameters.a;
+	matrix *b1 = parameters.b;
+	matrix *w2 = parameters.c;
+	matrix *b2 = parameters.d;
+    matrix *w3 = parameters.e;
+    matrix *b3 = parameters.f;*/
 
     for (int i = 0; i < 81; i++)
     {    
@@ -241,18 +214,18 @@ void predict()
         path[10] = 'n';
         path[11] = 'g';
         path[12] = '\0';
-        init_input_matrix_test(&input, path);
-        multiple_result forward_prop = forward_propagation(&parameters, &input);
-        matrix output_prop = forward_prop.c;
-        print_matrix(&output_prop);
-        double max = get_value(&output_prop, 0, 0);
+        input = init_input_matrix_test(path);
+        forward_prop = forward_propagation(&parameters, input);
+        output_prop = forward_prop.f;
+        print_matrix(output_prop);
+        double max = get_value(output_prop, 0, 0);
         char index = '0';
         for (int k = 1; k < 10; k++)
         {
-            if (get_value(&output_prop, k, 0) > max)
+            if (get_value(output_prop, k, 0) > max)
             {
                 index = k + 48;
-                max = get_value(&output_prop, k, 0);
+                max = get_value(output_prop, k, 0);
             }
         }
         printf("%c \n", index);
@@ -286,4 +259,66 @@ void predict()
     fprintf(output_file, "\n");
 	fclose(output_file);
     printf("Done\n");
+}
+
+void accuracy()
+{
+    srand(time(NULL));
+    int accuracy = 0;
+
+    matrix *input;
+    multiple_matrices forward_prop;
+    matrix *output_prop;
+    
+    multiple_matrices parameters;
+    parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons1, hidden_neurons2, output_neurons);
+    print_matrix(parameters.a);
+    print_matrix(parameters.b);
+    print_matrix(parameters.c);
+    print_matrix(parameters.d);
+    print_matrix(parameters.e);
+    print_matrix(parameters.f);
+
+    for (int i = 0; i < 200; i++)
+    {    
+        int number = rand() % 10;
+		int random = rand() % 10;
+		int random2 = rand() % 10;
+		char path[46] = "./OCR_neural_network/dataset/training/";
+		path[38] = number + 48;
+		path[39] = '/';
+		path[40] = random + 48;
+		path[41] = random2 + 48;
+		path[42] = '.';
+		path[43] = 'j';
+		path[44] = 'p';
+		path[45] = 'g';
+		path[46] = '\0';
+        printf("%s \n", path);
+        input = init_input_matrix_test(path);
+        forward_prop = forward_propagation(&parameters, input);
+        output_prop = forward_prop.f;
+        double max = get_value(output_prop, 0, 0);
+        char index = '0';
+        for (int k = 1; k < 10; k++)
+        {
+            if (get_value(output_prop, k, 0) > max)
+            {
+                index = k + 48;
+                max = get_value(output_prop, k, 0);
+            }
+        }
+        printf("got %c - expected %c - ", index, number + 48);
+        if (index == number + 48)
+        {
+            printf("Correct \n");
+            accuracy++;
+        }
+        else
+        {
+            printf("Incorrect \n");
+        }
+    }
+    printf("accuracy: %f \n", ((double)accuracy/(double)100));
+    return accuracy;
 }
