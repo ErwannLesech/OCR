@@ -88,7 +88,51 @@ void shuffle(matrix *inputs, matrix *exp_outputs)
 }
 
 
-matrix *init_input_matrix_test(char *path)
+matrix *init_input_matrix_predict(char *path)
+{
+	matrix *input = init_matrix(784, 1, 0);
+	SDL_Surface* surface = IMG_Load(path);
+	
+	SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
+		SDL_PIXELFORMAT_RGB888, 0);
+	Uint32* pixels = new_surface->pixels;
+	SDL_PixelFormat* format = new_surface->format;
+	SDL_LockSurface(new_surface);
+
+	int rate = 0;
+	
+	for (int i = 0; i < 784; i++)
+	{
+		if (pixels[i] == NULL)
+		{
+			continue;
+		// errx(EXIT_FAILURE, "%s", SDL_GetError());
+		}
+
+		Uint8 r, g, b;
+		SDL_GetRGB(pixels[i], format, &r, &g, &b);
+		double value = 0;
+		if ((r+b+g)/3 >= 127)
+		{
+			value = 1;
+		}
+		else
+		{
+			value = 0;
+			rate++;
+		}
+		//value = (double)((r+b+g)/(double)3)/(double)255;
+		insert_value(input, i, 0, value);
+	}
+	SDL_FreeSurface(new_surface);
+	SDL_UnlockSurface(new_surface);
+
+	if(rate < 10)
+		return NULL;
+	return input;
+}
+
+matrix *init_input_matrix_accuracy(char *path)
 {
 	matrix *input = init_matrix(784, 1, 0);
 	SDL_Surface* surface = IMG_Load(path);

@@ -42,7 +42,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(200, 0.001, 500);    
+            train_network(200, 0.01, 1000);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -63,7 +63,7 @@ int main_neural_network(int argc, char *argv[])
     else if (strcmp(argv[2], "-test") == 0)
     {
         printf("test\n");
-        matrix *input = init_input_matrix_test("./OCR_neural_network/dataset/training/1/01.jpg");
+        matrix *input = init_input_matrix_predict("./OCR_neural_network/dataset/training/1/01.jpg");
         display_mat(*input);
     }
     else if (strcmp(argv[2], "-help") == 0)
@@ -204,6 +204,8 @@ void predict()
     matrix *w3 = parameters.e;
     matrix *b3 = parameters.f;*/
 
+    int nb = 0;
+
     for (int i = 0; i < 81; i++)
     {    
         char path[12] = "cells/";
@@ -214,27 +216,36 @@ void predict()
         path[10] = 'n';
         path[11] = 'g';
         path[12] = '\0';
-        input = init_input_matrix_test(path);
-        forward_prop = forward_propagation(&parameters, input);
-        output_prop = forward_prop.f;
-        print_matrix(output_prop);
-        double max = get_value(output_prop, 0, 0);
-        char index = '0';
-        for (int k = 1; k < 10; k++)
+        input = init_input_matrix_predict(path);
+        if (input != NULL)
         {
-            if (get_value(output_prop, k, 0) > max)
+            forward_prop = forward_propagation(&parameters, input);
+            output_prop = forward_prop.f;
+            print_matrix(output_prop);
+            double max = get_value(output_prop, 0, 0);
+            char index = '0';
+            for (int k = 1; k < 10; k++)
             {
-                index = k + 48;
-                max = get_value(output_prop, k, 0);
+                if (get_value(output_prop, k, 0) > max)
+                {
+                    index = k + 48;
+                    max = get_value(output_prop, k, 0);
+                }
+            }
+            printf("%c \n", index);
+            if (index != '0')
+            {
+                printf("%d \n", i);
+                a[i/9][i%9] = index;
             }
         }
-        printf("%c \n", index);
-        if (index != '0')
+        else
         {
-            printf("%d \n", i);
-            a[i/9][i%9] = index;
+            nb++;
         }
     }
+
+    printf("%d \n", nb);
 
 	FILE* output_file = fopen("grid.txt", "w");
 
@@ -272,12 +283,12 @@ void accuracy()
     
     multiple_matrices parameters;
     parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons1, hidden_neurons2, output_neurons);
-    print_matrix(parameters.a);
+    /*print_matrix(parameters.a);
     print_matrix(parameters.b);
     print_matrix(parameters.c);
     print_matrix(parameters.d);
     print_matrix(parameters.e);
-    print_matrix(parameters.f);
+    print_matrix(parameters.f);*/
 
     for (int i = 0; i < 200; i++)
     {    
@@ -295,7 +306,8 @@ void accuracy()
 		path[45] = 'g';
 		path[46] = '\0';
         printf("%s \n", path);
-        input = init_input_matrix_test(path);
+        input = init_input_matrix_accuracy(path);
+        
         forward_prop = forward_propagation(&parameters, input);
         output_prop = forward_prop.f;
         double max = get_value(output_prop, 0, 0);

@@ -27,7 +27,9 @@ double softmax_derivative(x);
 
 void shuffle(matrix *inputs, matrix *exp_outputs);
 
-matrix *init_input_matrix_test(char *path);
+matrix *init_input_matrix_predict(char *path);
+
+matrix *init_input_matrix_accuracy(char *path);
 
 multiple_matrices init_input_matrix(size_t nbInputs);
 

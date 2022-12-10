@@ -158,11 +158,10 @@ for fonturl in fonts:
             for digit in range(0, 10):
                 img = Image.new('L', size, 255)
 
-                if digit != 0:
-                    draw = ImageDraw.Draw(img)
-                    draw.text((5, ypos + 4), str(digit), font=font, fill=0)
+                draw = ImageDraw.Draw(img)
+                draw.text((5, ypos + 4), str(digit), font=font, fill=0)
                 print(digit)
-                path = 'src/OCR_neural_network/dataset/training/'
+                path = './OCR_neural_network/dataset/training/'
                 path += str(digit) + '/'
                 img.save(path + str(count[digit]).zfill(2) + '.jpg')
                 count[digit] += 1
