@@ -15,8 +15,8 @@ const unsigned int hidden_neurons1 = 128;
 const unsigned int hidden_neurons2 = 32;
 const unsigned int output_neurons = 10;
 
-double learning_rate = 0.1;
-long epochs = 10000;
+double learning_rate = 0.001;
+long epochs = 500;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
@@ -42,7 +42,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(200, 0.01, 1000);    
+            train_network(epochs, learning_rate, 600);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -292,7 +292,7 @@ void accuracy()
 
     for (int i = 0; i < 200; i++)
     {    
-        int number = rand() % 10;
+        int number = rand() % 9 + 1;
 		int random = rand() % 10;
 		int random2 = rand() % 10;
 		char path[46] = "./OCR_neural_network/dataset/training/";

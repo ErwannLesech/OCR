@@ -179,7 +179,7 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 	srand(time(NULL));
 	for (size_t n = 0; n < nbInputs; n++)
 	{
-		int number = rand() % 10;
+		int number = rand() % 9 + 1;
 		int random = rand() % 10;
 		int random2 = rand() % 10;
 		char path[46] = "./OCR_neural_network/dataset/training/";
@@ -347,6 +347,8 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	// OUTPUT LAYER
 
 	matrix *dZ3 = substract_matrix(A3, exp_outputs);
+	//dZ3 = d_sigmoid_matrix(dZ3, Z3);
+	
 	matrix *A2_t = transpose_matrix(A2);
 	matrix *dW3 = dot_matrix(dZ3, A2_t);
 	dW3 = multiply_matrix(dW3, (1/m));
