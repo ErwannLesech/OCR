@@ -1,0 +1,28 @@
+window{
+	background-color :#788eac;
+	font-size: 20px;
+	font-family : Comic Sans MS,cursive;
+    color: white;
+}
+
+button{
+	background-color: white;
+	font-family :Comic Sans MS ,cursive;
+	font-size: 15px;
+	border-radius:10px;
+    color: black;
+}
+button:hover {
+  color: #d32d4a;
+  border: 2px solid #d32d4a;
+
+}
+label{
+	font-size : 15px;
+	font-family: Comic Sans MS,cursive;
+}
+scale slider{
+    border-radius: 10px;
+	 border: 1px solid #d32d4a;
+
+}

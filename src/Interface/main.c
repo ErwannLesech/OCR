@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <pthread.h>
 #include "ocr.h"
 #include "../Saved/main.h"
 #include "../Rotate/main.h"
@@ -96,16 +97,17 @@ void quickOCR()
                 	if(ocr(file))
 			{
                     		gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
-                    		//pixbuf_2 = resize("error_image2.png");
-				//gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				gtk_label_set_text(GTK_LABEL(label1), "THERE IT IS !");
+                    		pixbuf_2 = resize("saved.png");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 
 			}
-			/*else 
+			else 
 			{
-                    		gtk_label_set_text(GTK_LABEL(label), "No Solution Found !");
+                    		gtk_label_set_text(GTK_LABEL(label1), "No Solution Found !");
 				pixbuf_2 = resize("error_image1.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-			}*/
+			}
             	} 
 	    	else 
 	    	{
@@ -141,64 +143,72 @@ void step_click_OCR()
 		else if(lenF >4)
 		{
 			gtk_label_set_text(GTK_LABEL(label1), "Let's gooooooo");
-			//if(main_load(file))
-			//{
+			if(ocr(file))
+			{
 				switch(stepc)
 				{
 				case 0:
+					printf("0");
 					gtk_label_set_text(GTK_LABEL(label2), "Grayscale -->");
-					pixbuf_2 = resize("../Load_img/grayscale.png");
+					pixbuf_2 = resize("grayscale.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 1:
+					printf("0");
+
 					gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
 					//pixbuf_2 = resize("../Load_img/grayscale.png");
 					//gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 2:
+					printf("0");
+
 					gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
-					pixbuf_2 = resize("../Load_img/sobel_filter.png");
+					pixbuf_2 = resize("sobel_filter.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 3:
+					printf("0");
+
 					gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
-					pixbuf_2 = resize("../Load_img/hough.png");
+					pixbuf_2 = resize("hough.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
-				}
-			//}
-		}
-	}
-				/*case 4:
+				
+				case 4:
+					printf("0");
+
 					gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
-					pixbuf_2 = resize("");
+					pixbuf_2 = resize("grid.bmp");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 5:
+					printf("0");
+
 					gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
 					gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
-					pixbuf_2 = resize("");
+					pixbuf_2 = resize("saved.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					gtk_label_set_text(GTK_LABEL(label1), "We did it !");
 					break;
+				}
 			}
 			stepc += stepc <= 5;
 		}
 		else
 		{
-			gtk_label_set_text(GTK_lABEL(label1), "Oh nooooo :'(")
+			gtk_label_set_text(GTK_LABEL(label1), "Oh nooooo :'(");
                     	gtk_label_set_text(GTK_LABEL(label2), "No Solution Found !");
 			pixbuf_2 = resize("error_image1.jpg");
 			gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 
                 }
-            } 
-	    else
-	    {
-                gtk_label_set_text(GTK_LABEL(label), ".PNG OR .JPG PLEASE");
-            }
+	} 
+	else
+	{
+		gtk_label_set_text(GTK_LABEL(label1), ".PNG OR .JPG PLEASE");
         }
-	 */
+	 
 }
 
 void step_OCR()
@@ -224,53 +234,42 @@ void step_OCR()
             		}
            	 	bsolve += bsolve <= 2;
         	}
-	}
-		/*else* if(lenF >4)
+		else if(lenF >4)
 		{
 			gtk_label_set_text(GTK_LABEL(label1), "Let's gooooooo");
-			if(main_load(file))
+			if(ocr(file))
 			{
-				switch(stepc)
-				{
-				case 0:
-					gtk_label_set_text(GTK_LABEL(label2), "Grayscale");
-                    			pixbuf_2 = resize("../Load_img/hough.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					break;
-				case 1:
-					gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
-					pixbuf_2 = resize("../Load_img/hough.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					break;
-				case 2:
-					gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
-					pixbuf_2 = resize("../Load_img/hough.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					break;
-				case 3:
-					gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
-					pixbuf_2 = resize("../Load_img/hough.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					break;
-				case 4:
-					gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
-					pixbuf_2 = resize("../Load_img/hough.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					break;
-				case 5:
-					gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
+				/*gtk_label_set_text(GTK_LABEL(label2), "Grayscale");
+                    		pixbuf_2 = resize("grayscale.png");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 
-					gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
-					pixbuf_2 = resize("../Load_img/hough.png");
-					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					gtk_label_set_text(GTK_LABEL(label1), "We did it !");
-                
-				}
-				stepc += stepc <= 5;
+				gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
+				//pixbuf_2 = resize("hough.png");
+				//gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				
+				gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
+				pixbuf_2 = resize("sobel_filter.png");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+
+				gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
+				pixbuf_2 = resize("hough.png");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+					
+				gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
+				pixbuf_2 = resize("grid.bmp");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+
+				gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
+
+				gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
+				pixbuf_2 = resize("saved.png");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				gtk_label_set_text(GTK_LABEL(label1), "We did it !");*/
+			
 			}
 			else
 			{
-				gtk_label_set_text(GTK_lABEL(label1), "Oh nooooo :'(")
+				gtk_label_set_text(GTK_LABEL(label1), "Oh nooooo :'(");
                     		gtk_label_set_text(GTK_LABEL(label2), "No Solution Found !");
 				pixbuf_2 = resize("../Load_img/hough.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
@@ -280,10 +279,10 @@ void step_OCR()
 	}
 	else
 	{
-        	gtk_label_set_text(GTK_LABEL(label), ".PNG OR .JPG PLEASE");
+        	gtk_label_set_text(GTK_LABEL(label1), ".PNG OR .JPG PLEASE");
         }
-*/
 }
+
 int rotate_i()
 {
 	char* path = gtk_file_chooser_get_preview_filename(fileChooser);
@@ -303,6 +302,7 @@ int main_interface(int argc, char **argv)
 	
     	builder = gtk_builder_new_from_file("interface.glade");
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
+	//gtk_widget_override_background_color(window, GTK_STATE_NORMAL, &(GdkColor) {1,1,1,1});
     	fixed = GTK_WIDGET(gtk_builder_get_object(builder, "fixed"));
     	fileChooser = GTK_WIDGET(gtk_builder_get_object(builder, "fileChooser"));
     	button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
@@ -313,7 +313,15 @@ int main_interface(int argc, char **argv)
 	label2 = GTK_WIDGET(gtk_builder_get_object(builder, "label2"));
     	preview = GTK_WIDGET(gtk_builder_get_object(builder, "preview"));
 	scale = GTK_SCALE(gtk_builder_get_object(builder, "scale"));
+	
 
+    	GtkCssProvider* cssProvider = gtk_css_provider_new();
+    	gtk_css_provider_load_from_path(cssProvider, "./Interface/style.css", NULL);
+
+    	GdkScreen* screen = gdk_screen_get_default();
+    	gtk_style_context_add_provider_for_screen(screen,
+                                              GTK_STYLE_PROVIDER(cssProvider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_USER);
     	g_signal_connect(window, "destroy",
         	G_CALLBACK(gtk_main_quit), NULL);
     	g_signal_connect(GTK_FILE_CHOOSER(fileChooser), "update-preview",

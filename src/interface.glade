@@ -18,7 +18,7 @@
         <property name="border-width">0</property>
         <child>
           <object class="GtkFileChooserButton" id="fileChooser">
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -26,35 +26,35 @@
             <property name="title" translatable="yes"/>
           </object>
           <packing>
-            <property name="x">70</property>
-            <property name="y">215</property>
+            <property name="x">50</property>
+            <property name="y">210</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="button1">
             <property name="label">Print the resolved grid !</property>
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">70</property>
+            <property name="x">50</property>
             <property name="y">280</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="label1">
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">Choose Your Grid</property>
           </object>
           <packing>
-            <property name="x">70</property>
-            <property name="y">186</property>
+            <property name="x">50</property>
+            <property name="y">180</property>
           </packing>
         </child>
         <child>
@@ -75,47 +75,47 @@
         <child>
           <object class="GtkButton" id="button2">
             <property name="label" translatable="yes">Show me the different steps !</property>
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">70</property>
-            <property name="y">345</property>
+            <property name="x">50</property>
+            <property name="y">350</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="button3">
             <property name="label" translatable="yes">I will do it !</property>
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">70</property>
-            <property name="y">410</property>
+            <property name="x">50</property>
+            <property name="y">420</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="label2">
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">...</property>
           </object>
           <packing>
-            <property name="x">70</property>
+            <property name="x">50</property>
             <property name="y">600</property>
           </packing>
         </child>
         <child>
           <object class="GtkScale" id="scale">
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
@@ -123,21 +123,21 @@
             <property name="digits">0</property>
           </object>
           <packing>
-            <property name="x">70</property>
-            <property name="y">482</property>
+            <property name="x">50</property>
+            <property name="y">475</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="button4">
             <property name="label" translatable="yes">Rotate !</property>
-            <property name="width-request">230</property>
+            <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">70</property>
+            <property name="x">50</property>
             <property name="y">550</property>
           </packing>
         </child>

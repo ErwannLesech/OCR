@@ -86,15 +86,15 @@ void FillGrid(SDL_Surface* grid, SDL_Surface* cell, int pos)
 
 void PrettyGrid(char* old, char* solved)
 {
-    SDL_Surface* grid = IMG_Load("Grille.png");
+    SDL_Surface* grid = IMG_Load("./Saved/Grille.png");
     SDL_Surface** red = calloc(9,sizeof(grid));
     SDL_Surface** black = calloc(9,sizeof(grid));
-    char redstr[] = "Data/0r.png";
-    char blackstr[] = "Data/0b.png";
+    char redstr[] = "./Saved/Data/0r.png";
+    char blackstr[] = "./Saved/Data/0b.png";
     for(int i = 0; i < 9; i++)
     {
-        redstr[5] = i + '1';
-        blackstr[5] = i + '1';
+        redstr[13] = i + '1';
+        blackstr[13] = i + '1';
         red[i] = IMG_Load(redstr);
         black[i] = IMG_Load(blackstr);
     }

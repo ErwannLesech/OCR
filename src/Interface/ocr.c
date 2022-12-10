@@ -27,15 +27,15 @@ void ocr(char* path)
 	printf("ia\n");
 	//predict();	
 	//char* grille1 = "../OCR_neural_network/grid.txt";
-	char* grille1 = "../Saved/test_grid_01";
+	char* grille1 = "./Saved/test_grid_01";
 
 	//SOLVER
 	printf("solver\n");
-	//main_solver(grille1);
+	main_solver(grille1);
 	//char* grille2 = "../Solver/grid.result.txt";
-	char* grille2 = "../Saved/test_grid_02";
+	char* grille2 = "./Saved/test_grid_02";
 	
 	//SAVED
 	printf("saved\n");
-	//main_save(grille1,grille2);
+	main_save(grille1,grille2);
 }
