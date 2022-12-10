@@ -239,22 +239,18 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 
 
 multiple_matrices initialization(int input_neurons,
-	int hidden_neurons1, int hidden_neurons2, int output_neurons)
+	int hidden_neurons, int output_neurons)
 {
-	matrix *w1 = init_rand_matrix(hidden_neurons1, input_neurons);
-	matrix *b1 = init_rand_matrix(hidden_neurons1, 1);
-	matrix *w2 = init_rand_matrix(hidden_neurons2, hidden_neurons1);
-	matrix *b2 = init_rand_matrix(hidden_neurons2, 1);
-	matrix *w3 = init_rand_matrix(output_neurons, hidden_neurons2);
-	matrix *b3 = init_rand_matrix(output_neurons, 1);
+	matrix *w1 = init_rand_matrix(hidden_neurons, input_neurons);
+	matrix *b1 = init_rand_matrix(hidden_neurons, 1);
+	matrix *w2 = init_rand_matrix(output_neurons, hidden_neurons);
+	matrix *b2 = init_rand_matrix(output_neurons, 1);
 
 	multiple_matrices neurons;
 	neurons.a = w1;
 	neurons.b = b1;
 	neurons.c = w2;
 	neurons.d = b2;
-	neurons.e = w3;
-	neurons.f = b3;
 
 	return neurons;
 }
@@ -267,34 +263,23 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	matrix *b1 = parameters->b;
 	matrix *w2 = parameters->c;
 	matrix *b2 = parameters->d;
-	matrix *w3 = parameters->e;
-	matrix *b3 = parameters->f;
 	
-	// HIDDEN LAYER1
+	// HIDDEN LAYER
 
 	matrix *Z1 = dot_matrix(w1, inputs);
-	Z1 = add_matrix_bias(Z1, b1);
+	Z1 = add_matrix(Z1, b1);
 
 	matrix *A1 = copy_matrix(Z1);
 	A1 = relu_matrix(A1);
-		
-	// HIDDEN LAYER2
-
-	matrix *Z2 = dot_matrix(w2, A1);
-	Z2 = add_matrix_bias(Z2, b2);
-
-	matrix *A2 = copy_matrix(Z2);
-	A2 = relu_matrix(A2);
-
 
 	// OUTPUT LAYER
 
-	matrix *Z3 = dot_matrix(w3, A2);
-	Z3 = add_matrix_bias(Z3, b3);
+	matrix *Z2 = dot_matrix(w2, A1);
+	Z2 = add_matrix(Z2, b2);
 
 	
-	matrix *A3 = copy_matrix(Z3);
-	A3 = softmax_matrix(A3);
+	matrix *A2 = copy_matrix(Z2);
+	A2 = softmax_matrix(A2);
 
 	//printf("forward_propagation done\n");
 
@@ -305,8 +290,6 @@ multiple_matrices forward_propagation(multiple_matrices *parameters,
 	results.b = A1;
 	results.c = Z2;
 	results.d = A2;
-	results.e = Z3;
-	results.f = A3;
 
 	return results;
 }
@@ -333,47 +316,27 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix *A1 = forward_prop->b;
 	matrix *Z2 = forward_prop->c;
 	matrix *A2 = forward_prop->d;
-	matrix *Z3 = forward_prop->e;
-	matrix *A3 = forward_prop->f;
 	double m = exp_outputs->cols;
 
 	matrix *b3 = parameters->f;
 	matrix *w3 = parameters->e;
 	matrix *b2 = parameters->d;
 	matrix *w2 = parameters->c;
-	matrix *b1 = parameters->b;
-	matrix *w1 = parameters->a;
 
 	// OUTPUT LAYER
 
-	matrix *dZ3 = substract_matrix(A3, exp_outputs);
-	//dZ3 = d_sigmoid_matrix(dZ3, Z3);
-	
-	matrix *A2_t = transpose_matrix(A2);
-	matrix *dW3 = dot_matrix(dZ3, A2_t);
-	dW3 = multiply_matrix(dW3, (1/m));
-
-	double dB3_value = 0;
-	double sum = sum_matrix(dZ3);
-	dB3_value = sum/m;
-	matrix *dB3 = init_matrix(dZ3->rows, 1, dB3_value);
-
-	// HIDDEN LAYER2
-
-	matrix *w3_t = transpose_matrix(w3);
-	matrix *dZ2 = dot_matrix(w3_t, dZ3);
-	dZ2 = d_relu_matrix(dZ2, Z2);
+	matrix *dZ2 = substract_matrix(A2, exp_outputs);
+	//dZ2 = d_sigmoid(dZ2, Z2);
 
 	matrix *A1_t = transpose_matrix(A1);
 	matrix *dW2 = dot_matrix(dZ2, A1_t);
 	dW2 = multiply_matrix(dW2, (1/m));
 
-	double dB2_value = 0;
-	sum = sum_matrix(dZ2);
-	dB2_value = sum/m;
+	double dB2_value = sum_matrix(dZ2);
+	dB2_value /= m;
 	matrix *dB2 = init_matrix(dZ2->rows, 1, dB2_value);
 
-	// HIDDEN LAYER1
+	// HIDDEN LAYER
 
 	matrix *w2_t = transpose_matrix(w2);
 	matrix *dZ1 = dot_matrix(w2_t, dZ2);
@@ -383,16 +346,13 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	matrix *dW1 = dot_matrix(dZ1, A0_t);
 	dW1 = multiply_matrix(dW1, (1/m));
 
-	double dB1_value = 0;
-	sum = sum_matrix(dZ1);
-	dB1_value = sum/m;
+	double dB1_value = sum_matrix(dZ1);
+	dB1_value /= m;
 	matrix *dB1 = init_matrix(dZ1->rows, 1, dB1_value);
 
 	// Free useless memory
 
-	free_matrix(A2_t);
 	free_matrix(A1_t);
-	free_matrix(w3_t);
 	free_matrix(w2_t);
 	free_matrix(A0_t);
 
@@ -401,12 +361,10 @@ multiple_matrices back_propagation(matrix *exp_outputs, matrix *inputs,
 	// Return values
 
 	multiple_matrices back_prop;
-	back_prop.a = dW3;
-	back_prop.b = dB3;
-	back_prop.c = dW2;
-	back_prop.d = dB2;
-	back_prop.e = dW1;
-	back_prop.f = dB1;
+	back_prop.a = dW2;
+	back_prop.b = dB2;
+	back_prop.c = dW1;
+	back_prop.d = dB1;
 
 	return back_prop;
 }
@@ -419,21 +377,11 @@ multiple_matrices *upgrade_parameters(matrix *inputs, multiple_matrices *paramet
 	matrix *b1 = parameters->b;
 	matrix *w2 = parameters->c;
 	matrix *b2 = parameters->d;
-	matrix *w3 = parameters->e;
-	matrix *b3 = parameters->f;
 
-	matrix *dW3 = back_prop->a;
-	matrix *dB3 = back_prop->b;
-	matrix *dW2 = back_prop->c;
-	matrix *dB2 = back_prop->d;
-	matrix *dW1 = back_prop->e;
-	matrix *dB1 = back_prop->f;
-
-	matrix *dw3 = multiply_matrix(dW3, lr);
-	w3 = substract_matrix(w3, dw3);
-
-	matrix *db3 = multiply_matrix(dB3, lr);
-	b3 = substract_matrix(b3, db3);
+	matrix *dW2 = back_prop->a;
+	matrix *dB2 = back_prop->b;
+	matrix *dW1 = back_prop->c;
+	matrix *dB1 = back_prop->d;
 
 	matrix *dw2 = multiply_matrix(dW2, lr);
 	w2 = substract_matrix(w2, dw2);
@@ -449,8 +397,6 @@ multiple_matrices *upgrade_parameters(matrix *inputs, multiple_matrices *paramet
 
 	// Free useless memory
 
-	free_matrix(dw3);
-	free_matrix(db3);
 	free_matrix(dw2);
 	free_matrix(db2);
 	free_matrix(dw1);
@@ -464,8 +410,6 @@ multiple_matrices *upgrade_parameters(matrix *inputs, multiple_matrices *paramet
 	parameters->b = b1;
 	parameters->c = w2;
 	parameters->d = b2;
-	parameters->e = w3;
-	parameters->f = b3;
 
 	return parameters;
 }
