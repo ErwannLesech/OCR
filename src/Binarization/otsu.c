@@ -121,7 +121,7 @@ void image_binarize(SDL_Surface *image)
 }
 
 
-float gaussian_kernel[5][5] = {{1.0, 4.0,  6.0,  4.0 , 1.0 },
+float gauss_kernel[5][5] = {{1.0, 4.0,  6.0,  4.0 , 1.0 },
                    {4.0 , 16.0 , 24.0 , 16.0 , 4.0 },
                    {6.0 , 24.0 , 36.0 , 24.0 , 6.0 },
                    {4.0 , 16.0 , 24.0 , 16.0 , 4.0 },
@@ -150,9 +150,9 @@ void blur_filter(SDL_Surface* image)
                     			Uint32 RGB = (Uint32)pixels[yn*(image->w) + xn];
                     			Uint8 r, g, b;
                     			SDL_GetRGB(RGB, format, &r, &g, &b);
-                    			red += ((float)r)*((gaussian_kernel[i][j])/256.0);
-                   			green += ((float)g)*((gaussian_kernel[i][j])/256.0);      
-                    			blue+= ((float)b)*((gaussian_kernel[i][j])/256.0);
+                    			red += ((float)r)*((gauss_kernel[i][j])/256.0);
+                   			green += ((float)g)*((gauss_kernel[i][j])/256.0);      
+                    			blue+= ((float)b)*((gauss_kernel[i][j])/256.0);
                 		}
 			}
 
@@ -172,7 +172,7 @@ void blur_filter(SDL_Surface* image)
 */
 
 
-Uint8 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
+Uint8 pixel_to_gray(Uint32 pixel_color, SDL_PixelFormat* format)
 {
     Uint8 r, g, b;
     SDL_GetRGB(pixel_color, format, &r, &g, &b);
@@ -205,7 +205,7 @@ void insertion_sort(int arr[], int len)
     }
 }
 
-void print_array(int **array, int x, int y)
+void print_arr(int **array, int x, int y)
 {
 	for(int i = 0; i < x; i++)
 	{
@@ -249,7 +249,7 @@ void median_filter(SDL_Surface *image)
 		for(int col = 0; col < width; col++)
 		{
 			//printf("%i\n", pixel_to_grayscale(pixels[row * width + col], format));
-			array[row][col] = pixel_to_grayscale(pixels[row * width + col], format);
+			array[row][col] = pixel_to_gray(pixels[row * width + col], format);
 			arr[row][col] = 0;
 		}
 	}

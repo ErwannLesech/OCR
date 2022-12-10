@@ -4,6 +4,7 @@
 #include "../Saved/main.h"
 #include "../Solver/main.h"
 #include "../OCR_neural_network/main.h"
+#include "../Binarization/main.h"
 
 #include <err.h>
 #include <math.h>
@@ -15,9 +16,13 @@
 
 void ocr(char* path)
 {
+	//BINARIZATION
+	printf("binarization\n");
+	main_bin(path);
+
 	//LOADER
 	printf("loader\n");
-	main_load(path);    	
+	main_load("image_otsu.png");    	
 
 	//SEPARATE
 	printf("separate\n");

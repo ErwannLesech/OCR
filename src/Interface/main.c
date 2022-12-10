@@ -157,8 +157,8 @@ void step_click_OCR()
 					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
-					//pixbuf_2 = resize("../Load_img/grayscale.png");
-					//gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+					pixbuf_2 = resize("image_otsu.png");
+					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 2:
 					printf("0");
