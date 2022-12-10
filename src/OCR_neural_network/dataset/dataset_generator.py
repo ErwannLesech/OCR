@@ -8,7 +8,7 @@ import io
 import random
 
 size = (28, 28)
-maxnumber = 100
+maxnumber = 101
 count = [0] * 10
 
 
@@ -22,6 +22,19 @@ def webfont(font_url):
 
 
 fonts = [
+    "https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Bold.ttf?raw=true",  # 200
+    "https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-BoldItalic.ttf?raw=true",  # 199
+    "https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-Italic.ttf?raw=true", # 198
+    #"https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-light.ttf?raw=true",  # 197"
+    #"https://github.com/google/fonts/blob/main/apache/opensanshebrew/OpenSansHebrew-regular.ttf?raw=true",  # 196
+    # "https://github.com/google/fonts/blob/main/apache/satisfy/Satisfy-Regular.ttf?raw=true",  # 195
+    "https://github.com/google/fonts/blob/main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-Bold.ttf?raw=true",  # 194
+    "https://github.com/google/fonts/blob/main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-BoldItalic.ttf?raw=true",  # 193
+    #"https://github.com/google/fonts/blob/main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-Italic.ttf?raw=true",  # 192
+    #"https://github.com/google/fonts/blob/main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-Light.ttf?raw=true",  # 191
+    "https://github.com/google/fonts/blob/main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-Regular.ttf",  # 190
+    #"https://github.com/google/fonts/blob/main/apache/syncopate/Syncopate-Bold.ttf?raw=true",  # 189
+    #"https://github.com/google/fonts/blob/main/apache/syncopate/Syncopate-Regular.ttf?raw=true",  # 188
     "https://github.com/googlefonts/roboto/blob/main/src/hinted/Roboto-Black.ttf?raw=true",  # 103
     "https://github.com/googlefonts/roboto/blob/main/src/hinted/Roboto-Bold.ttf?raw=true",  # 102
     "https://github.com/googlefonts/roboto/blob/main/src/hinted/Roboto-Light.ttf?raw=true",  # 101
@@ -100,13 +113,13 @@ fonts = [
     "https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-ExtraLight.ttf",  # 29
     "https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-Light.ttf",  # 28
     "https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-Medium.ttf",  # 27
-    "https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-Regular.ttf",  # 26
-    "https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-SemiBold.ttf",  # 25
-    "https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-Thin.ttf",  # 24
-    "https://github.com/itfoundry/Poppins/blob/master/variable/TTF%20(Beta)/Poppins-VariableFont_wght.ttf",
-    "https://github.com/clauseggers/Playfair-Display/blob/master/fonts/TTF/PlayfairDisplay-Black.ttf",
-    "https://github.com/clauseggers/Playfair-Display/blob/master/fonts/TTF/PlayfairDisplay-Bold.ttf",
-    "https://github.com/clauseggers/Playfair-Display/blob/master/fonts/TTF/PlayfairDisplay-Regular.ttf",
+    #"https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-Regular.ttf",  # 26
+    #"https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-SemiBold.ttf",  # 25
+    #"https://github.com/JulietaUla/Montserrat/blob/master/fonts/ttf/Montserrat-Thin.ttf",  # 24
+    #"https://github.com/itfoundry/Poppins/blob/master/variable/TTF%20(Beta)/Poppins-VariableFont_wght.ttf",
+    #"https://github.com/clauseggers/Playfair-Display/blob/master/fonts/TTF/PlayfairDisplay-Black.ttf",
+    #"https://github.com/clauseggers/Playfair-Display/blob/master/fonts/TTF/PlayfairDisplay-Bold.ttf",
+    #"https://github.com/clauseggers/Playfair-Display/blob/master/fonts/TTF/PlayfairDisplay-Regular.ttf",
     "https://github.com/googlefonts/rubik/blob/main/fonts/ttf/Rubik-Black.ttf",  # 23
     "https://github.com/googlefonts/rubik/blob/main/fonts/ttf/Rubik-Bold.ttf",  # 22
     "https://github.com/googlefonts/rubik/blob/main/fonts/ttf/Rubik-ExtraBold.ttf",  # 21
@@ -114,12 +127,12 @@ fonts = [
     "https://github.com/googlefonts/rubik/blob/main/fonts/ttf/Rubik-Medium.ttf",  # 19
     "https://github.com/googlefonts/rubik/blob/main/fonts/ttf/Rubik-Regular.ttf",  # 18
     "https://github.com/googlefonts/rubik/blob/main/fonts/ttf/Rubik-SemiBold.ttf",  # 17
-    "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Black.ttf",  # 16
-    "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Bold.ttf",  # 15
-    "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-ExtraBold.ttf",  # 14
-    "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-ExtraLight.ttf",  # 13
-    "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Light.ttf",  # 12
-    "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Medium.ttf",  # 11
+    #"https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Black.ttf",  # 16
+    #"https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Bold.ttf",  # 15
+    #"https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-ExtraBold.ttf",  # 14
+    #"https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-ExtraLight.ttf",  # 13
+    #"https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Light.ttf",  # 12
+    #"https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Medium.ttf",  # 11
     "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Regular.ttf",  # 10
     "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-SemiBold.ttf",  # 9
     "https://github.com/weiweihuanghuang/Work-Sans/blob/master/fonts/ttf/WorkSans-Thin.ttf",  # 8

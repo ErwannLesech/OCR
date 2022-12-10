@@ -11,8 +11,8 @@
 #include "save_parameters.h"
 
 const unsigned int input_neurons = 784;
-const unsigned int hidden_neurons1 = 12;
-const unsigned int hidden_neurons2 = 11;
+const unsigned int hidden_neurons1 = 128;
+const unsigned int hidden_neurons2 = 32;
 const unsigned int output_neurons = 10;
 
 double learning_rate = 0.1;
@@ -42,7 +42,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(1000, 0.001, 1000);    
+            train_network(200, 0.001, 500);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -63,7 +63,7 @@ int main_neural_network(int argc, char *argv[])
     else if (strcmp(argv[2], "-test") == 0)
     {
         printf("test\n");
-        matrix *input = init_input_matrix_test("./cells/01.png");
+        matrix *input = init_input_matrix_test("./OCR_neural_network/dataset/training/1/01.jpg");
         display_mat(*input);
     }
     else if (strcmp(argv[2], "-help") == 0)
@@ -279,10 +279,10 @@ void accuracy()
     print_matrix(parameters.e);
     print_matrix(parameters.f);
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 200; i++)
     {    
         int number = rand() % 10;
-		int random = rand() % 8;
+		int random = rand() % 10;
 		int random2 = rand() % 10;
 		char path[46] = "./OCR_neural_network/dataset/training/";
 		path[38] = number + 48;
