@@ -6,7 +6,6 @@
     <property name="width-request">1200</property>
     <property name="height-request">800</property>
     <property name="can-focus">False</property>
-    <property name="resizable">False</property>
     <property name="default-width">-1</property>
     <property name="default-height">-1</property>
     <child>
@@ -27,7 +26,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">210</property>
+            <property name="y">310</property>
           </packing>
         </child>
         <child>
@@ -41,7 +40,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">280</property>
+            <property name="y">380</property>
           </packing>
         </child>
         <child>
@@ -54,7 +53,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">180</property>
+            <property name="y">280</property>
           </packing>
         </child>
         <child>
@@ -83,7 +82,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">350</property>
+            <property name="y">450</property>
           </packing>
         </child>
         <child>
@@ -97,7 +96,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">420</property>
+            <property name="y">520</property>
           </packing>
         </child>
         <child>
@@ -110,7 +109,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">600</property>
+            <property name="y">700</property>
           </packing>
         </child>
         <child>
@@ -124,7 +123,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">475</property>
+            <property name="y">575</property>
           </packing>
         </child>
         <child>
@@ -138,7 +137,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">550</property>
+            <property name="y">650</property>
           </packing>
         </child>
         <child>
@@ -150,8 +149,8 @@
             <property name="pixbuf">Images/Logo.png</property>
           </object>
           <packing>
-            <property name="x">10</property>
-            <property name="y">10</property>
+            <property name="x">80</property>
+            <property name="y">40</property>
           </packing>
         </child>
       </object>
