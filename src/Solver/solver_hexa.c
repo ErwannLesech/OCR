@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <err.h>
 #include <string.h>
+#include "solver_hexa.h"
 
 #define ROW_SIZE 16
 #define COL_SIZE 16
@@ -31,7 +32,7 @@ int isValidMove(char sudoku[16][16], int row, int col, char c)
     return 1;
 }
 
-int solve_hexadoku(char sudoku[16][16])
+int solver_hexa(char sudoku[16][16])
 {
     for(unsigned int i = 0; i < 16; i++)
     {
@@ -46,7 +47,7 @@ int solve_hexadoku(char sudoku[16][16])
                     {
                         sudoku[i][j] = c;
 
-                        if(solve_hexadoku(sudoku))
+                        if(solver_hexa(sudoku))
                         {
                             return 1;
                         }
