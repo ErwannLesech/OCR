@@ -3,7 +3,7 @@
 #include <err.h>
 #include <string.h>
 #include "solver.h"
-#include "solver_hexa.h"
+//#include "solver_hexa.h"
 
 char simple_grid[9][9] = 
 {
@@ -38,6 +38,69 @@ char hexa_grid[16][16] =
 	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'}
 };
 
+int isValidMove(char sudoku[16][16], int row, int col, char c)
+{
+    for(unsigned int i = 0; i < 16; i++)
+    {
+        if(sudoku[i][col] != '.' && sudoku[i][col] == c)
+        {
+            return 0;
+        }
+
+        if (sudoku[row][i] != '.' && sudoku[row][i] == c)
+        {
+            return 0;
+        }
+
+        if (sudoku[4*(row/4) + i/4][4*(col/4) + i%4] != '.' 
+                && sudoku[4*(row/4) + i/4][4*(col*4) + i%4] == c)
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+
+int solver_hexa(char sudoku[16][16])
+{
+    for(unsigned int i = 0; i < 16; i++)
+    {
+        for(unsigned int j = 0; j < 16; j++)
+        {
+            if(sudoku[i][j] == '.')
+            {
+                for(char c = '1'; c <= 'F'; c++)
+                {
+                    if(isValidMove(sudoku, i, j, c))
+                    {
+                        sudoku[i][j] = c;
+
+                        if(solver_hexa(sudoku))
+                        {
+                            return 1;
+                        }
+
+                        else
+                        {
+                            sudoku[i][j] = '.';
+                        }
+                    }
+
+                    if (c == '9')
+                    {
+                        c = ('A' - 1);
+                    }
+                }
+
+                return 0;
+            }
+        }
+    }
+
+    return 1;    
+}
 
 void read_sudoku(char *filename, unsigned int max)
 {
@@ -140,14 +203,14 @@ void save_sudoku(char *filename, unsigned int max)
 	{
 		mod = 4;
 	}
-
-
+	
+	//printf("ratio: %d\n", max);
 	for(unsigned int i = 0; i < max; i++)
 	{
+		//printf("%u\n", i%mod);
 		if(i%mod == 0 && i != 0)
                 {
-			//fwrite('\n', 1, 1, output_file);
-			//write(output_file, "space", 5);
+			//printf("\n");
 			fprintf(output_file, "\n");
                 }
 
@@ -155,16 +218,10 @@ void save_sudoku(char *filename, unsigned int max)
 		{
 			if(j%mod == 0 && j != 0)
 			{
-				//fwrite(" ", 1, 1, output_file);
-				//write(output_file, " ", 1);
+				//printf(" ");
 				fprintf(output_file, " ");
 			}
 			
-			//fwrite(a[i][j], 1, 1, output_file);
-			//write(output_file, a[i][j], 1);
-			/*printf("%c", a[i][j]);
-			printf("%i", i);
-			printf("%i\n", j);*/
 			
 			if(max == 9)
 			{
@@ -173,17 +230,16 @@ void save_sudoku(char *filename, unsigned int max)
 
 			else
 			{
+				//printf("%c", hexa_grid[i][j]);
 				fprintf(output_file, "%c", hexa_grid[i][j]);
 			}
 		}
 
-		//fwrite('\n', 1, 1, output_file);
-		//write(output_file, "space", 5);
+		//printf("\n");
 		fprintf(output_file, "\n");
 	}
 
-	//fwrite('\n', 1, 1, output_file);
-	//write(output_file, "space", 5);
+	//printf("\n");
 	fprintf(output_file, "\n");
 	fclose(output_file);
 }
@@ -191,6 +247,7 @@ void save_sudoku(char *filename, unsigned int max)
 
 int main_solver(char* sudoku, unsigned int simple_or_hexa)
 {
+	unsigned int temp = simple_or_hexa;
 	read_sudoku(sudoku, simple_or_hexa);
 	print_sudoku(simple_or_hexa);
 
@@ -212,7 +269,7 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	{
 		filename[i] = sudoku[i];
 	}
-
+	
 	filename[i] = '.';
 	filename[i+1] = 'r';
 	filename[i+2] = 'e';
@@ -221,7 +278,8 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	filename[i+5] = 'l';
 	filename[i+6] = 't';
 	filename[i+7] = '\0';
-	save_sudoku(filename, simple_or_hexa);
+	
+	save_sudoku(filename, temp);
 
 	return 0;
 }
@@ -234,8 +292,7 @@ int main(int argc, char **argv)
 		errx(EXIT_FAILURE, "%s", "A valid sudoku is needed");
 	}
 	
-	unsigned int simple_or_hexa = 16;//(unsigned int)argv[2];
-	printf("%u\n", simple_or_hexa);
+	unsigned int simple_or_hexa = 16; //(unsigned int)argv[2];
 	main_solver(argv[1], simple_or_hexa);
 		
 	return EXIT_SUCCESS;
