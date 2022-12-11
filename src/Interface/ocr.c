@@ -31,11 +31,11 @@ void ocr(char* path)
 	//IA
 	printf("ia\n");
 	predict();
-	char* grille1 = "./grid.txt";
+	//char* grille1 = "./grid.txt";
 	printf("saved_ocr\n");
-	main_save_ocr(grille1);
+	//main_save_ocr(grille1);
 	
-	//char* grille1 = "./Saved/test_grid_01";
+	char* grille1 = "./Saved/test_grid_01";
 
 	//SOLVER
 	printf("solver\n");
