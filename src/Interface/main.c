@@ -98,7 +98,7 @@ void quickOCR()
 	    	{
                 
                 	gtk_label_set_text(GTK_LABEL(label1), "Processing...");
-                	if(ocr(file))
+                	if(ocr_2(file))
 			{
 			        gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
 				gtk_label_set_text(GTK_LABEL(label1), "THERE IT IS !");
