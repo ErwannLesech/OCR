@@ -15,7 +15,7 @@ const unsigned int hidden_neurons = 16;
 const unsigned int output_neurons = 10;
 
 double learning_rate = 0.001;
-long epochs = 210;
+long epochs = 200;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
@@ -43,7 +43,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(epochs, learning_rate, 250);    
+            train_network(epochs, learning_rate, 80);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -281,7 +281,7 @@ void accuracy()
 
     for (int i = 0; i < 200; i++)
     {    
-        int number = rand() % 9 + 1;
+        /*int number = rand() % 9 + 1;
 		int random = rand() % 10;
         int random2 = rand() % 10;
 		char path[46] = "./OCR_neural_network/dataset/training/";
@@ -293,7 +293,21 @@ void accuracy()
         path[43] = 'j';
         path[44] = 'p';
 		path[45] = 'g';
-        path[46] = '\0';
+        path[46] = '\0';*/
+
+		int number = rand() % 9 + 1;
+		int random = rand() % 7;
+		//int random2 = rand() % 10;
+		char path[45] = "./OCR_neural_network/dataset/training/";
+		path[38] = number + 48;
+		path[39] = '/';
+		path[40] = random + 48;
+		//path[41] = random2 + 48;
+		path[41] = '.';
+		path[42] = 'p';
+		path[43] = 'n';
+		path[44] = 'g';
+		path[45] = '\0';
         printf("%s \n", path);
         input = init_input_matrix_accuracy(path);
         
