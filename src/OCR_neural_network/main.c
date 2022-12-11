@@ -91,7 +91,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
 {
     multiple_matrices parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
-    multiple_matrices entries = init_input_matrix_mnist(nbInputs);
+    multiple_matrices entries = init_input_matrix(nbInputs);
     matrix *exp_output_hot = exp_output_init(entries.b);
     multiple_matrices forward_prop;
     multiple_matrices back_prop;
@@ -284,16 +284,16 @@ void accuracy()
         int number = rand() % 9 + 1;
 		int random = rand() % 10;
         int random2 = rand() % 10;
-		char path[47] = "./OCR_neural_network/dataset/training/";
-		path[39] = number + 48;
-		path[40] = '/';
-		path[41] = random + 48;
-        path[42] = random2 + 48;
-        path[43] = '.';
+		char path[46] = "./OCR_neural_network/dataset/training/";
+		path[38] = number + 48;
+		path[39] = '/';
+		path[40] = random + 48;
+        path[41] = random2 + 48;
+        path[42] = '.';
+        path[43] = 'j';
         path[44] = 'p';
-        path[45] = 'n';
-		path[46] = 'g';
-        path[47] = '\0';
+		path[45] = 'g';
+        path[46] = '\0';
         printf("%s \n", path);
         input = init_input_matrix_accuracy(path);
         
