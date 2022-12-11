@@ -17,12 +17,12 @@
 void ocr(char* path)
 {
 	//BINARIZATION
-	printf("binarization\n");
-	main_bin(path);
+	//printf("binarization\n");
+	//main_bin(path);
 
 	//LOADER
 	printf("loader\n");
-	main_load("image_otsu.png");    	
+	main_load(path);    	
 
 	//SEPARATE
 	printf("separate\n");
