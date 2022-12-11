@@ -31,6 +31,8 @@ matrix *init_input_matrix_predict(char *path);
 
 matrix *init_input_matrix_accuracy(char *path);
 
+multiple_matrices init_input_matrix_mnist(size_t nbInputs);
+
 multiple_matrices init_input_matrix(size_t nbInputs);
 
 multiple_matrices initialization(int input_neurons,

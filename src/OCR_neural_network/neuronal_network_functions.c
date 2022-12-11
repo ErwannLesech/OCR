@@ -237,6 +237,67 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 	return matrices;
 }
 
+multiple_matrices init_input_matrix_mnist(size_t nbInputs)
+{
+	multiple_matrices matrices;
+	matrix *input = init_matrix(784, nbInputs, 0);
+	matrix *exp_output = init_matrix(1, nbInputs, 0);
+	srand(time(NULL));
+	for (size_t n = 0; n < nbInputs; n++)
+	{
+		int number = rand() % 9 + 1;
+		// rand number 48 to 122
+		int random = rand() % 75 + 48;
+		char path[46] = "./OCR_neural_network/dataset/train/";
+		path[35] = number + 48;
+		path[36] = '/';
+		path[37] = (char)random;
+		path[38] = '\0';
+		/*printf("%s\n", path);*/
+		insert_value(exp_output, 0, n, (double)path[35] - 48);
+
+		SDL_Surface* surface = IMG_Load(path);
+		if (surface == NULL)
+		{
+			printf("Error: %s\n", SDL_GetError());
+			exit(EXIT_FAILURE);
+		}
+		SDL_Surface* new_surface = SDL_ConvertSurfaceFormat(surface, 
+			SDL_PIXELFORMAT_RGB888, 0);
+		Uint32* pixels = new_surface->pixels;
+		SDL_PixelFormat* format = new_surface->format;
+		SDL_FreeSurface(surface);
+		SDL_LockSurface(new_surface);
+		for (int i = 0; i < 784; i++)
+		{
+			if (pixels[i] == NULL)
+			{
+				continue;
+			// errx(EXIT_FAILURE, "%s", SDL_GetError());
+			}
+
+			Uint8 r, g, b;
+			SDL_GetRGB(pixels[i], format, &r, &g, &b);
+			double value = 0;
+			if ((r+b+g)/3 >= 127)
+			{
+				value = 1;
+			}
+			else
+			{
+				value = 0;
+			}
+			//value = 0.3*r + 0.59*g+0.11*b;
+			insert_value(input, i, n, value);
+		}
+		SDL_UnlockSurface(new_surface);
+		SDL_FreeSurface(new_surface);
+	}
+	matrices.a = input;
+	matrices.b = exp_output;
+	return matrices;
+}
+
 
 multiple_matrices initialization(int input_neurons,
 	int hidden_neurons, int output_neurons)

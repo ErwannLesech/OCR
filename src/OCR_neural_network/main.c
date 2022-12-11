@@ -15,11 +15,13 @@ const unsigned int hidden_neurons = 16;
 const unsigned int output_neurons = 10;
 
 double learning_rate = 0.001;
-long epochs = 200;
+long epochs = 210;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
 void predict();
+void accuracy();
+void accuracy_mnist();
 
 int main_neural_network(int argc, char *argv[])
 {
@@ -41,7 +43,7 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(epochs, learning_rate, 200);    
+            train_network(epochs, learning_rate, 250);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
@@ -56,8 +58,13 @@ int main_neural_network(int argc, char *argv[])
     }
     else if (strcmp(argv[2], "-accuracy") == 0)
     {
-        printf("predict_train\n");
+        printf("test_numeric\n");
         accuracy();
+    }
+    else if (strcmp(argv[2], "-accuracy_mnist") == 0)
+    {
+        printf("test_mnist\n");
+        accuracy_mnist();
     }
     else if (strcmp(argv[2], "-test") == 0)
     {
@@ -84,7 +91,7 @@ void train_network(long epochs, double lr, size_t nbInputs)
 {
     multiple_matrices parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
-    multiple_matrices entries = init_input_matrix(nbInputs);
+    multiple_matrices entries = init_input_matrix_mnist(nbInputs);
     matrix *exp_output_hot = exp_output_init(entries.b);
     multiple_matrices forward_prop;
     multiple_matrices back_prop;
@@ -276,17 +283,68 @@ void accuracy()
     {    
         int number = rand() % 9 + 1;
 		int random = rand() % 10;
-		int random2 = rand() % 10;
-		char path[46] = "./OCR_neural_network/dataset/training/";
-		path[38] = number + 48;
-		path[39] = '/';
-		path[40] = random + 48;
-		path[41] = random2 + 48;
-		path[42] = '.';
-		path[43] = 'j';
-		path[44] = 'p';
-		path[45] = 'g';
-		path[46] = '\0';
+        int random2 = rand() % 10;
+		char path[47] = "./OCR_neural_network/dataset/training/";
+		path[39] = number + 48;
+		path[40] = '/';
+		path[41] = random + 48;
+        path[42] = random2 + 48;
+        path[43] = '.';
+        path[44] = 'p';
+        path[45] = 'n';
+		path[46] = 'g';
+        path[47] = '\0';
+        printf("%s \n", path);
+        input = init_input_matrix_accuracy(path);
+        
+        forward_prop = forward_propagation(&parameters, input);
+        output_prop = forward_prop.d;
+        double max = get_value(output_prop, 0, 0);
+        char index = '0';
+        for (int k = 1; k < 10; k++)
+        {
+            if (get_value(output_prop, k, 0) > max)
+            {
+                index = k + 48;
+                max = get_value(output_prop, k, 0);
+            }
+        }
+        printf("got %c - expected %c - ", index, number + 48);
+        if (index == number + 48)
+        {
+            printf("Correct \n");
+            accuracy++;
+        }
+        else
+        {
+            printf("Incorrect \n");
+        }
+    }
+    printf("accuracy: %f \n", ((double)accuracy/(double)200));
+    return accuracy;
+}
+
+void accuracy_mnist()
+{
+    srand(time(NULL));
+    int accuracy = 0;
+
+    matrix *input;
+    multiple_matrices forward_prop;
+    matrix *output_prop;
+    
+    multiple_matrices parameters;
+    parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons, output_neurons);
+
+    for (int i = 0; i < 200; i++)
+    {    
+        int number = rand() % 9 + 1;
+		int random = rand() % 75 + 48;
+		char path[41] = "./OCR_neural_network/dataset/test/";
+		path[34] = number + 48;
+		path[35] = '/';
+		path[36] = random;
+		path[37] = '\0';
         printf("%s \n", path);
         input = init_input_matrix_accuracy(path);
         
