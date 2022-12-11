@@ -180,18 +180,18 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 	for (size_t n = 0; n < nbInputs; n++)
 	{
 		int number = rand() % 9 + 1;
-		int random = rand() % 10;
-		int random2 = rand() % 10;
-		char path[46] = "./OCR_neural_network/dataset/training/";
+		int random = rand() % 7;
+		//int random2 = rand() % 10;
+		char path[45] = "./OCR_neural_network/dataset/training/";
 		path[38] = number + 48;
 		path[39] = '/';
 		path[40] = random + 48;
-		path[41] = random2 + 48;
-		path[42] = '.';
-		path[43] = 'j';
-		path[44] = 'p';
-		path[45] = 'g';
-		path[46] = '\0';
+		//path[41] = random2 + 48;
+		path[41] = '.';
+		path[42] = 'p';
+		path[43] = 'n';
+		path[44] = 'g';
+		path[45] = '\0';
 		/*printf("%s\n", path);*/
 		insert_value(exp_output, 0, n, (double)path[38] - 48);
 
