@@ -3,8 +3,9 @@
 #include <err.h>
 #include <string.h>
 #include "solver.h"
+//#include "solver_hexa.h"
 
-char a[9][9] = 
+char simple_grid[9][9] = 
 {
 	{'.','.','.','.','.','.','.','.','.'},
 	{'.','.','.','.','.','.','.','.','.'},
@@ -17,22 +18,113 @@ char a[9][9] =
 	{'.','.','.','.','.','.','.','.','.'}
 };
 
+char hexa_grid[16][16] = 
+{
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'}
+};
 
-void read_sudoku(char *filename)
+int isValidMove(char sudoku[16][16], int row, int col, char c)
+{
+    for(unsigned int i = 0; i < 16; i++)
+    {
+        if(sudoku[i][col] != '.' && sudoku[i][col] == c)
+        {
+            return 0;
+        }
+
+        if (sudoku[row][i] != '.' && sudoku[row][i] == c)
+        {
+            return 0;
+        }
+
+        if (sudoku[4*(row/4) + i/4][4*(col/4) + i%4] != '.' 
+                && sudoku[4*(row/4) + i/4][4*(col*4) + i%4] == c)
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+
+int solver_hexa()
+{
+    for(unsigned int i = 0; i < 16; i++)
+    {
+        for(unsigned int j = 0; j < 16; j++)
+        {
+            if(hexa_grid[i][j] == '.')
+            {
+                for(char c = '0'; c <= 'F'; c++)
+                {
+                    if(isValidMove(hexa_grid, i, j, c))
+                    {
+                        hexa_grid[i][j] = c;
+
+                        if(solver_hexa(hexa_grid))
+                        {
+                            return 1;
+                        }
+
+                        else
+                        {
+                            hexa_grid[i][j] = '.';
+                        }
+                    }
+
+                    if (c == '9')
+                    {
+                        c = ('A' - 1);
+                    }
+                }
+
+                return 0;
+            }
+        }
+    }
+
+    return 1;    
+}
+
+void read_sudoku(char *filename, unsigned int max)
 {
 	FILE *input_file = fopen(filename, "r");
-	int i = 0;
-	int j = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 	char c;
 	
 	while((c=fgetc(input_file)) != EOF)
 	{
 		if(c != ' ' && c != '\n')
 		{
-			a[i][j] = c;
+			if(max == 9)
+			{
+				simple_grid[i][j] = c;
+			}
+
+			else
+			{
+				hexa_grid[i][j] = c;
+			}
 			j++;
 
-			if(j > 8)
+			if(j > max-1)
 			{
 				j = 0;
 				i++;
@@ -49,23 +141,43 @@ void read_sudoku(char *filename)
 }
 
 
-void print_sudoku()
+void print_sudoku(unsigned int max)
 {
-	for(unsigned int i = 0; i < 9; i++)
+	unsigned int mod;
+
+	if(max == 9)
 	{
-		if(i%3 == 0 && i != 0)
+		mod = 3;
+	}
+
+	else
+	{
+		mod = 4;
+	}
+
+	for(unsigned int i = 0; i < max; i++)
+	{
+		if(i%mod == 0 && i != 0)
                 {
 			printf("\n");
                 }
 
-		for(unsigned int j = 0; j < 9; j++)
+		for(unsigned int j = 0; j < max; j++)
 		{
-			if(j%3 == 0 && j != 0)
+			if(j%mod == 0 && j != 0)
 			{
 				printf(" ");
 			}
 			
-			printf("%c", a[i][j]);
+			if(max == 9)
+			{
+				printf("%c", simple_grid[i][j]);
+			}
+
+			else
+			{
+				printf("%c", hexa_grid[i][j]);
+			}
 		}
 
 		printf("\n");
@@ -76,58 +188,97 @@ void print_sudoku()
 }
 
 
-void save_sudoku(char *filename)
+void save_sudoku(char *filename, unsigned int max)
 {
 	FILE* output_file = fopen(filename, "w");
 
-	for(unsigned int i = 0; i < 9; i++)
+	unsigned int mod;
+
+	if(max == 9)
 	{
-		if(i%3 == 0 && i != 0)
+		mod = 3;
+	}
+
+	else
+	{
+		mod = 4;
+	}
+	
+	//printf("ratio: %d\n", max);
+	for(unsigned int i = 0; i < max; i++)
+	{
+		//printf("%u\n", i%mod);
+		if(i%mod == 0 && i != 0)
                 {
-			//fwrite('\n', 1, 1, output_file);
-			//write(output_file, "space", 5);
+			//printf("\n");
 			fprintf(output_file, "\n");
                 }
 
-		for(unsigned int j = 0; j < 9; j++)
+		for(unsigned int j = 0; j < max; j++)
 		{
-			if(j%3 == 0 && j != 0)
+			if(j%mod == 0 && j != 0)
 			{
-				//fwrite(" ", 1, 1, output_file);
-				//write(output_file, " ", 1);
+				//printf(" ");
 				fprintf(output_file, " ");
 			}
 			
-			//fwrite(a[i][j], 1, 1, output_file);
-			//write(output_file, a[i][j], 1);
-			/*printf("%c", a[i][j]);
-			printf("%i", i);
-			printf("%i\n", j);*/
+			
+			if(max == 9)
+			{
+				fprintf(output_file, "%c", simple_grid[i][j]);
+			}
 
-			fprintf(output_file, "%c", a[i][j]);
+			else
+			{
+				//printf("%c", hexa_grid[i][j]);
+				fprintf(output_file, "%c", hexa_grid[i][j]);
+			}
 		}
 
-		//fwrite('\n', 1, 1, output_file);
-		//write(output_file, "space", 5);
+		//printf("\n");
 		fprintf(output_file, "\n");
 	}
 
-	//fwrite('\n', 1, 1, output_file);
-	//write(output_file, "space", 5);
+	//printf("\n");
 	fprintf(output_file, "\n");
 	fclose(output_file);
 }
 
-int main_solver(char* sudoku)
+
+int main_solver(char* sudoku, unsigned int simple_or_hexa)
 {
-	read_sudoku(sudoku);
-	solver(a);
-	char filename[strlen((sudoku + 8))];
+	unsigned int temp = simple_or_hexa;
+	read_sudoku(sudoku, simple_or_hexa);
+	print_sudoku(simple_or_hexa);
+
+	if(simple_or_hexa == 9)
+	{
+		solver(simple_grid);
+	}
+
+	else
+	{
+		solver_hexa(hexa_grid);
+		//print_sudoku(simple_or_hexa);
+		//read_sudoku("expect_test_hexa_grid_01", simple_or_hexa);
+	}
+
+	print_sudoku(simple_or_hexa);
+	
+	size_t txt = 0;
+	size_t leng = strlen((sudoku));
+	if(sudoku[leng - 4] == '.')
+	{
+		txt = 4;
+	}
+
+	char filename[leng + txt];
 	size_t i = 0;
-	for (i = 0; i < strlen((sudoku)); i++)
+	for (i = 0; i < leng-txt; i++)
 	{
 		filename[i] = sudoku[i];
 	}
+	
 	filename[i] = '.';
 	filename[i+1] = 'r';
 	filename[i+2] = 'e';
@@ -136,93 +287,23 @@ int main_solver(char* sudoku)
 	filename[i+5] = 'l';
 	filename[i+6] = 't';
 	filename[i+7] = '\0';
-	save_sudoku(filename);
 	
+	save_sudoku(filename, temp);
+
+	return 0;
 }
+
+
 /*int main(int argc, char **argv)
 {
 	if(argc < 3)
 	{
 		errx(EXIT_FAILURE, "%s", "A valid sudoku is needed");
 	}
-	else if (strcmp(argv[2], "-solveAndPrint") == 0)
-	{
-		printf("main_solver: solve %s and print result.\n", argv[2]);
-
-		read_sudoku(argv[3]);
-		printf("main_solver: Grid before solver\n");
-		print_sudoku();
-		solver(a);
-		char filename[strlen((argv[3] + 8))];
-		size_t i = 0;
-		for (i = 0; i < strlen((argv[3])); i++)
-		{
-			filename[i] = argv[3][i];
-		}
-		filename[i] = '.';
-		filename[i+1] = 'r';
-		filename[i+2] = 'e';
-		filename[i+3] = 's';
-		filename[i+4] = 'u';
-		filename[i+5] = 'l';
-		filename[i+6] = 't';
-		filename[i+7] = '\0';
-
-		save_sudoku(filename);
-		printf("main_solver: Grid solved\n");
-		print_sudoku();
-	}
 	
-	else if (strcmp(argv[2], "-solve") == 0)
-	{
-		printf("main_solver: solve %s.\n", argv[2]);
-
-		read_sudoku(argv[3]);
-		solver(a);
-		char filename[strlen((argv[3] + 8))];
-		size_t i = 0;
-		for (i = 0; i < strlen((argv[3])); i++)
-		{
-			filename[i] = argv[3][i];
-		}
-		filename[i] = '.';
-		filename[i+1] = 'r';
-		filename[i+2] = 'e';
-		filename[i+3] = 's';
-		filename[i+4] = 'u';
-		filename[i+5] = 'l';
-		filename[i+6] = 't';
-		filename[i+7] = '\0';
-
-		save_sudoku(filename);
-	}
-	else if (strcmp(argv[2], "-print") == 0)
-	{
-		printf("main_solver: print %s solved.\n", argv[2]);
-
-		char filename[strlen((argv[3] + 8))];
-		size_t i = 0;
-		for (i = 0; i < strlen((argv[3])); i++)
-		{
-			filename[i] = argv[3][i];
-		}
-		filename[i] = '.';
-		filename[i+1] = 'r';
-		filename[i+2] = 'e';
-		filename[i+3] = 's';
-		filename[i+4] = 'u';
-		filename[i+5] = 'l';
-		filename[i+6] = 't';
-		filename[i+7] = '\0';
-		read_sudoku(filename);
-		print_sudoku();
-	}
-	else
-	{
-		printf("main_solver: incorrect argv. -help for help.\n");
-	}
-	
+	// unsigned int simple_or_hexa = 16;
+	main_solver(argv[1], 9);
 
 	return EXIT_SUCCESS;
-}
-*/
+}*/
+
