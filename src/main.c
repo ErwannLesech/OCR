@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     else if (strcmp(argv[1], "-solver") == 0)
     {
-        main_solver(argv[2]);
+        main_solver(argv[2], 9);
     }
 
     else if (strcmp(argv[1], "-rotate") == 0)

@@ -38,7 +38,7 @@ char hexa_grid[16][16] =
 	{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'}
 };
 
-int isValidMove(char sudoku[16][16], int row, int col, char c)
+int isValid(char sudoku[16][16], int row, int col, char c)
 {
     for(unsigned int i = 0; i < 16; i++)
     {
@@ -73,7 +73,7 @@ int solver_hexa()
             {
                 for(char c = '0'; c <= 'F'; c++)
                 {
-                    if(isValidMove(hexa_grid, i, j, c))
+                    if(isValid(hexa_grid, i, j, c))
                     {
                         hexa_grid[i][j] = c;
 
