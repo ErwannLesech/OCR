@@ -30,13 +30,16 @@ void ocr(char* path)
 	
 	//IA
 	printf("ia\n");
-	//predict();	
-	//char* grille1 = "../OCR_neural_network/grid.txt";
-	char* grille1 = "./Saved/test_grid_01";
+	predict();
+	char* grille1 = "./grid.txt";
+	printf("saved_ocr\n");
+	main_save_ocr(grille1);
+	
+	//char* grille1 = "./Saved/test_grid_01";
 
 	//SOLVER
 	printf("solver\n");
-	main_solver(grille1);
+	main_solver("./Saved/test_grid_01");
 	//char* grille2 = "../Solver/grid.result.txt";
 	char* grille2 = "./Saved/test_grid_01.result";
 	

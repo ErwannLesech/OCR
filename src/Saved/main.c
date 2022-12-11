@@ -170,6 +170,64 @@ int main_save(char* grille1, char* grille2)
 	return 1;
 }
 
+void PrettyGrid_ocr(char* old)
+{
+    SDL_Surface* grid = IMG_Load("./Saved/Grille.png");
+    SDL_Surface** black = calloc(9,sizeof(grid));
+    char blackstr[] = "./Saved/Data/0b.png";
+    for(int i = 0; i < 9; i++)
+    {
+        blackstr[13] = i + '1';
+        black[i] = IMG_Load(blackstr);
+    }
+    for(int i = 0; i < 81; i++)
+    {
+		int indice = old[i] - '0';
+		FillGrid(grid,black[indice -1],i);
+
+    }
+    for(int i = 0; i < 9; i++)
+    {
+        SDL_FreeSurface(black[i]);
+    }
+    free(black);
+    SDL_Surface *save =SDL_CreateRGBSurface(0,500,500,32,0,0,0,0);
+    SDL_BlitScaled(grid,NULL,save,NULL);
+    IMG_SavePNG(save, "saved_ocr.png");
+    SDL_FreeSurface(save);
+    SDL_FreeSurface(grid);
+}
+
+
+int main_save_ocr(char* grille1)
+{
+	
+	FILE *old = fopen(grille1, "r");
+	char* o = calloc(81,sizeof(char));
+	char c;
+	char *i = o;
+	while((c=fgetc(old)) != EOF)
+	{
+		if(c != ' ' && c != '\n')
+		{
+			
+			if(c != '.')
+			{
+				*i = c;
+				i +=1;
+			}
+			else
+			{
+				*i = ' ' - 32;
+				i+=1;
+			}
+		}
+	}
+	PrettyGrid_ocr(o);
+	fclose(old);
+	free(o);
+	return 1;
+}
 
 /*int main(int argc, char** argv)
 {

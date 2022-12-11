@@ -139,10 +139,13 @@ multiple_matrices load_parameters(char path[], int input_neurons,
 			i++;
 		}
 	}*/
+	printf("%c", c);
 	
 	if ((c == ' ' || c == '\n') && temp_index >= 7)
         {
+		printf("%f ", temp_value);
 	    dtemp = strtod(temp_value, NULL);
+		printf("%f ", dtemp);
 
 	    if(negative)
 	    {
@@ -167,7 +170,7 @@ multiple_matrices load_parameters(char path[], int input_neurons,
 				cols++;
 				
 			    }*/
-
+			 printf("%f\n ", dtemp);
 			 insert_value(w1, rows, cols, dtemp);
 			 //printf("row: %i, col: %i\n", rows, cols);
 			 if(rows  >= hidden_neurons-1 && cols >= input_neurons-1)
@@ -267,6 +270,7 @@ multiple_matrices load_parameters(char path[], int input_neurons,
 	else
 	{
 		temp_value[temp_index] = c;
+		printf("%c - %c\n", c, temp_value[temp_index]);
 		temp_index++;
 	}
    
@@ -279,6 +283,10 @@ multiple_matrices load_parameters(char path[], int input_neurons,
     parameters.b = b1;
     parameters.c = w2;
     parameters.d = b2;
+	print_matrix(w1);
+	print_matrix(b1);
+	print_matrix(w2);
+	print_matrix(b2);
     
     return parameters;
 }

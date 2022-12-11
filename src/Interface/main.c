@@ -150,8 +150,8 @@ void step_click_OCR()
 				case 0:
 					printf("0");
 
-					gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
-					pixbuf_2 = resize("image_otsu.png");
+					gtk_label_set_text(GTK_LABEL(label2), "Grayscale -->");
+					pixbuf_2 = resize("grayscale.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 1:
@@ -179,6 +179,13 @@ void step_click_OCR()
 				case 4:
 					printf("0");
 
+					gtk_label_set_text(GTK_LABEL(label2), "Ocr -->");
+					pixbuf_2 = resize("saved_ocr.png");
+					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+					break;
+				case 5:
+					printf("0");
+
 					gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
 					gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
 					pixbuf_2 = resize("saved.png");
@@ -187,7 +194,7 @@ void step_click_OCR()
 					break;
 				}
 			}
-			stepc += stepc <= 4;
+			stepc += stepc <= 5;
 		}
 		else
 		{
