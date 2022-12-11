@@ -263,7 +263,6 @@ void predict()
 
 		fprintf(output_file, "\n");
 	}
-    fprintf(output_file, "\n");
 	fclose(output_file);
     printf("Done\n");
 }

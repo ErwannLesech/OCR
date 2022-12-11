@@ -33,13 +33,13 @@ void ocr(char* path)
 	predict();
 	//char* grille1 = "./grid.txt";
 	printf("saved_ocr\n");
-	//main_save_ocr(grille1);
+	main_save_ocr("./grid.txt");
 	
 	char* grille1 = "./Saved/test_grid_01";
 
 	//SOLVER
 	printf("solver\n");
-	main_solver("./Saved/test_grid_01");
+	main_solver(grille1);
 	//char* grille2 = "../Solver/grid.result.txt";
 	char* grille2 = "./Saved/test_grid_01.result";
 	

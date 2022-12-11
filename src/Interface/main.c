@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "ocr.h"
 #include "../Saved/main.h"
 #include "../Rotate/main.h"
@@ -240,28 +241,31 @@ void step_OCR()
 			gtk_label_set_text(GTK_LABEL(label1), "Let's gooooooo");
 			if(ocr(file))
 			{
-				/*gtk_label_set_text(GTK_LABEL(label2), "Grayscale");
+				/*printf("A");
+				gtk_label_set_text(GTK_LABEL(label2), "Grayscale");
                     		pixbuf_2 = resize("grayscale.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-
-				gtk_label_set_text(GTK_LABEL(label2), "Binarization -->");
-				//pixbuf_2 = resize("hough.png");
-				//gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				g_usleep(5000);
 				
+				printf("B");
 				gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
 				pixbuf_2 = resize("sobel_filter.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-
+				g_usleep(5000);
+				
+				printf("C");
 				gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
 				pixbuf_2 = resize("hough.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-					
+				g_usleep(5000);
+
+				printf("D");
 				gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
 				pixbuf_2 = resize("grid.bmp");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				g_usleep(5000);
 
-				gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
-
+				printf("E");
 				gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
 				pixbuf_2 = resize("saved.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);

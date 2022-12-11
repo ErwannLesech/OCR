@@ -178,14 +178,20 @@ void PrettyGrid_ocr(char* old)
     for(int i = 0; i < 9; i++)
     {
         blackstr[13] = i + '1';
+	printf("%s\n",blackstr);
         black[i] = IMG_Load(blackstr);
     }
+    printf("test\n");
     for(int i = 0; i < 81; i++)
     {
+	    if(old[i] != ' ' - 32)
+	    {
 		int indice = old[i] - '0';
-		FillGrid(grid,black[indice -1],i);
+		FillGrid(grid,black[indice-1],i);
+	    }
 
     }
+    printf("test");
     for(int i = 0; i < 9; i++)
     {
         SDL_FreeSurface(black[i]);
@@ -210,17 +216,21 @@ int main_save_ocr(char* grille1)
 	{
 		if(c != ' ' && c != '\n')
 		{
-			
+			//printf("%c ->",c);
+
 			if(c != '.')
 			{
 				*i = c;
+				//printf("%s\n",i);
 				i +=1;
 			}
 			else
 			{
 				*i = ' ' - 32;
+				//printf("\n");
 				i+=1;
 			}
+			
 		}
 	}
 	PrettyGrid_ocr(o);
