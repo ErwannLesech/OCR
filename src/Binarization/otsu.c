@@ -3,6 +3,31 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+
+Uint8 pixel_to_gray(Uint32 pixel_color, SDL_PixelFormat* format)
+{
+    Uint8 r, g, b;
+    SDL_GetRGB(pixel_color, format, &r, &g, &b);
+    Uint8 average = 0.3*r + 0.59*g + 0.11*b;
+    r = g = b = average;
+    return average;
+}
+
+
+void surface_to_gray(SDL_Surface* surface)
+{
+    Uint32* pixels = surface->pixels;
+    int len = (surface->w)*(surface->h);
+    SDL_PixelFormat* format = surface->format;
+    
+    for (int i = 0; i < len; i++)
+    {
+	   Uint8 rgb = pixel_to_gray(pixels[i], format);
+	   pixels[i]= SDL_MapRGB(format, rgb, rgb, rgb);
+    }
+}
+
+
 void print_histo(int *histo, int x)
 {
 	for(int i = 0; i < x; i++)
@@ -28,7 +53,7 @@ int *build_histo(SDL_Surface *image)
 		for (int width = 0; width < image->w; width++)
 		{
 			Uint8 r,g,b;
-			SDL_GetRGB(pixels[height * (image->w) + width], format, &r, &g, &b);   
+			SDL_GetRGB(pixels[height * (image->w) + width], format, &r, &g, &b);
 			histo[r]++;
         	}
     	}
@@ -93,6 +118,7 @@ int get_threshold(SDL_Surface *image, int *histo)
 
 void image_binarize(SDL_Surface *image)
 {
+	surface_to_gray(image);
 	int *histo = build_histo(image);
 	int threshold = get_threshold(image, histo);
 
@@ -119,6 +145,11 @@ void image_binarize(SDL_Surface *image)
         	}
     	}
 }
+
+
+/*
+ * BLUR FILTER
+*/
 
 
 float gauss_kernel[5][5] = {{1.0, 4.0,  6.0,  4.0 , 1.0 },
@@ -171,20 +202,6 @@ void blur_filter(SDL_Surface* image)
  * MEDIAN FILTER NOT WORKING ENOUGHT SADDLY
 */
 
-
-Uint8 pixel_to_gray(Uint32 pixel_color, SDL_PixelFormat* format)
-{
-    Uint8 r, g, b;
-    SDL_GetRGB(pixel_color, format, &r, &g, &b);
-    Uint8 average = 0.3*r + 0.59*g + 0.11*b;
-    //Uint8 average = 0.34*r + 0.33*g + 0.33*b;
-    r = g = b = average;
-    return average;
-    //Uint32 color = SDL_MapRGB(format, r, g, b);
-    //printf("%i: %i\n", average, color);
-    //return color;
-    
-}
 
 void insertion_sort(int arr[], int len)
 {

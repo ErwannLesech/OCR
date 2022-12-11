@@ -12,7 +12,7 @@ SDL_Surface* init_image(char* path)
     return new_surface;
 }
 
-int main_bin(char *filename)
+/*int main_bin(char *filename)
 {
 	SDL_Surface *image = init_image(filename);
 	
@@ -25,19 +25,19 @@ int main_bin(char *filename)
 	IMG_SavePNG(image, "image_otsu.png");
 	free(image);
 	return EXIT_SUCCESS;
-}
+}*/
 
-/*int main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	SDL_Surface *image = init_image(argv[1]);
 	
 	//blur_filter(image);
-	median_filter(image);
-	blur_filter(image);
+	//median_filter(image);
+	//blur_filter(image);
 	image_binarize(image);
 	//median_filter(image);
 
 	IMG_SavePNG(image, "image_otsu.png");
 	free(image);
 	return EXIT_SUCCESS;
-}*/
+}
