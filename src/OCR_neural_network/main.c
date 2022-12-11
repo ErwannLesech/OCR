@@ -14,8 +14,8 @@ const unsigned int input_neurons = 784;
 const unsigned int hidden_neurons = 16;
 const unsigned int output_neurons = 10;
 
-double learning_rate = 0.001;
-long epochs = 400;
+double learning_rate = 0.003;
+long epochs = 170;
 
 void train_network(long epochs, double lr, size_t nbInputs);
 void load_weights(char *filename);
@@ -27,7 +27,7 @@ int main_neural_network(int argc, char *argv[])
 {
     if (argc < 3)
     {
-        printf("main_xor: Argv missing");
+        printf("main_nn: Argv missing");
         return EXIT_FAILURE;
     }
     if (strcmp(argv[2], "-train") == 0)
@@ -43,12 +43,12 @@ int main_neural_network(int argc, char *argv[])
         {
             printf("main_nn: train xor network - 10000 epochs - ");
             printf("0.1 learning rate.\n");
-            train_network(epochs, learning_rate, 120);    
+            train_network(epochs, learning_rate, 300);    
         }
     }
     else if (strcmp(argv[2], "-weights") == 0)
     {
-        printf("main_xor: load_weights.\n\n");
+        printf("main_nn: load_weights.\n\n");
         load_weights("./OCR_neural_network/weights.txt");
     }
     else if (strcmp(argv[2], "-predict") == 0)
@@ -74,14 +74,16 @@ int main_neural_network(int argc, char *argv[])
     }
     else if (strcmp(argv[2], "-help") == 0)
     {
-        printf("main_xor: -train to train the network.\n");
-        printf("main_xor: -weights to load weights.\n");
-        printf("main_xor: -predict to predict.\n");
-        printf("main_xor: -test to test.\n");
+        printf("main_nn: -train to train the network.\n");
+        printf("main_nn: -weights to load weights.\n");
+        printf("main_nn: -predict to predict.\n");
+        printf("main_nn: -test to test image matrix.\n");
+        printf("main_nn: -accuracy to test accuracy.\n");
+        printf("main_nn: -accuracy_mnist to test accuracy on mnist.\n");
     }
     else
     {
-        printf("main_xor: incorrect argv. -help for help.\n");
+        printf("v: incorrect argv. -help for help.\n");
     }
 
     return EXIT_SUCCESS;
@@ -89,26 +91,33 @@ int main_neural_network(int argc, char *argv[])
 
 void train_network(long epochs, double lr, size_t nbInputs)
 {
+    // Parameters initialization
     multiple_matrices parameters = initialization(input_neurons, 
     hidden_neurons, output_neurons);
+    // Inputs and expected outputs initialization
     multiple_matrices entries = init_input_matrix(nbInputs);
+    // Expected outputs hot encoding
     matrix *exp_output_hot = exp_output_init(entries.b);
+    // Forward and back propagation matrices initialization
     multiple_matrices forward_prop;
     multiple_matrices back_prop;
+
+    // Input and expected output for 1 input matrices initialization
     matrix *input = init_matrix(784, 1, 0);
     matrix *exp_output = init_matrix(10, 1, 0);
     
     for (long i = 0; i < epochs + 1; i++)
     {        
-        printf("%i\n", i);
+        printf("%ith epoch\n", i);
+        // Shuffle inputs and expected outputs
         shuffle(entries.a, entries.b);
+        // reset expected outputs hot encoding
         exp_output_hot = exp_output_init(entries.b);
 
+        // train each input
         for(int j = 0; j < nbInputs; j++)
         {
-            input = init_matrix(784, 1, 0);
-            exp_output = init_matrix(10, 1, 0);
-            
+            // initialize input and expected output for 1 input
             for(int k = 0; k < 784; k++)
             {
                 insert_value(input, k, 0, get_value(entries.a, k, j));
@@ -117,27 +126,19 @@ void train_network(long epochs, double lr, size_t nbInputs)
             {
                 insert_value(exp_output, k, 0, get_value(exp_output_hot, k, j));
             }    
-        
+
+            // Apply forward and back propagation
             forward_prop = forward_propagation(&parameters, input);
 
             back_prop = back_propagation(exp_output, input,
             &parameters, &forward_prop);
 
+            // Update parameters
             upgrade_parameters(input, &parameters, &forward_prop, &back_prop,
             lr);
         }
-
-        /*if (i % (epochs / 10) == 0)
-        {
-            print_matrix(parameters.a);
-            print_matrix(parameters.b);
-            print_matrix(parameters.c);
-            print_matrix(parameters.d);
-
-            print_matrix(forward_prop.c);
-        }*/
     }
-
+    
     // Parameters saving
 
     save_parameters(parameters, "./OCR_neural_network/weights.txt");
@@ -151,8 +152,8 @@ void train_network(long epochs, double lr, size_t nbInputs)
     free_multiple_matrices(forward_prop);
     free_multiple_matrices(back_prop);
 
-    /*free_multiple_matrices(entries);
-    free_matrix(exp_output_hot);*/
+    free_multiple_matrices(entries);
+    free_matrix(exp_output_hot);
 }
 
 void load_weights(char *filename)
@@ -308,9 +309,8 @@ void accuracy()
 		path[43] = 'n';
 		path[44] = 'g';
 		path[45] = '\0';
-        printf("%s \n", path);
+        //printf("%s \n", path);
         input = init_input_matrix_accuracy(path);
-        
         forward_prop = forward_propagation(&parameters, input);
         output_prop = forward_prop.d;
         double max = get_value(output_prop, 0, 0);
@@ -334,6 +334,7 @@ void accuracy()
             printf("Incorrect \n");
         }
     }
+    printf("Number of correct predictions: %d over 200 tests\n", accuracy);
     printf("accuracy: %f \n", ((double)accuracy/(double)200));
     return accuracy;
 }
@@ -359,7 +360,7 @@ void accuracy_mnist()
 		path[35] = '/';
 		path[36] = random;
 		path[37] = '\0';
-        printf("%s \n", path);
+        //printf("%s \n", path);
         input = init_input_matrix_accuracy(path);
         
         forward_prop = forward_propagation(&parameters, input);
@@ -385,6 +386,7 @@ void accuracy_mnist()
             printf("Incorrect \n");
         }
     }
-    printf("accuracy: %f \n", ((double)accuracy/(double)200));
+    printf("Number of correct predictions: %d over 200 tests\n", accuracy);
+    printf("accuracy with MNIST dataset: %f \n", ((double)accuracy/(double)200));
     return accuracy;
 }

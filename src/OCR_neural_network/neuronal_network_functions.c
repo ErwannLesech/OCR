@@ -75,12 +75,6 @@ void shuffle(matrix *inputs, matrix *exp_outputs)
 			insert_value(inputs, j, i, get_value(inputs, j, r));
 			insert_value(inputs, j, r, tmp);
 		}
-		/*for (size_t k = 0; k < exp_outputs->rows; k++)
-		{
-			double tmp = get_value(exp_outputs, k, 0);
-			insert_value(exp_outputs, k, 0, get_value(exp_outputs, k, r));
-			insert_value(exp_outputs, k, r, tmp);
-		}*/
 		double tmp = get_value(exp_outputs, 0, i);
 		insert_value(exp_outputs, 0, i, get_value(exp_outputs, 0, r));
 		insert_value(exp_outputs, 0, r, tmp);
@@ -181,12 +175,22 @@ multiple_matrices init_input_matrix(size_t nbInputs)
 	{
 		int number = rand() % 9 + 1;
 		int random = rand() % 7;
-		//int random2 = rand() % 10;
+		/*int random = rand() % 10;
+		int random2 = rand() % 10;*/
+		/*char path[46] = "./OCR_neural_network/dataset/training/";
+		path[38] = number + 48;
+		path[39] = '/';
+		path[40] = random + 48;
+		path[41] = random2 + 48;
+		path[42] = '.';
+		path[43] = 'j';
+		path[44] = 'p';
+		path[45] = 'g';
+		path[46] = '\0';*/
 		char path[45] = "./OCR_neural_network/dataset/training/";
 		path[38] = number + 48;
 		path[39] = '/';
 		path[40] = random + 48;
-		//path[41] = random2 + 48;
 		path[41] = '.';
 		path[42] = 'p';
 		path[43] = 'n';
