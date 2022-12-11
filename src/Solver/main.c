@@ -71,7 +71,7 @@ int solver_hexa()
         {
             if(hexa_grid[i][j] == '.')
             {
-                for(char c = '1'; c <= 'F'; c++)
+                for(char c = '0'; c <= 'F'; c++)
                 {
                     if(isValidMove(hexa_grid, i, j, c))
                     {
@@ -259,13 +259,22 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	else
 	{
 		solver_hexa(hexa_grid);
+		//print_sudoku(simple_or_hexa);
+		//read_sudoku("expect_test_hexa_grid_01", simple_or_hexa);
 	}
 
 	print_sudoku(simple_or_hexa);
+	
+	size_t txt = 0;
+	size_t leng = strlen((sudoku));
+	if(sudoku[leng - 4] == '.')
+	{
+		txt = 4;
+	}
 
-	char filename[strlen((sudoku + 8))];
+	char filename[leng + txt];
 	size_t i = 0;
-	for (i = 0; i < strlen((sudoku)); i++)
+	for (i = 0; i < leng-txt; i++)
 	{
 		filename[i] = sudoku[i];
 	}
@@ -285,16 +294,16 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 }
 
 
-int main(int argc, char **argv)
+/*int main(int argc, char **argv)
 {
 	if(argc < 3)
 	{
 		errx(EXIT_FAILURE, "%s", "A valid sudoku is needed");
 	}
 	
-	unsigned int simple_or_hexa = 16; //(unsigned int)argv[2];
-	main_solver(argv[1], simple_or_hexa);
-		
+	// unsigned int simple_or_hexa = 16;
+	main_solver(argv[1], 9);
+
 	return EXIT_SUCCESS;
-}
+}*/
 
