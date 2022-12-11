@@ -57,17 +57,13 @@ SDL_Surface * focus_grid(SDL_Surface * sdl, struct Squares squares){
         }
     }
    }
-  // else{
-
-    //TODO IF WE HAVE NEURONAL NETWORK
-   //}
    SDL_UnlockSurface(sdl_surface);
     return sdl_surface;
 }
 
 void registerSurface(SDL_Surface * sdl, struct Squares squares){
     SDL_Surface * s = focus_grid(sdl, squares);
-    SDL_SaveBMP(s, "grid.bmp\0");
+    IMG_SavePNG(s, "grid.png");
     SDL_FreeSurface(s);
     SDL_FreeSurface(sdl);
 }

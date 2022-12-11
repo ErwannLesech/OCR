@@ -17,8 +17,8 @@
 void ocr(char* path)
 {
 	//BINARIZATION
-	//printf("binarization\n");
-	//main_bin(path);
+	printf("binarization\n");
+	main_bin(path);
 
 	//LOADER
 	printf("loader\n");
@@ -26,7 +26,7 @@ void ocr(char* path)
 
 	//SEPARATE
 	printf("separate\n");
-	main_separate("grid.bmp");
+	main_separate("grid.png");
 	
 	//IA
 	printf("ia\n");

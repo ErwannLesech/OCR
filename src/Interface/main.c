@@ -174,7 +174,7 @@ void step_click_OCR()
 					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
-					pixbuf_2 = resize("grid.bmp");
+					pixbuf_2 = resize("grid.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 4:
