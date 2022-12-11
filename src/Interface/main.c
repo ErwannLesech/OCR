@@ -5,7 +5,6 @@
 #include <math.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "ocr.h"
 #include "../Solver/main.h"
 #include "../Saved/main.h"
 #include "../Rotate/main.h"
