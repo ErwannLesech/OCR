@@ -7,7 +7,7 @@ and give back to the user the completed sudoku.
 
 # Links 
 
-Website that explains our project and who we are:
+Website that explains our project and who we are: https://nimu93.github.io/
 ###
 Link of this github where you can understand how we developped it:
 https://github.com/ErwannLesech/OCR
