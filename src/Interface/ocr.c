@@ -18,7 +18,7 @@ void ocr(char* path)
 {
 	//BINARIZATION
 	printf("binarization\n");
-	main_bin(path);
+	//main_bin(path);
 
 	//LOADER
 	printf("loader\n");
@@ -31,19 +31,19 @@ void ocr(char* path)
 	//IA
 	printf("ia\n");
 	predict();
-	//char* grille1 = "./grid.txt";
+	char* grille1 = "./grid.txt";
 	printf("saved_ocr\n");
 	main_save_ocr("./grid.txt");
 	
-	char* grille1 = "./Saved/test_grid_01";
+	//char* grille1 = "./Saved/test_grid_01";
 
 	//SOLVER
 	printf("solver\n");
-	main_solver(grille1, 9);
-	//char* grille2 = "../Solver/grid.result.txt";
-	char* grille2 = "./Saved/test_grid_01.result";
+	/*main_solver(grille1, 9);
+	char* grille2 = "./grid.result";
+	char* grille2 = "./Saved/test_grid_01.result";*/
 	
 	//SAVED
 	printf("saved\n");
-	main_save(grille1,grille2);
+	//main_save(grille1,grille2);
 }

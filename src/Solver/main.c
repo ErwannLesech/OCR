@@ -287,7 +287,7 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	filename[i+5] = 'l';
 	filename[i+6] = 't';
 	filename[i+7] = '\0';
-	
+	printf("%i\n",temp);
 	save_sudoku(filename, temp);
 
 	return 0;
@@ -303,7 +303,5 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	
 	// unsigned int simple_or_hexa = 16;
 	main_solver(argv[1], 9);
-
 	return EXIT_SUCCESS;
 }*/
-

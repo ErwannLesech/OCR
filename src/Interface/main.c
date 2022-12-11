@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "ocr.h"
+#include "../Solver/main.h"
 #include "../Saved/main.h"
 #include "../Rotate/main.h"
 #include "../Load_img/main.h"
@@ -23,6 +24,7 @@ static GtkWidget* label1;
 static GtkWidget* label2;
 static GtkWidget* preview;
 static GtkScale* scale;
+static GtkEntry* entry;
 static char* file;
 static int bsolve;
 static int stepc;
@@ -68,6 +70,7 @@ void updateImage(GtkFileChooser *fc)
 
 void quickOCR()
 {
+	gtk_widget_set_sensitive(GTK_WIDGET(button4), FALSE);
     if(file)
     {
         size_t lenF = strlen(file);
@@ -120,6 +123,7 @@ void quickOCR()
 
 void step_click_OCR()
 {
+	gtk_widget_set_sensitive(GTK_WIDGET(button4), FALSE);
 	if(file)
     	{
         	size_t lenF = strlen(file);
@@ -176,6 +180,7 @@ void step_click_OCR()
 					gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
 					pixbuf_2 = resize("grid.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+					gtk_widget_set_sensitive(GTK_WIDGET(button4), TRUE);
 					break;
 				case 4:
 					printf("0");
@@ -183,12 +188,20 @@ void step_click_OCR()
 					gtk_label_set_text(GTK_LABEL(label2), "Ocr -->");
 					pixbuf_2 = resize("saved_ocr.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+					gtk_label_set_text(GTK_LABEL(label2), "Enter X Y Value !");
+
 					break;
 				case 5:
 					printf("0");
+					//char* grille1 = "./grid.txt";
+					char* grille1 = "./Saved/test_grid_01";
+					main_solver(grille1, 9);
+					char* grille2 = "./grid.result";
+					//char* grille2 = "./Saved/test_grid_01.result";
 
 					gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
 					gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
+					main_save(grille1,grille2);
 					pixbuf_2 = resize("saved.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					gtk_label_set_text(GTK_LABEL(label1), "We did it !");
@@ -213,81 +226,7 @@ void step_click_OCR()
 	 
 }
 
-void step_OCR()
-{
-	if(file)
-    	{
-        	size_t lenF = strlen(file);
-        	if(lenF == 0) 
-		{
-            		switch(bsolve) 
-	    		{
-            		case 0:
-                		gtk_label_set_text(GTK_LABEL(label1), "Choose Your Grid !");
-                		break;
-            		case 1:
-                		gtk_label_set_text(GTK_LABEL(label1), "CHOOSE YOUR GRID !");
-                		break;
-            		case 2:
-                		gtk_label_set_text(GTK_LABEL(label1), "CHOOSE IT !!!!!!");
-				pixbuf_2 = resize("error_image1.jpg");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-                		break;
-            		}
-           	 	bsolve += bsolve <= 2;
-        	}
-		else if(lenF >4)
-		{
-			gtk_label_set_text(GTK_LABEL(label1), "Let's gooooooo");
-			if(ocr(file))
-			{
-				/*printf("A");
-				gtk_label_set_text(GTK_LABEL(label2), "Grayscale");
-                    		pixbuf_2 = resize("grayscale.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-				g_usleep(5000);
-				
-				printf("B");
-				gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
-				pixbuf_2 = resize("sobel_filter.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-				g_usleep(5000);
-				
-				printf("C");
-				gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
-				pixbuf_2 = resize("hough.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-				g_usleep(5000);
-
-				printf("D");
-				gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
-				pixbuf_2 = resize("grid.bmp");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-				g_usleep(5000);
-
-				printf("E");
-				gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
-				pixbuf_2 = resize("saved.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-				gtk_label_set_text(GTK_LABEL(label1), "We did it !");*/
-			
-			}
-			else
-			{
-				gtk_label_set_text(GTK_LABEL(label1), "Oh nooooo :'(");
-                    		gtk_label_set_text(GTK_LABEL(label2), "No Solution Found !");
-				pixbuf_2 = resize("../Load_img/hough.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-
-			}
-                }
-	}
-	else
-	{
-        	gtk_label_set_text(GTK_LABEL(label1), ".PNG OR .JPG PLEASE");
-        }
-}
-
+;
 int rotate_i()
 {
 	char* path = gtk_file_chooser_get_preview_filename(fileChooser);
@@ -298,8 +237,79 @@ int rotate_i()
 	return 1;
 }
 
+int modify()
+{
+	char sudo[9][9] = 
+	{
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'},
+    	{'.','.','.','.','.','.','.','.','.'}
+	};
+	FILE *input_file = fopen("./grid.txt", "r");
+    	unsigned int i = 0;
+    	unsigned int j = 0;
+    	char c;
+    
+   	while((c=fgetc(input_file)) != EOF)
+    	{
+        	if(c != ' ' && c != '\n')
+        	{
+            		sudo[i][j] = c;
+            		j++;
+
+            		if(j > 8)
+            		{
+                		j = 0;
+                		i++;
+           		}
+        	}
+    	}
+    	fclose(input_file);
+	gchar *data = gtk_entry_get_text(GTK_ENTRY(entry));
+	int a = data[0] - 48;
+	int b = data[2] - 48;
+	char value = data[4];
+	sudo[a][b] = value;
+	FILE* output_file = fopen("./grid.txt", "w");
+    
+    	for(unsigned int i = 0; i < 9; i++)
+    	{
+        	if(i%3 == 0 && i != 0)
+                {
+            		fprintf(output_file, "\n");
+                }
+
+        	for(unsigned int j = 0; j < 9; j++)
+        	{
+            	if(j%3 == 0 && j != 0)
+            	{
+                	fprintf(output_file, " ");
+            	}
+            
+            	fprintf(output_file, "%c", sudo[i][j]);
+        }
+
+        fprintf(output_file, "\n");
+    }
+
+    fprintf(output_file, "\n");
+    fclose(output_file);
+    main_save_ocr("./grid.txt");
+    pixbuf_2 = resize("./saved_ocr.png");
+	gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+
+}
+
 int main_interface(int argc, char **argv)
 {
+	gtk_widget_set_sensitive(GTK_WIDGET(button2), FALSE);
+
 	gtk_init(&argc, &argv);
     	file = "";
     	bsolve = 0;
@@ -307,9 +317,9 @@ int main_interface(int argc, char **argv)
 	
     	builder = gtk_builder_new_from_file("interface.glade");
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
-	//gtk_widget_override_background_color(window, GTK_STATE_NORMAL, &(GdkColor) {1,1,1,1});
     	fixed = GTK_WIDGET(gtk_builder_get_object(builder, "fixed"));
-    	fileChooser = GTK_WIDGET(gtk_builder_get_object(builder, "fileChooser"));
+    	fileChooser = GTK_WIDGET(gtk_builder_get_object(builder,
+			       	"fileChooser"));
     	button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button1"));
 	button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button2"));
 	button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button3"));
@@ -318,10 +328,13 @@ int main_interface(int argc, char **argv)
 	label2 = GTK_WIDGET(gtk_builder_get_object(builder, "label2"));
     	preview = GTK_WIDGET(gtk_builder_get_object(builder, "preview"));
 	scale = GTK_SCALE(gtk_builder_get_object(builder, "scale"));
+	entry = GTK_ENTRY(gtk_builder_get_object(builder, "entry"));
+
 	
 
     	GtkCssProvider* cssProvider = gtk_css_provider_new();
-    	gtk_css_provider_load_from_path(cssProvider, "./Interface/style.css", NULL);
+    	gtk_css_provider_load_from_path(cssProvider, "./Interface/style.css",
+		       	NULL);
 
     	GdkScreen* screen = gdk_screen_get_default();
     	gtk_style_context_add_provider_for_screen(screen,
@@ -337,10 +350,10 @@ int main_interface(int argc, char **argv)
 		G_CALLBACK(rotate_i),NULL);
     	g_signal_connect(GTK_BUTTON(button1), "clicked",
         	G_CALLBACK(quickOCR), NULL);
-	g_signal_connect(GTK_BUTTON(button2),"clicked",
-		G_CALLBACK(step_OCR),NULL);
 	g_signal_connect(GTK_BUTTON(button3),"clicked",
 		G_CALLBACK(step_click_OCR), NULL);
+	g_signal_connect(GTK_BUTTON(button2),"clicked",
+		G_CALLBACK(modify), NULL);
 
     gtk_widget_show(window);
     gtk_main();

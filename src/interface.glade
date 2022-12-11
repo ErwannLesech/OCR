@@ -72,8 +72,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="button2">
-            <property name="label" translatable="yes">Show me the different steps !</property>
+          <object class="GtkButton" id="button3">
+            <property name="label" translatable="yes">I will do it !</property>
             <property name="width-request">260</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
@@ -86,20 +86,6 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="button3">
-            <property name="label" translatable="yes">I will do it !</property>
-            <property name="width-request">260</property>
-            <property name="height-request">40</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">50</property>
-            <property name="y">520</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkLabel" id="label2">
             <property name="width-request">260</property>
             <property name="height-request">40</property>
@@ -109,7 +95,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">700</property>
+            <property name="y">650</property>
           </packing>
         </child>
         <child>
@@ -123,7 +109,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">575</property>
+            <property name="y">520</property>
           </packing>
         </child>
         <child>
@@ -137,7 +123,7 @@
           </object>
           <packing>
             <property name="x">50</property>
-            <property name="y">650</property>
+            <property name="y">590</property>
           </packing>
         </child>
         <child>
@@ -151,6 +137,32 @@
           <packing>
             <property name="x">80</property>
             <property name="y">40</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="entry">
+            <property name="width-request">200</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">700</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button2">
+            <property name="label" translatable="yes">Apply</property>
+            <property name="width-request">50</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">260</property>
+            <property name="y">700</property>
           </packing>
         </child>
       </object>
