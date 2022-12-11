@@ -39,7 +39,7 @@ void ocr(char* path)
 
 	//SOLVER
 	printf("solver\n");
-	main_solver(grille1);
+	main_solver(grille1, 9);
 	//char* grille2 = "../Solver/grid.result.txt";
 	char* grille2 = "./Saved/test_grid_01.result";
 	
