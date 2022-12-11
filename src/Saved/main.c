@@ -86,11 +86,16 @@ void FillGrid(SDL_Surface* grid, SDL_Surface* cell, int pos)
 
 void PrettyGrid(char* old, char* solved)
 {
+    //Take a new empty grid
     SDL_Surface* grid = IMG_Load("./Saved/Grille.png");
+
+    //Create the memory for surfaces
     SDL_Surface** red = calloc(9,sizeof(grid));
     SDL_Surface** black = calloc(9,sizeof(grid));
     char redstr[] = "./Saved/Data/0r.png";
     char blackstr[] = "./Saved/Data/0b.png";
+
+    //Create all the surfaces
     for(int i = 0; i < 9; i++)
     {
         redstr[13] = i + '1';
@@ -98,6 +103,8 @@ void PrettyGrid(char* old, char* solved)
         red[i] = IMG_Load(redstr);
         black[i] = IMG_Load(blackstr);
     }
+
+    //Compare the characters and make the final grid
     for(int i = 0; i < 81; i++)
     {
 
@@ -112,6 +119,7 @@ void PrettyGrid(char* old, char* solved)
 		FillGrid(grid,red[indice-1], i);
 	    }
     }
+    //Free and save
     for(int i = 0; i < 9; i++)
     {
         SDL_FreeSurface(red[i]);
@@ -129,12 +137,16 @@ void PrettyGrid(char* old, char* solved)
 
 int main_save(char* grille1, char* grille2)
 {
-	
+	//Open the grid from OCR
 	FILE *old = fopen(grille1, "r");
+
+	//Create the memory 
 	char* o = calloc(81,sizeof(char));
 	char* n = calloc(81,sizeof(char));
 	char c;
 	char *i = o;
+
+	//Read and get the characters of the grid
 	while((c=fgetc(old)) != EOF)
 	{
 		if(c != ' ' && c != '\n')
@@ -153,6 +165,8 @@ int main_save(char* grille1, char* grille2)
 		}
 	}
 	fclose(old);
+
+	//Read and get the characters of the solved grid
 	FILE *new = fopen(grille2, "r");
 	char *j = n;
 	while((c=fgetc(new)) != EOF)
@@ -163,7 +177,9 @@ int main_save(char* grille1, char* grille2)
 			j+=1;
 		}
 	}
+	//Prepare the final grid
 	PrettyGrid(o,n);
+	//Free
 	fclose(new);
 	free(o);
 	free(n);

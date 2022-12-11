@@ -100,7 +100,7 @@ void quickOCR()
                 	gtk_label_set_text(GTK_LABEL(label1), "Processing...");
                 	if(ocr(file))
 			{
-                    		gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
+			        gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
 				gtk_label_set_text(GTK_LABEL(label1), "THERE IT IS !");
                     		pixbuf_2 = resize("saved.png");
 				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
@@ -148,26 +148,23 @@ void step_click_OCR()
 		else if(lenF >4)
 		{
 			gtk_label_set_text(GTK_LABEL(label1), "Let's gooooooo");
-			if(ocr(file))
+			if(ocr(file,stepc))
 			{
 				switch(stepc)
 				{
 				case 0:
-					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Grayscale -->");
 					pixbuf_2 = resize("grayscale.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 1:
-					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Sobel Filter -->");
 					pixbuf_2 = resize("sobel_filter.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					break;
 				case 2:
-					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Hough Transform -->");
 					pixbuf_2 = resize("hough.png");
@@ -175,7 +172,6 @@ void step_click_OCR()
 					break;
 				
 				case 3:
-					printf("0");
 
 					gtk_label_set_text(GTK_LABEL(label2), "Separate -->");
 					pixbuf_2 = resize("grid.png");
@@ -183,8 +179,7 @@ void step_click_OCR()
 					gtk_widget_set_sensitive(GTK_WIDGET(button4), TRUE);
 					break;
 				case 4:
-					printf("0");
-
+			
 					gtk_label_set_text(GTK_LABEL(label2), "Ocr -->");
 					pixbuf_2 = resize("saved_ocr.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
@@ -192,16 +187,8 @@ void step_click_OCR()
 
 					break;
 				case 5:
-					printf("0");
-					//char* grille1 = "./grid.txt";
-					char* grille1 = "./Saved/test_grid_01";
-					main_solver(grille1, 9);
-					char* grille2 = "./grid.result";
-					//char* grille2 = "./Saved/test_grid_01.result";
-
 					gtk_label_set_text(GTK_LABEL(label2), "Processing -->");
 					gtk_label_set_text(GTK_LABEL(label2), "Solution ! -->");
-					main_save(grille1,grille2);
 					pixbuf_2 = resize("saved.png");
 					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
 					gtk_label_set_text(GTK_LABEL(label1), "We did it !");
