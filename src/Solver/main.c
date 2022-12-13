@@ -111,6 +111,7 @@ void read_sudoku(char *filename, unsigned int max)
 	
 	while((c=fgetc(input_file)) != EOF)
 	{
+		
 		if(c != ' ' && c != '\n')
 		{
 			if(max == 9)
@@ -245,10 +246,10 @@ void save_sudoku(char *filename, unsigned int max)
 }
 
 
-int main_solver(char* sudoku, unsigned int simple_or_hexa)
+int main_solver(char* path, unsigned int simple_or_hexa)
 {
 	unsigned int temp = simple_or_hexa;
-	read_sudoku(sudoku, simple_or_hexa);
+	read_sudoku(path, simple_or_hexa);
 	print_sudoku(simple_or_hexa);
 
 	if(simple_or_hexa == 9)
@@ -266,17 +267,18 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	print_sudoku(simple_or_hexa);
 	
 	size_t txt = 0;
-	size_t leng = strlen((sudoku));
-	if(sudoku[leng - 4] == '.')
+	size_t leng = strlen((path));
+	if(path[leng - 4] == '.')
 	{
 		txt = 4;
 	}
 
 	char filename[leng + txt];
+	
 	size_t i = 0;
 	for (i = 0; i < leng-txt; i++)
 	{
-		filename[i] = sudoku[i];
+		filename[i] = path[i];
 	}
 	
 	filename[i] = '.';
@@ -287,7 +289,6 @@ int main_solver(char* sudoku, unsigned int simple_or_hexa)
 	filename[i+5] = 'l';
 	filename[i+6] = 't';
 	filename[i+7] = '\0';
-	printf("%i\n",temp);
 	save_sudoku(filename, temp);
 
 	return 0;

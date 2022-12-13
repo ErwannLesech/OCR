@@ -85,37 +85,53 @@ void quickOCR()
                 break;
             case 2:
                 gtk_label_set_text(GTK_LABEL(label1), "CHOOSE IT !!!!!!");
-		pixbuf_2 = resize("error_image1.png");
-		gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				pixbuf_2 = resize("error_image1.png");
+				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
                 break;
             }
             bsolve += bsolve <= 2;
         }
         else if(lenF > 4) 
-	{
-            	if(valid_format(lenF)) 
+		{
+            if(valid_format(lenF)) 
 	    	{
                 
-                	gtk_label_set_text(GTK_LABEL(label1), "Processing...");
-                	if(ocr_2(file))
-			{
-			        gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
-				gtk_label_set_text(GTK_LABEL(label1), "THERE IT IS !");
-                    		pixbuf_2 = resize("saved.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				gtk_label_set_text(GTK_LABEL(label1), "Processing...");
+				if(ocr_2(file, stepc))
+				{
+					switch (stepc)
+					{
+					case 0:
+						gtk_label_set_text(GTK_LABEL(label2), "Ocr -->");
+						pixbuf_2 = resize("saved_ocr.png");
+						gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+						gtk_label_set_text(GTK_LABEL(label2), "Enter X Y Value !");
+						break;
+					
+					case 1:
+						gtk_label_set_text(GTK_LABEL(label2), "Tadaaaaaa!");
+						gtk_label_set_text(GTK_LABEL(label1), "THERE IT IS !");
+						pixbuf_2 = resize("saved.png");
+						gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+						break;
 
-			}
-			else 
-			{
-                    		gtk_label_set_text(GTK_LABEL(label1), "No Solution Found !");
-				pixbuf_2 = resize("error_image1.png");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
-			}
-            	} 
+					default:
+						break;
+					}
+					stepc += stepc <= 1;
+
+				}
+				else 
+				{
+					gtk_label_set_text(GTK_LABEL(label1), "No Solution Found !");
+					pixbuf_2 = resize("error_image1.png");
+					gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+				}
+            } 
 	    	else 
 	    	{
-                	gtk_label_set_text(GTK_LABEL(label1), ".PNG OR .JPG PLEASE");
-            	}
+            	gtk_label_set_text(GTK_LABEL(label1), ".PNG OR .JPG PLEASE");
+            }
         }
     }
 }
@@ -138,8 +154,8 @@ void step_click_OCR()
                 		break;
             		case 2:
                 		gtk_label_set_text(GTK_LABEL(label1), "CHOOSE IT !!!!!!");
-				pixbuf_2 = resize("error_image1.jpg");
-				gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+						pixbuf_2 = resize("error_image1.jpg");
+						gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
                 		break;
             		}
            	 	bsolve += bsolve <= 2;
@@ -243,52 +259,58 @@ int modify()
     	char c;
     
    	while((c=fgetc(input_file)) != EOF)
-    	{
-        	if(c != ' ' && c != '\n')
-        	{
-            		sudo[i][j] = c;
-            		j++;
+	{
+		if(c != ' ' && c != '\n')
+		{
+				sudo[i][j] = c;
+				j++;
 
-            		if(j > 8)
-            		{
-                		j = 0;
-                		i++;
-           		}
-        	}
-    	}
-    	fclose(input_file);
+				if(j > 8)
+				{
+					j = 0;
+					i++;
+			}
+		}
+	}
+    fclose(input_file);
+
+
 	gchar *data = gtk_entry_get_text(GTK_ENTRY(entry));
 	int a = data[0] - 48;
 	int b = data[2] - 48;
 	char value = data[4];
 	sudo[a][b] = value;
+
 	FILE* output_file = fopen("./grid.txt", "w");
-    
-    	for(unsigned int i = 0; i < 9; i++)
-    	{
-        	if(i%3 == 0 && i != 0)
-                {
-            		fprintf(output_file, "\n");
-                }
+    printf("test\n");
+	for(unsigned int i = 0; i < 9; i++)
+	{
+		if(i%3 == 0 && i != 0)
+			{
+				fprintf(output_file, "\n");
+			}
 
-        	for(unsigned int j = 0; j < 9; j++)
-        	{
-            	if(j%3 == 0 && j != 0)
-            	{
-                	fprintf(output_file, " ");
-            	}
-            
-            	fprintf(output_file, "%c", sudo[i][j]);
-        }
+		for(unsigned int j = 0; j < 9; j++)
+		{
+			if(j%3 == 0 && j != 0)
+			{
+				fprintf(output_file, " ");
+			}
+			printf("sudo: %c\n", sudo[i][j]);
+			fprintf(output_file, "%c", sudo[i][j]);
+	}
 
-        fprintf(output_file, "\n");
+	fprintf(output_file, "\n");
     }
 
     fprintf(output_file, "\n");
     fclose(output_file);
-    main_save_ocr("./grid.txt");
+    // Redraw for display
+	main_save_ocr("./grid.txt");
     pixbuf_2 = resize("./saved_ocr.png");
 	gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pixbuf_2);
+
+	return 1;
 
 }
 

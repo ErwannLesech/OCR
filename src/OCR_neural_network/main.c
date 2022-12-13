@@ -199,7 +199,6 @@ void predict()
     
     multiple_matrices parameters;
     parameters = load_parameters("./OCR_neural_network/weights.txt", input_neurons, hidden_neurons, output_neurons);
-    print_matrix(parameters.d);
 
     int nb = 0;
 
@@ -218,7 +217,6 @@ void predict()
         {
             forward_prop = forward_propagation(&parameters, input);
             output_prop = forward_prop.d;
-            print_matrix(output_prop);
             double max = get_value(output_prop, 0, 0);
             char index = '0';
             for (int k = 1; k < 10; k++)
@@ -229,10 +227,8 @@ void predict()
                     max = get_value(output_prop, k, 0);
                 }
             }
-            printf("%c \n", index);
             if (index != '0')
             {
-                printf("%d \n", i);
                 a[i/9][i%9] = index;
             }
         }
@@ -241,8 +237,6 @@ void predict()
             nb++;
         }
     }
-
-    printf("%d \n", nb);
 
 	FILE* output_file = fopen("grid.txt", "w");
 
@@ -265,7 +259,6 @@ void predict()
 		fprintf(output_file, "\n");
 	}
 	fclose(output_file);
-    printf("Done\n");
 }
 
 void accuracy()
