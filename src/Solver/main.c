@@ -250,7 +250,6 @@ int main_solver(char* path, unsigned int simple_or_hexa)
 {
 	unsigned int temp = simple_or_hexa;
 	read_sudoku(path, simple_or_hexa);
-	print_sudoku(simple_or_hexa);
 
 	if(simple_or_hexa == 9)
 	{
@@ -264,7 +263,6 @@ int main_solver(char* path, unsigned int simple_or_hexa)
 		//read_sudoku("expect_test_hexa_grid_01", simple_or_hexa);
 	}
 
-	print_sudoku(simple_or_hexa);
 	
 	size_t txt = 0;
 	size_t leng = strlen((path));

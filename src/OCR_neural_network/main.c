@@ -221,13 +221,15 @@ void predict()
             char index = '0';
             for (int k = 1; k < 10; k++)
             {
+                
                 if (get_value(output_prop, k, 0) > max)
                 {
                     index = k + 48;
                     max = get_value(output_prop, k, 0);
+                    
                 }
             }
-            if (index != '0')
+            if (index != '0' && max > 0.4)
             {
                 a[i/9][i%9] = index;
             }

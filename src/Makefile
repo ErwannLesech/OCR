@@ -38,6 +38,8 @@ clean:
 	rm -rf $(BUILD) $(TARGET)
 	rm -rf test.txt
 	rm -rf ./Solver/test_grid_01.result
+	rm -rf ./grid.result
+	rm -rf ./grid.txt
 	rm -rf *.png
 	rm -rf grid.txt
 	rm -rf ./cells
