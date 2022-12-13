@@ -229,7 +229,7 @@ void predict()
                     
                 }
             }
-            if (index != '0' && max > 0.4)
+            if (index != '0' && max > 0.7)
             {
                 a[i/9][i%9] = index;
             }
